@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /SE1_Project/
+
+    # Redirect root to Public
+    RewriteRule ^$ Public/ [L]
+
+    # Redirect all requests to Public folder
+    RewriteCond %{REQUEST_URI} !^/SE1_Project/Public/
+    RewriteRule ^(.*)$ Public/$1 [L]
+</IfModule>
