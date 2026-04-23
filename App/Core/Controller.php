@@ -4,11 +4,11 @@ class Controller
 {
     public function view($name)
     {
-        $viewName = '../App/Views/' . $name. '.view.php';
+        $viewName = '../App/views/' . $name. '.php';
         if (file_exists($viewName)) {
             require $viewName;
         } else {
-            require '../App/Views/404.view.php';
+            require '../App/views/404.php';
         }
 
     }

@@ -2,32 +2,53 @@
 
 class App
 {
-    private $controller = 'Home';
+    private $controller = 'HomeController';
     private $method = 'index';
+
     public function splitUrl()
     {
-        $url = $_GET['url'] ?? 'Home'; 
+        $url = $_GET['url'] ?? 'home';
+        $url = rtrim($url, '/');
         $url = explode('/', $url);
         return $url;
     }
 
-    public function loadController()
+    public function run()
     {
         $url = $this->splitUrl();
 
-        $controller = !empty($url[0]) ? ucfirst($url[0]) : 'Home';
+        $controller = !empty($url[0]) 
+            ? ucfirst($url[0]) . 'Controller' 
+            : 'HomeController';
 
-        $controllerName = '../App/Controllers/' . $controller . '.php';
+        $controllerPath = __DIR__ . '/../Controllers/' . $controller . '.php';
 
-        if (file_exists($controllerName)) {
-            require $controllerName;
-            $this->controller = ucfirst($url[0]);
-        } else {
-            require '../App/Controllers/_404.php';
+        if (file_exists($controllerPath)) {
+
+            require_once $controllerPath;
+            $this->controller = $controller;
+
+        } 
+        else {
+
+            require_once __DIR__ . '/../Controllers/_404.php';
             $this->controller = '_404';
         }
-        $controller = new $this->controller;
-        call_user_func_array([$controller, $this->method], []);
 
+        $controller = new $this->controller;
+
+        if (!empty($url[1])) {
+
+            if (method_exists($controller, $url[1])) {
+
+                $this->method = $url[1];
+            }
+        }
+
+
+        call_user_func_array(
+            [$controller, $this->method],
+            []
+        );
     }
 }
