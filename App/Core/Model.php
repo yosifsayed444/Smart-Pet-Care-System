@@ -1,8 +1,9 @@
 <?php
-trait Model 
+
+trait Model
 {
-   use Database;
-    
+    use Database;
+
     public function insert($data)
     {
         $keys = array_keys($data);
@@ -10,8 +11,7 @@ trait Model
         $columns = implode(',', $keys);
         $values  = ':' . implode(', :', $keys);
 
-        $query = "INSERT INTO $this->table ($columns)
-                  VALUES ($values)";
+        $query = "INSERT INTO $this->table ($columns) VALUES ($values)";
 
         return $this->query($query, $data);
     }
@@ -19,39 +19,30 @@ trait Model
     public function update($id, $data)
     {
         $keys = array_keys($data);
-
-        $set = "";
+        $set  = "";
 
         foreach ($keys as $key) {
             $set .= "$key = :$key, ";
         }
 
-        $set = rtrim($set, ', ');
-
+        $set        = rtrim($set, ', ');
         $data['id'] = $id;
 
-        $query = "UPDATE $this->table
-                  SET $set
-                  WHERE id = :id";
+        $query = "UPDATE $this->table SET $set WHERE id = :id";
 
         return $this->query($query, $data);
     }
+
     public function delete($id)
     {
-        $query = "DELETE FROM $this->table
-                  WHERE id = :id";
+        $query = "DELETE FROM $this->table WHERE id = :id";
 
-        $data = [
-            'id' => $id,
-        ];
-
-        return $this->query($query, $data);
+        return $this->query($query, ['id' => $id]);
     }
 
     public function where($data)
     {
-        $keys = array_keys($data);
-
+        $keys       = array_keys($data);
         $conditions = [];
 
         foreach ($keys as $key) {
@@ -59,11 +50,20 @@ trait Model
         }
 
         $conditions = implode(" AND ", $conditions);
-
-        $query = "SELECT * FROM $this->table
-              WHERE $conditions";
+        $query      = "SELECT * FROM $this->table WHERE $conditions";
 
         return $this->query($query, $data);
+    }
+
+    public function first($data)
+    {
+        $result = $this->where($data);
+
+        if ($result && is_array($result) && count($result) > 0) {
+            return $result[0];
+        }
+
+        return false;
     }
 
     public function fetchAll()
@@ -71,20 +71,5 @@ trait Model
         $query = "SELECT * FROM $this->table";
 
         return $this->query($query);
-    }
-    public function fetchrow($query, $data = [])
-    {
-        $stmt  = $this->connect()->prepare($query);
-        $check = $stmt->execute($data);
-        if ($check) {
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            if (is_array($result) && count($result) > 0) {
-                return $result[0];
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
     }
 }
