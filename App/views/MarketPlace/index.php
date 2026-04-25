@@ -3,56 +3,68 @@
 
 <section class="ftco-section bg-light">
     <div class="container">
+
         <div class="row justify-content-center pb-5 mb-3">
             <div class="col-md-7 heading-section text-center ftco-animate">
                 <h2>Pet Food & Accessories Marketplace</h2>
                 <p>Filter marketplace items based on your pet's medical needs.</p>
             </div>
         </div>
-      <?php if (! empty($products)): ?>
-    <?php foreach ($products as $product): ?>
 
-        <div class="col-md-4 ftco-animate">
-            <div class="block-7">
+        <div class="row">
 
-                <div class="img"
-style="background-image: url(<?php echo ROOT ?>/assets/images/<?php echo htmlspecialchars($product['image'] ?? 'pricing-1.jpg') ?>);">
-</div>
+        <?php if (! empty($products)): ?>
+            <?php foreach ($products as $product): ?>
 
-                <div class="text-center p-4">
+                <div class="col-md-4 col-sm-6 mb-4 ftco-animate">
 
-                    <span class="excerpt d-block">
-                        <?php echo htmlspecialchars($product['Name']) ?>
-                    </span>
+                    <div class="block-7">
 
-                    <span class="price">
-                        <sup>$</sup>
-                        <span class="number">
-                            <?php echo htmlspecialchars($product['Price']) ?>
-                        </span>
-                    </span>
+                        <div class="img"
+                        style="background-image: url(<?php echo ROOT ?>/assets/images/<?php echo htmlspecialchars($product['image'] ?? 'pricing-1.jpg') ?>);">
+                        </div>
 
-                    <ul class="pricing-text mb-5">
-                        <li>
-                            <?php echo htmlspecialchars($product['Ingredients']) ?>
-                        </li>
-                    </ul>
+                        <div class="text-center p-4">
 
-                    <a href="#" class="btn btn-primary d-block px-3 py-2">Add to Cart</a>
+                            <span class="excerpt d-block">
+                                <?php echo htmlspecialchars($product['Name']) ?>
+                            </span>
 
+                            <span class="price">
+                                <sup>$</sup>
+                                <span class="number">
+                                    <?php echo htmlspecialchars($product['Price']) ?>
+                                </span>
+                            </span>
+
+                            <ul class="pricing-text mb-5">
+                                <li>
+                                    <?php echo htmlspecialchars($product['Ingredients']) ?>
+                                </li>
+                            </ul>
+
+                            <a href="#" class="btn btn-primary d-block px-3 py-2">
+                                Add to Cart
+                            </a>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-            </div>  
-        </div>
+            <?php endforeach; ?>
 
-    <?php endforeach; ?>
-<?php else: ?>
+        <?php else: ?>
 
-<p>No products found.</p>
+            <div class="col-12 text-center">
+                <p>No products found.</p>
+            </div>
 
-<?php endif; ?>
-        </div>
+        <?php endif; ?>
+
+        </div> 
+
     </div>
 </section>
 
