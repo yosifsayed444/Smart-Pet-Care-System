@@ -12,7 +12,7 @@
                     <div class="alert alert-success">Appointment requested successfully!</div>
                 <?php endif; ?>
 
-                <?php if(!isset($_SESSION['USER'])): ?>
+                <?php if(!isset($_SESSION['id'])): ?>
                     <div class="alert alert-warning">Please <a href="<?= ROOT ?>/auth/login">login</a> to book an appointment.</div>
                 <?php else: ?>
                     <form method="POST" action="<?= ROOT ?>/vet/book" class="appointment">

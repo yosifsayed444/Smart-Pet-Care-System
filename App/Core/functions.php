@@ -9,8 +9,15 @@ function show($data)
 
 function checkLogin()
 {
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: /SE1_Project/auth");
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Pragma: no-cache");
+
+    if (!isset($_SESSION['id'])) {
+
+        http_response_code(404);
+
+        require "../App/Views/404.php";
+
         exit;
     }
 }
@@ -20,7 +27,11 @@ function checkRole($allowedRoles = [])
     checkLogin();
 
     if (!in_array($_SESSION['role'], $allowedRoles)) {
-        header("Location: /SE1_Project/home");
+
+        http_response_code(404);
+
+        require "../App/Views/404.php";
+
         exit;
     }
 }

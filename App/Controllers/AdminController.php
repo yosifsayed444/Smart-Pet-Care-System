@@ -2,9 +2,9 @@
 
 class AdminController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
         checkRole(['Admin']);
-        $this->view('Admin/dashboard');
+        $this->view("admin/dashboard");
     }
 }

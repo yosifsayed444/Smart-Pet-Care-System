@@ -7,6 +7,7 @@ class AuthController extends Controller
     {
         $this->view('auth/login');
     }
+
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -42,30 +43,26 @@ class AuthController extends Controller
 
                     if (password_verify($password, $row['password'])) {
 
-                        $_SESSION['user_id']  = $row['id'];
+                        $_SESSION['id']       = $row['id'];
                         $_SESSION['role']     = $row['role'];
                         $_SESSION['username'] = $row['username'];
 
                         switch ($row['role']) {
 
                             case 'Admin':
-                                header("Location: /SE1_Project/admin/dashboard");
+                                header("Location: " . ROOT . "/admin/dashboard");
                                 break;
 
                             case 'Vet':
-                                header("Location: /SE1_Project/vet/dashboard");
+                                header("Location: " . ROOT . "/vet/dashboard");
                                 break;
 
                             case 'Provider':
-                                header("Location: /SE1_Project/serviceprovider/dashboard");
+                                header("Location: " . ROOT . "/serviceprovider/dashboard");
                                 break;
-
-                            case 'Owner':
-                                header("Location: /SE1_Project/marketplace/dashboard");
-                                break;
-
+                                
                             default:
-                                header("Location: /SE1_Project/home");
+                                header("Location: " . ROOT . "/home");
                                 break;
                         }
 
@@ -91,6 +88,7 @@ class AuthController extends Controller
             $this->view('auth/login');
         }
     }
+
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -116,10 +114,7 @@ class AuthController extends Controller
 
                 $errors['email'] = "Email is required";
 
-            } elseif (! filter_var(
-                $email,
-                FILTER_VALIDATE_EMAIL
-            )) {
+            } elseif (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
                 $errors['email'] = "Invalid email format";
             }
@@ -128,14 +123,12 @@ class AuthController extends Controller
 
                 $errors['phone'] = "Phone is required";
 
-            } elseif (! preg_match(
-                "/^[0-9]{11}$/",
-                $phone
-            )) {
+            } elseif (! preg_match("/^[0-9]{11}$/", $phone)) {
 
                 $errors['phone'] =
                     "Phone must be 11 digits";
             }
+
             if (empty($password)) {
 
                 $errors['password'] = "Password is required";
@@ -169,6 +162,7 @@ class AuthController extends Controller
                     'email'    => $email,
                     'phone'    => $phone,
                     'role'     => 'Owner',
+
                     'password' => password_hash(
                         $password,
                         PASSWORD_DEFAULT
@@ -178,7 +172,16 @@ class AuthController extends Controller
                 $user = new User();
 
                 $user->insert($data);
-                header("Location: /SE1_Project/home");
+
+                $newUser = $user->first([
+                    'email' => $email,
+                ]);
+
+                $_SESSION['id']       = $newUser['id'];
+                $_SESSION['role']     = $newUser['role'];
+                $_SESSION['username'] = $newUser['username'];
+
+                header("Location: " . ROOT . "/home");
                 exit;
             }
 
@@ -194,9 +197,14 @@ class AuthController extends Controller
 
     public function logout()
     {
+
+        session_unset();
         session_destroy();
 
-        header("Location: /SE1_Project/home");
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Pragma: no-cache");
+
+        header("Location: " . ROOT . "/auth/login");
         exit;
     }
 }

@@ -4,6 +4,11 @@ class MarketplaceController extends Controller
 {
     public function index()
     {
-        $this->view('MarketPlace/index');
+        $this->view('Marketplace/index');
+    }
+
+    public function dashboard()
+    {
+        $this->view('Marketplace/dashboard');
     }
 }
