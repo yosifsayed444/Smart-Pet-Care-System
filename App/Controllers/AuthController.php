@@ -61,7 +61,11 @@ class AuthController extends Controller
                                 break;
 
                             case 'Owner':
+<<<<<<< HEAD
                                 header("Location: /SE1_Project/marketplace/dashboard");
+=======
+                                header("Location: /SE1_Project/home");
+>>>>>>> cdac4227ca14190cde6c08d98dab3cf85bb9c343
                                 break;
 
                             default:
