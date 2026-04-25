@@ -3,11 +3,6 @@
 class AuthController extends Controller
 {
 
-    public function index()
-    {
-        $this->view('auth/login');
-    }
-
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -60,7 +55,7 @@ class AuthController extends Controller
                             case 'Provider':
                                 header("Location: " . ROOT . "/serviceprovider/dashboard");
                                 break;
-                                
+
                             default:
                                 header("Location: " . ROOT . "/home");
                                 break;

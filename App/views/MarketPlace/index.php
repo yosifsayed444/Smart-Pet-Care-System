@@ -9,30 +9,49 @@
                 <p>Filter marketplace items based on your pet's medical needs.</p>
             </div>
         </div>
-        <div class="row">
-            <?php if(!empty($products)): ?>
-                <?php foreach($products as $product): ?>
-                    <div class="col-md-4 ftco-animate">
-                        <div class="block-7">
-                            <div class="img" style="background-image: url(<?= ROOT ?>/assets/images/<?= htmlspecialchars($product['image'] ?? 'pricing-1.jpg') ?>);"></div>
-                            <div class="text-center p-4">
-                                <span class="excerpt d-block"><?= htmlspecialchars($product['name']) ?></span>
-                                <span class="price"><sup>$</sup> <span class="number"><?= htmlspecialchars($product['price']) ?></span></span>
-                                
-                                <ul class="pricing-text mb-5">
-                                    <li><?= htmlspecialchars($product['description'] ?? 'No description') ?></li>
-                                </ul>
+      <?php if (! empty($products)): ?>
+    <?php foreach ($products as $product): ?>
 
-                                <a href="#" class="btn btn-primary d-block px-2 py-3" onclick="alert('Added to cart!'); return false;">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="col-12 text-center">
-                    <p>No products found.</p>
+        <div class="col-md-4 ftco-animate">
+            <div class="block-7">
+
+                <div class="img"
+style="background-image: url(<?php echo ROOT ?>/assets/images/<?php echo htmlspecialchars($product['image'] ?? 'pricing-1.jpg') ?>);">
+</div>
+
+                <div class="text-center p-4">
+
+                    <span class="excerpt d-block">
+                        <?php echo htmlspecialchars($product['Name']) ?>
+                    </span>
+
+                    <span class="price">
+                        <sup>$</sup>
+                        <span class="number">
+                            <?php echo htmlspecialchars($product['Price']) ?>
+                        </span>
+                    </span>
+
+                    <ul class="pricing-text mb-5">
+                        <li>
+                            <?php echo htmlspecialchars($product['Ingredients']) ?>
+                        </li>
+                    </ul>
+
+                    <a href="#" class="btn btn-primary d-block px-3 py-2">Add to Cart</a>
+
+
                 </div>
-            <?php endif; ?>
+
+            </div>  
+        </div>
+
+    <?php endforeach; ?>
+<?php else: ?>
+
+<p>No products found.</p>
+
+<?php endif; ?>
         </div>
     </div>
 </section>

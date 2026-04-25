@@ -2,13 +2,13 @@
 
 class MarketplaceController extends Controller
 {
+    
     public function index()
     {
-        $this->view('Marketplace/index');
-    }
+        $product = new Product();
 
-    public function dashboard()
-    {
-        $this->view('Marketplace/dashboard');
+        $data['products'] = $product->fetchAll();
+
+        $this->view('marketplace/index', $data);
     }
 }
