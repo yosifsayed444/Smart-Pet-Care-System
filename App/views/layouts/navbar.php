@@ -153,11 +153,9 @@
     <?php else: ?>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/<?php echo strtolower($_SESSION['role']) ?>/dashboard"
+            <a href="<?php echo ROOT ?>/<?php echo ($_SESSION['role'] === 'Provider') ? 'serviceprovider' : strtolower($_SESSION['role']); ?>/dashboard"
                class="nav-link">
-
                 Dashboard
-
             </a>
         </li>
 

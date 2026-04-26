@@ -35,3 +35,9 @@ function checkRole($allowedRoles = [])
         exit;
     }
 }
+
+function redirect($path)
+{
+    header("Location: " . ROOT . "/" . $path);
+    die;
+}
