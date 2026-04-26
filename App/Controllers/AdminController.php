@@ -43,4 +43,15 @@ class AdminController extends Controller
     public function salesReport(){}
     public function userReport(){}
     public function appointmentReport(){}
+
+    public function messages()
+{
+    Middleware::requireRole('Admin');
+
+    $message = new Message();
+
+    $data['messages'] = $message->fetchAll();
+
+    $this->view('admin/messages', $data);
+}
 }
