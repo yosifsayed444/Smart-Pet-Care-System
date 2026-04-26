@@ -1,8 +1,15 @@
 <?php
+
 class HomeController extends Controller
 {
     public function index()
     {
-        $this->view('Home');
+        $productModel = new Product();
+
+        $products = $productModel->getFeatured();
+
+        $this->view("Home", [
+            "products" => $products
+        ]);
     }
 }

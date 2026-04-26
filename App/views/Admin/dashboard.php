@@ -10,7 +10,7 @@
 
             <div class="card p-4 shadow-sm">
                 <h4>Welcome <?php echo $_SESSION['username']; ?> </h4>
-                <p>This is your dashboard.</p>
+                
             </div>
 
         </div>

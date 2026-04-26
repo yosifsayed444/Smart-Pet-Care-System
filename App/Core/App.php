@@ -3,7 +3,7 @@
 class App
 {
     private $controller = 'HomeController';
-    private $method = 'index';
+    private $method     = 'index';
 
     public function splitUrl()
     {
@@ -17,8 +17,8 @@ class App
     {
         $url = $this->splitUrl();
 
-        $controller = !empty($url[0]) 
-            ? ucfirst($url[0]) . 'Controller' 
+        $controller = ! empty($url[0])
+            ? ucfirst($url[0]) . 'Controller'
             : 'HomeController';
 
         $controllerPath = __DIR__ . '/../Controllers/' . $controller . '.php';
@@ -28,8 +28,7 @@ class App
             require_once $controllerPath;
             $this->controller = $controller;
 
-        } 
-        else {
+        } else {
 
             require_once __DIR__ . '/../Controllers/_404.php';
             $this->controller = '_404';
@@ -37,7 +36,7 @@ class App
 
         $controller = new $this->controller;
 
-        if (!empty($url[1])) {
+        if (! empty($url[1])) {
 
             if (method_exists($controller, $url[1])) {
 
@@ -45,10 +44,15 @@ class App
             }
         }
 
+        $params = [];
 
-        call_user_func_array(
-            [$controller, $this->method],
-            []
-        );
+if (count($url) > 2) {
+    $params = array_slice($url, 2);
+}
+
+call_user_func_array(
+    [$controller, $this->method],
+    $params
+);
     }
 }

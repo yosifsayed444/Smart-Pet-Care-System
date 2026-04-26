@@ -43,10 +43,32 @@
                                 </li>
                             </ul>
 
-                            <a href="#" class="btn btn-primary d-block px-3 py-2">
-                                Add to Cart
-                            </a>
+                        <?php if ($product['stock'] > 0): ?>
 
+<a href="<?= ROOT ?>/marketplace/addToCart/<?= $product['ProductID'] ?>"
+class="btn btn-primary btn-sm">
+
+Add To Cart 🛒
+
+</a>
+
+<p class="text-success small">
+Stock: <?= $product['stock'] ?>
+</p>
+
+<?php else: ?>
+
+<button class="btn btn-secondary btn-sm" disabled>
+
+Out of Stock ❌
+
+</button>
+
+<p class="text-danger small">
+Out of Stock
+</p>
+
+<?php endif; ?>
                         </div>
 
                     </div>

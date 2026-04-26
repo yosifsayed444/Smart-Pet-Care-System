@@ -72,4 +72,9 @@ trait Model
 
         return $this->query($query);
     }
+    public function lastInsertId()
+{
+    $connection = $this->connect();
+    return $connection->lastInsertId();
+}
 }

@@ -1,4 +1,9 @@
-    <div class="wrap">
+   <?php
+$count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+$user  = $_SESSION['user'] ?? null;
+?>
+ 
+ <div class="wrap">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6 d-flex align-items-center">
@@ -30,6 +35,17 @@
 	        	<li class="nav-item"><a href="<?php echo ROOT ?>/" class="nav-link">Home</a></li>
 	        	<li class="nav-item"><a href="<?php echo ROOT ?>/serviceprovider" class="nav-link">Services</a></li>
 	          <li class="nav-item"><a href="<?php echo ROOT ?>/marketplace" class="nav-link">Marketplace</a></li>
+	          <li class="nav-item"><a href="<?php echo ROOT ?>/about" class="nav-link">About</a></li>
+	          <li class="nav-item"><a href="<?php echo ROOT ?>/contact" class="nav-link">Contact</a></li>
+	          <li class="nav-item"><a href="<?= ROOT ?>/marketplace/cart" class="nav-link"> Cart 🛒
+
+        <?php if ($count > 0): ?>
+            <span class="badge badge-light">
+                <?= $count ?>
+            </span>
+        <?php endif; ?>
+    </a></li>
+			  
 
 
 <?php if (isset($_SESSION['id'])): ?>
