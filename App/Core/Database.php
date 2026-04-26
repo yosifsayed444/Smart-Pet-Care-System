@@ -2,7 +2,7 @@
 
 trait Database
 {
-    private function connect()
+    public function connect()
     {
         $string = "mysql:host=" . DBHOST . ";dbname=" . DBNAME . ";charset=utf8mb4";
 
@@ -15,7 +15,7 @@ trait Database
         return $connection;
     }
 
-    private function query($query, $data = [])
+    public function query($query, $data = [])
     {
         try {
             $stmt  = $this->connect()->prepare($query);

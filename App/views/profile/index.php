@@ -2,31 +2,28 @@
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
 <div class="container mt-5">
+    <h2>My Profile</h2>
 
-    <div class="card p-4 shadow">
-
-        <h2>My Profile</h2>
-
-        <hr>
+    <div class="card mt-4 p-4">
 
         <p>
-            <strong>Username:</strong>
-            <?= $user['username'] ?>
+            <strong>Name:</strong>
+            <?= $data['username'] ?? 'No name' ?>
         </p>
 
         <p>
             <strong>Email:</strong>
-            <?= $user['email'] ?>
+            <?= $data['email'] ?? 'No email' ?>
         </p>
 
         <p>
             <strong>Phone:</strong>
-            <?= $user['phone'] ?>
+            <?= $data['phone'] ?? 'No phone' ?>
         </p>
 
         <p>
             <strong>Role:</strong>
-            <?= $user['role'] ?>
+            <?= $data['role'] ?? 'No role' ?>
         </p>
 
     </div>

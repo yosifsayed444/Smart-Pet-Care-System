@@ -1,15 +1,11 @@
 <?php
-
 class ProfileController extends Controller
 {
+
     public function index()
     {
-        if (!isset($_SESSION['id'])) {
-
-            header("Location: " . ROOT . "/auth/login");
-            exit;
-        }
-
+     Middleware::requireLogin();
+    
         $user = new User();
 
         $data = $user->first([
@@ -17,7 +13,8 @@ class ProfileController extends Controller
         ]);
 
         $this->view('profile/index', [
-            'user' => $data
+            'data' => $data
         ]);
     }
+
 }

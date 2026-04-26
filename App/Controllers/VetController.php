@@ -29,7 +29,7 @@ class VetController extends Controller
 
     public function dashboard()
     {
-            checkRole(['Veterinarian']);
+        Middleware::requireRole('Vet');
         $this->view('Veterinarian/dashboard');
     }
 }

@@ -19,6 +19,7 @@ class ServiceProviderController extends Controller
 
     public function dashboard()
     {
+        Middleware::requireRole('ServiceProvider');
         $this->view('ServiceProvider/dashboard');
     }
 }
