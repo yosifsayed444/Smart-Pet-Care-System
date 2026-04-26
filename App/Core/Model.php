@@ -32,6 +32,32 @@ trait Model
 
         return $this->query($query, $data);
     }
+    public function updateProduct($id, $data)
+    {
+        $keys = array_keys($data);
+
+        $query = "UPDATE $this->table SET ";
+
+        foreach ($keys as $key) {
+
+            $query .= "$key = :$key,";
+        }
+
+        $query = rtrim($query, ",");
+
+        $query .= " WHERE $this->primaryKey = :id";
+
+        $data['id']  = $id;
+
+        return $this->query($query, $data);
+    }
+    public function deleteProduct($id)
+    {
+        $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id";
+        return $this->query($sql, [
+            'id' => $id,
+        ]);
+    }
 
     public function delete($id)
     {
@@ -73,8 +99,8 @@ trait Model
         return $this->query($query);
     }
     public function lastInsertId()
-{
-    $connection = $this->connect();
-    return $connection->lastInsertId();
-}
+    {
+        $connection = $this->connect();
+        return $connection->lastInsertId();
+    }
 }

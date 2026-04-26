@@ -87,7 +87,7 @@
 <div class="card shadow-sm h-100">
 
 <img
-src="<?php echo ROOT ?>/assets/images/<?php echo ! empty($product['image']) ? $product['image'] : 'pricing-1.jpg'; ?>"
+src="<?php echo ROOT ?>/uploads/products/<?php echo ! empty($product['image']) ? $product['image'] : 'pricing-1.jpg'; ?>"
 class="card-img-top"
 style="height:200px; object-fit:cover;">
 

@@ -1,12 +1,15 @@
 <?php
-    $count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+$count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 ?>
+
+<?php if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin'): ?>
 
 <div class="wrap">
     <div class="container">
         <div class="row">
             <div class="col-md-6 d-flex align-items-center">
                 <p class="mb-0 phone pl-md-2">
+
                     <a href="#" class="mr-2">
                         <span class="fa fa-phone mr-1"></span>
                         +00 1234 567
@@ -16,6 +19,7 @@
                         <span class="fa fa-paper-plane mr-1"></span>
                         info@petcare.com
                     </a>
+
                 </p>
             </div>
 
@@ -51,7 +55,8 @@
     PetCare
 </a>
 
-<button class="navbar-toggler" type="button"
+<button class="navbar-toggler"
+        type="button"
         data-toggle="collapse"
         data-target="#ftco-nav">
 
@@ -66,28 +71,7 @@
 <?php if (isset($_SESSION['id'])): ?>
 
 
-    <?php if ($_SESSION['role'] === 'Admin'): ?>
-
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/admin/dashboard" class="nav-link">
-                Dashboard
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/profile" class="nav-link">
-                👤 <?php echo $_SESSION['username'] ?>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/auth/logout" class="nav-link">
-                Logout
-            </a>
-        </li>
-
-
-    <?php elseif ($_SESSION['role'] === 'Owner'): ?>
+    <?php if ($_SESSION['role'] === 'Owner'): ?>
 
         <li class="nav-item">
             <a href="<?php echo ROOT ?>/" class="nav-link">
@@ -121,7 +105,8 @@
 
         <li class="nav-item">
 
-            <a href="<?php echo ROOT ?>/marketplace/cart" class="nav-link">
+            <a href="<?php echo ROOT ?>/marketplace/cart"
+               class="nav-link">
 
                 Cart 🛒
 
@@ -138,14 +123,20 @@
         </li>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/profile" class="nav-link">
+            <a href="<?php echo ROOT ?>/profile"
+               class="nav-link">
+
                 👤 <?php echo $_SESSION['username'] ?>
+
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/auth/logout" class="nav-link">
+            <a href="<?php echo ROOT ?>/auth/logout"
+               class="nav-link">
+
                 Logout
+
             </a>
         </li>
 
@@ -153,21 +144,29 @@
     <?php else: ?>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/<?php echo ($_SESSION['role'] === 'Provider') ? 'serviceprovider' : strtolower($_SESSION['role']); ?>/dashboard"
+            <a href="<?php echo ROOT ?>/<?php echo strtolower($_SESSION['role']) ?>/dashboard"
                class="nav-link">
+
                 Dashboard
+
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/profile" class="nav-link">
+            <a href="<?php echo ROOT ?>/profile"
+               class="nav-link">
+
                 👤 <?php echo $_SESSION['username'] ?>
+
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/auth/logout" class="nav-link">
+            <a href="<?php echo ROOT ?>/auth/logout"
+               class="nav-link">
+
                 Logout
+
             </a>
         </li>
 
@@ -175,36 +174,38 @@
 
 <?php else: ?>
 
-    <!-- ================= GUEST ================= -->
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/" class="nav-link">
-                Home
-            </a>
-        </li>
+    <!-- Guest -->
 
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/serviceprovider" class="nav-link">
-                Services
-            </a>
-        </li>
+    <li class="nav-item">
+        <a href="<?php echo ROOT ?>/" class="nav-link">
+            Home
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/marketplace" class="nav-link">
-                Marketplace
-            </a>
-        </li>
+    <li class="nav-item">
+        <a href="<?php echo ROOT ?>/serviceprovider" class="nav-link">
+            Services
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/about" class="nav-link">
-                About
-            </a>
-        </li>
+    <li class="nav-item">
+        <a href="<?php echo ROOT ?>/marketplace" class="nav-link">
+            Marketplace
+        </a>
+    </li>
 
-        <li class="nav-item">
-            <a href="<?php echo ROOT ?>/contact" class="nav-link">
-                Contact
-            </a>
-        </li>
+    <li class="nav-item">
+        <a href="<?php echo ROOT ?>/about" class="nav-link">
+            About
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="<?php echo ROOT ?>/contact" class="nav-link">
+            Contact
+        </a>
+    </li>
+
     <li class="nav-item">
 
         <a href="<?php echo ROOT ?>/auth/login"
@@ -225,3 +226,5 @@
 </div>
 
 </nav>
+
+<?php endif; ?>

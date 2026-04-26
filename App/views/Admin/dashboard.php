@@ -1,5 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 
+
 <style>
     * { box-sizing: border-box; }
 
@@ -234,6 +235,76 @@
     .i-purple { background: #EEEDFE; }
     .i-pink   { background: #FBEAF0; }
 </style>
+<!-- ══════════ TOP NAVBAR ══════════ -->
+
+<style>
+
+.top-navbar {
+    height: 56px;
+    background: #ffffff;
+    border-bottom: 0.5px solid rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Profile */
+
+.nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
+}
+
+/* Avatar */
+
+.profile-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #EEEDFE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #534AB7;
+}
+
+/* Logout Button */
+
+.logout-btn {
+    margin-left: 14px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    background: #FCEBEB;
+    color: #791F1F;
+    border: 0.5px solid #F09595;
+    transition: 0.15s;
+}
+
+.logout-btn:hover {
+    opacity: 0.75;
+    text-decoration: none;
+}
+
+</style>
+
+
+
 
 <div class="admin-layout">
 
@@ -255,101 +326,94 @@
 
             <div class="nav-group-label">Main</div>
 
-            <a href="<?= ROOT ?>/admin/dashboard" class="nav-item active">
+            <a href="<?php echo ROOT ?>/admin/dashboard" class="nav-item active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 Dashboard
             </a>
 
-            <a href="<?= ROOT ?>/admin/users" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/users" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                 Users
             </a>
 
-            <a href="<?= ROOT ?>/admin/products" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/products" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 Products
             </a>
 
-            <a href="<?= ROOT ?>/admin/orders" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/orders" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
                 Orders
             </a>
 
-            <a href="<?= ROOT ?>/admin/appointments" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/appointments" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                 Appointments
             </a>
 
-            <a href="<?= ROOT ?>/admin/messages" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/messages" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 Messages
             </a>
 
             <div class="nav-group-label">Management</div>
 
-            <a href="<?= ROOT ?>/admin/notificationEscalator" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/notificationEscalator" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
                 Notifications
                 <span class="nav-badge">3</span>
             </a>
 
-            <a href="<?= ROOT ?>/admin/lostPetBroadcast" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/lostPetBroadcast" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
                 Lost pet
             </a>
 
-            <a href="<?= ROOT ?>/admin/manageDisputes" class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                Disputes
-            </a>
-
-            <a href="<?= ROOT ?>/admin/suspendUsers" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/suspendUsers" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
                 Suspended users
             </a>
 
-            <a href="<?= ROOT ?>/admin/verifyUsers" class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                User verification
-            </a>
-
             <div class="nav-group-label">System</div>
 
-            <a href="<?= ROOT ?>/admin/manageRoles" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/manageRoles" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Roles &amp; permissions
             </a>
 
-            <a href="<?= ROOT ?>/admin/auditLogs" class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                Audit logs
-            </a>
-
-            <a href="<?= ROOT ?>/admin/archiveData" class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-                Archive
-            </a>
-
-            <a href="<?= ROOT ?>/admin/manageCurrency" class="nav-item">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
-                Currency
-            </a>
-
-            <a href="<?= ROOT ?>/admin/reports" class="nav-item">
+            <a href="<?php echo ROOT ?>/admin/reports" class="nav-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                 Reports
             </a>
 
+            <div class="top-navbar" >
+
+<div class="nav-profile" >
+
+<div class="profile-avatar">
+
+<?php
+$name = $data['username'] ?? 'A';
+echo strtoupper(substr($name,0,1));
+?>
+
+</div>
+
+<span class="profile-name">
+
+ <a href="<?php echo ROOT ?>/profile/index" class="profile-name"><?php echo $data['username'] ?? 'No name' ?></a>
+
+</span>
+
+<a href="<?php echo ROOT ?>/auth/logout" class="logout-btn">Logout</a>
+
+</div>
+
+</div>
+
         </nav>
 
-        <div class="sidebar-footer">
-            <div class="avatar">AD</div>
-            <div class="avatar-info">
-                <p>Admin</p>
-                <span>Super admin</span>
-            </div>
-        </div>
-
+    
     </aside>
 
     <!-- ══════════ MAIN CONTENT ══════════ -->
@@ -357,30 +421,25 @@
 
         <div class="page-header">
             <h1>Admin Dashboard</h1>
-            <p>Welcome back, Admin</p>
+            <p>Welcome back, <?php echo $data['username'] ?? 'No name' ?></p>
         </div>
 
         <!-- Stats -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="label">Total users</div>
-                <div class="value">—</div>
+                <div class="value"><?php echo $totalUsers ?? 0 ?></div>
                 <div class="delta delta-up">Active</div>
             </div>
             <div class="stat-card">
                 <div class="label">Orders</div>
-                <div class="value">—</div>
-                <div class="delta delta-up">This month</div>
+                 <div class="value"><?php echo $totalOrders ?? 0 ?></div>                
+                 <div class="delta delta-up">This month</div>
             </div>
             <div class="stat-card">
                 <div class="label">Appointments</div>
-                <div class="value">—</div>
+                <div class="value"><?php echo $totalAppointments ?? 0 ?></div>
                 <div class="delta">Upcoming</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">Open disputes</div>
-                <div class="value">—</div>
-                <div class="delta delta-down">Needs action</div>
             </div>
         </div>
 
@@ -396,8 +455,8 @@
                     <span class="dash-card-title">Users management</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/users"   class="btn-pill btn-blue">View users</a>
-                    <a href="<?= ROOT ?>/admin/addUser" class="btn-pill btn-green">Add user</a>
+                    <a href="<?php echo ROOT ?>/admin/users"   class="btn-pill btn-blue">View users</a>
+                    <a href="<?php echo ROOT ?>/admin/addUser" class="btn-pill btn-green">Add user</a>
                 </div>
             </div>
 
@@ -410,8 +469,8 @@
                     <span class="dash-card-title">Products</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/products"   class="btn-pill btn-blue">Manage</a>
-                    <a href="<?= ROOT ?>/admin/addProduct" class="btn-pill btn-green">Add product</a>
+                    <a href="<?php echo ROOT ?>/admin/products"   class="btn-pill btn-blue">Manage</a>
+                    <a href="<?php echo ROOT ?>/admin/addProduct" class="btn-pill btn-green">Add product</a>
                 </div>
             </div>
 
@@ -424,7 +483,7 @@
                     <span class="dash-card-title">Orders</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/orders" class="btn-pill btn-blue">View orders</a>
+                    <a href="<?php echo ROOT ?>/admin/orders" class="btn-pill btn-blue">View orders</a>
                 </div>
             </div>
 
@@ -437,7 +496,7 @@
                     <span class="dash-card-title">Appointments</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/appointments" class="btn-pill btn-blue">Manage</a>
+                    <a href="<?php echo ROOT ?>/admin/appointments" class="btn-pill btn-blue">Manage</a>
                 </div>
             </div>
 
@@ -450,8 +509,8 @@
                     <span class="dash-card-title">Notifications</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/notificationEscalator" class="btn-pill btn-blue">All notifications</a>
-                    <a href="<?= ROOT ?>/admin/healthAlerts"           class="btn-pill btn-amber">Health alerts</a>
+                    <a href="<?php echo ROOT ?>/admin/notificationEscalator" class="btn-pill btn-blue">All notifications</a>
+                    <a href="<?php echo ROOT ?>/admin/healthAlerts"           class="btn-pill btn-amber">Health alerts</a>
                 </div>
             </div>
 
@@ -464,33 +523,7 @@
                     <span class="dash-card-title">Lost pet</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/lostPetBroadcast" class="btn-pill btn-red">Broadcast alert</a>
-                </div>
-            </div>
-
-            <!-- Disputes -->
-            <div class="dash-card">
-                <div class="dash-card-top">
-                    <div class="card-icon i-pink">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#993556" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    </div>
-                    <span class="dash-card-title">Disputes</span>
-                </div>
-                <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/manageDisputes" class="btn-pill btn-blue">Manage disputes</a>
-                </div>
-            </div>
-
-            <!-- Audit logs -->
-            <div class="dash-card">
-                <div class="dash-card-top">
-                    <div class="card-icon i-gray">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#5F5E5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    </div>
-                    <span class="dash-card-title">Audit logs</span>
-                </div>
-                <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/auditLogs" class="btn-pill btn-gray">View logs</a>
+                    <a href="<?php echo ROOT ?>/admin/lostPetBroadcast" class="btn-pill btn-red">Broadcast alert</a>
                 </div>
             </div>
 
@@ -503,33 +536,7 @@
                     <span class="dash-card-title">Suspended users</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/suspendUsers" class="btn-pill btn-red">Suspend users</a>
-                </div>
-            </div>
-
-            <!-- Archive -->
-            <div class="dash-card">
-                <div class="dash-card-top">
-                    <div class="card-icon i-gray">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#5F5E5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-                    </div>
-                    <span class="dash-card-title">Archive</span>
-                </div>
-                <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/archiveData" class="btn-pill btn-gray">Archive data</a>
-                </div>
-            </div>
-
-            <!-- Currency -->
-            <div class="dash-card">
-                <div class="dash-card-top">
-                    <div class="card-icon i-green">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>
-                    </div>
-                    <span class="dash-card-title">Currency</span>
-                </div>
-                <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/manageCurrency" class="btn-pill btn-blue">Manage currency</a>
+                    <a href="<?php echo ROOT ?>/admin/suspendUsers" class="btn-pill btn-red">Suspend users</a>
                 </div>
             </div>
 
@@ -542,7 +549,7 @@
                     <span class="dash-card-title">User verification</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/verifyUsers" class="btn-pill btn-green">Verify users</a>
+                    <a href="<?php echo ROOT ?>/admin/verifyUsers" class="btn-pill btn-green">Verify users</a>
                 </div>
             </div>
 
@@ -555,7 +562,7 @@
                     <span class="dash-card-title">Messages</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/messages" class="btn-pill btn-green">View messages</a>
+                    <a href="<?php echo ROOT ?>/admin/messages" class="btn-pill btn-green">View messages</a>
                 </div>
             </div>
 
@@ -568,10 +575,10 @@
                     <span class="dash-card-title">Reports</span>
                 </div>
                 <div class="dash-card-actions">
-                    <a href="<?= ROOT ?>/admin/reports"            class="btn-pill btn-blue">Dashboard</a>
-                    <a href="<?= ROOT ?>/admin/salesReport"        class="btn-pill btn-green">Sales</a>
-                    <a href="<?= ROOT ?>/admin/userReport"         class="btn-pill btn-teal">Users</a>
-                    <a href="<?= ROOT ?>/admin/appointmentReport"  class="btn-pill btn-amber">Appointments</a>
+                    <a href="<?php echo ROOT ?>/admin/reports"            class="btn-pill btn-blue">Dashboard</a>
+                    <a href="<?php echo ROOT ?>/admin/salesReport"        class="btn-pill btn-green">Sales</a>
+                    <a href="<?php echo ROOT ?>/admin/userReport"         class="btn-pill btn-teal">Users</a>
+                    <a href="<?php echo ROOT ?>/admin/appointmentReport"  class="btn-pill btn-amber">Appointments</a>
                 </div>
             </div>
 
@@ -581,4 +588,4 @@
 
 </div>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
+<!-- <?php require __DIR__ . '/../layouts/footer.php'; ?> -->
