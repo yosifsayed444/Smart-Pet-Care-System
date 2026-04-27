@@ -30,6 +30,18 @@ class ServiceProvider
         return $this->query($query, ['price' => $price, 'id' => $service_id]);
     }
 
+    public function deleteService($service_id, $provider_id)
+    {
+        $query = "DELETE FROM provider_services WHERE id = :id AND provider_id = :provider_id";
+        return $this->query($query, ['id' => $service_id, 'provider_id' => $provider_id]);
+    }
+
+    public function deleteAvailability($slot_id, $provider_id)
+    {
+        $query = "DELETE FROM provider_availability WHERE id = :id AND provider_id = :provider_id";
+        return $this->query($query, ['id' => $slot_id, 'provider_id' => $provider_id]);
+    }
+
     public function getServices($provider_id)
     {
         $query = "SELECT * FROM provider_services WHERE provider_id = :provider_id";

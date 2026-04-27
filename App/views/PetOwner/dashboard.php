@@ -1,0 +1,234 @@
+<?php require __DIR__ . '/../layouts/header.php'; ?>
+<?php require __DIR__ . '/../layouts/navbar.php'; ?>
+
+<style>
+/* Modern Glassmorphism UI */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+.pet-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+}
+.pet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+.action-btn {
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 8px 15px;
+}
+.nav-tabs .nav-link.active { border-bottom: 4px solid #007bff; color: #007bff; font-weight: 700; background: none; }
+.nav-tabs .nav-link { border: none; color: #777; transition: 0.3s; padding: 15px 25px; }
+</style>
+
+<div class="hero-wrap js-fullheight" style="background-image: url('<?php echo ROOT ?>/assets/images/bg_2.jpg'); height: 300px !important; min-height: 300px;">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" style="height: 300px !important; min-height: 300px;">
+      <div class="col-md-11 ftco-animate text-center">
+        <h1 class="mb-4">Owner Command Center 🐾</h1>
+        <p class="breadcrumbs"><span class="mr-2"><a href="<?= ROOT ?>/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Dashboard</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        
+        <?php if(isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show mb-4">
+                <i class="fa fa-check-circle mr-2"></i><?= $_SESSION['success'] ?>
+                <?php unset($_SESSION['success']); ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        <?php endif; ?>
+
+        <?php if(isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show mb-4">
+                <i class="fa fa-exclamation-circle mr-2"></i><?= $_SESSION['error'] ?>
+                <?php unset($_SESSION['error']); ?>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        <?php endif; ?>
+
+        <div class="row">
+            <!-- Left Side: My Pets -->
+            <div class="col-lg-5 mb-5">
+                <div class="glass-panel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="mb-0" style="font-weight: 800;">My Pets</h3>
+                        <a href="<?= ROOT ?>/petowner/pets" class="btn btn-primary btn-sm rounded-pill px-3">
+                            <i class="fa fa-plus mr-1"></i> Register
+                        </a>
+                    </div>
+                    
+                    <?php if(!empty($pets)): ?>
+                        <?php foreach($pets as $pet): ?>
+                            <div class="pet-card">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="mb-0 font-weight-bold"><?= htmlspecialchars($pet['PetName']) ?></h5>
+                                    <span class="badge badge-primary badge-pill"><?= htmlspecialchars($pet['Species']) ?></span>
+                                </div>
+                                <p class="small text-muted mb-3">
+                                    <?= htmlspecialchars($pet['Age']) ?> yrs | <?= htmlspecialchars($pet['Gender']) ?>
+                                </p>
+
+                                <!-- Medical Center Grid -->
+                                <div class="bg-light p-3 rounded mb-3">
+                                    <label class="small font-weight-bold text-uppercase text-primary d-block mb-2">Medical Center</label>
+                                    <div class="row no-gutters text-center">
+                                        <div class="col-6 mb-2">
+                                            <a href="<?= ROOT ?>/petowner/vaccinations/<?= $pet['PetID'] ?>" title="Vaccinations">
+                                                <i class="fa fa-shield text-info d-block fa-lg mb-1"></i><small>Vaccinations</small>
+                                            </a>
+                                        </div>
+                                        <div class="col-6 mb-2">
+                                            <a href="<?= ROOT ?>/petowner/prescriptions/<?= $pet['PetID'] ?>" title="Prescriptions">
+                                                <i class="fa fa-file-text-o text-success d-block fa-lg mb-1"></i><small>Prescriptions</small>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-wrap">
+                                    <a href="<?= ROOT ?>/petowner/viewConditions/<?= $pet['PetID'] ?>" class="btn btn-outline-danger btn-sm action-btn mr-1 mb-1">
+                                        Conditions
+                                    </a>
+                                    <a href="<?= ROOT ?>/petowner/viewWeight/<?= $pet['PetID'] ?>" class="btn btn-outline-info btn-sm action-btn mb-1">
+                                        Weight
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-4">
+                            <i class="fa fa-paw fa-3x text-muted mb-2"></i>
+                            <p>No pets found.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Right Side: Scheduled Appointments -->
+            <div class="col-lg-7">
+                <div class="glass-panel">
+                    <h3 class="mb-4" style="font-weight: 800;">Scheduled Events</h3>
+                    
+                    <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="vet-tab" data-toggle="tab" href="#vet-pane">Vet Checkups</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="service-tab" data-toggle="tab" href="#service-pane">Service Bookings</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="dashboardTabsContent">
+                        <!-- Vet Appointments -->
+                        <div class="tab-pane fade show active" id="vet-pane">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="bg-primary text-white">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Pet</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($vetAppointments)): ?>
+                                            <?php foreach($vetAppointments as $vApp): ?>
+                                                <tr>
+                                                    <td><strong><?= date('M d', strtotime($vApp['AppointmentDate'])) ?></strong></td>
+                                                    <td><?= htmlspecialchars($vApp['PetName']) ?></td>
+                                                    <td>
+                                                        <?php 
+                                                            $st = $vApp['status'] ?? 'Pending';
+                                                            $cls = $st == 'Accepted' ? 'success' : ($st == 'Rejected' ? 'danger' : 'warning');
+                                                        ?>
+                                                        <span class="badge badge-<?= $cls ?>"><?= $st ?></span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="<?= ROOT ?>/petowner/deleteVetAppointment/<?= $vApp['AppointmentID'] ?>" 
+                                                           class="text-danger" onclick="return confirm('Cancel checkup?')">
+                                                            <i class="fa fa-times-circle fa-lg"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr><td colspan="4" class="text-center py-4">No upcoming vet appointments.</td></tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-right mt-3">
+                                <a href="<?= ROOT ?>/petowner/bookVet" class="btn btn-outline-primary btn-sm">Book a Vet Checkup</a>
+                            </div>
+                        </div>
+
+                        <!-- Service Bookings -->
+                        <div class="tab-pane fade" id="service-pane">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="bg-success text-white">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Service</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($bookings)): ?>
+                                            <?php foreach($bookings as $booking): ?>
+                                                <tr>
+                                                    <td><strong><?= date('M d', strtotime($booking['BookingDate'])) ?></strong></td>
+                                                    <td><?= htmlspecialchars($booking['service_name'] ?? 'Booking') ?></td>
+                                                    <td>
+                                                        <?php 
+                                                            $st = $booking['status'] ?? 'Under Review';
+                                                            $cls = $st == 'Accepted' ? 'success' : ($st == 'Rejected' ? 'danger' : 'secondary');
+                                                        ?>
+                                                        <span class="badge badge-<?= $cls ?>"><?= $st ?></span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="<?= ROOT ?>/petowner/deleteAppointment/<?= $booking['BookingID'] ?>" 
+                                                           class="text-danger" onclick="return confirm('Cancel booking?')">
+                                                            <i class="fa fa-times-circle fa-lg"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr><td colspan="4" class="text-center py-4">No active service bookings.</td></tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-right mt-3">
+                                <a href="<?= ROOT ?>/ServiceProvider/services" class="btn btn-outline-success btn-sm">Browse All Services</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php require __DIR__ . '/../layouts/footer.php'; ?>

@@ -2,34 +2,231 @@
 
 class VetController extends Controller
 {
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    /** Returns the VetID from the veterinarian table for the logged-in user */
+    private function getVetId()
+    {
+        $vetModel = new Veterinarian();
+        $vet = $vetModel->getById($_SESSION['id']);
+        return $vet ? $vet['VetID'] : $_SESSION['id'];
+    }
+
+    private function clean($v)
+    {
+        return htmlspecialchars(trim($v), ENT_QUOTES, 'UTF-8');
+    }
+
+    // ─── Dashboard ────────────────────────────────────────────────────────────
+
     public function index()
     {
-        $this->view('Veterinarian/index');
-    }
-
-    public function book()
-    {
-        $this->view('Veterinarian/book');
-    }
-
-    public function appointments()
-    {
-        $this->view('Veterinarian/appointments');
-    }
-
-    public function medical_records()
-    {
-        $this->view('Veterinarian/medical_records');
-    }
-
-    public function prescriptions()
-    {
-        $this->view('Veterinarian/prescriptions');
+        $this->dashboard();
     }
 
     public function dashboard()
     {
         Middleware::requireRole('Vet');
-        $this->view('Veterinarian/dashboard');
+        $vetId    = $this->getVetId();
+        $vetModel = new Veterinarian();
+        $vacModel = new Vaccination();
+        $presModel = new Prescription();
+        $medModel  = new MedicalRecord();
+
+        $data['vet']           = $vetModel->getById($vetId);
+        $data['appointments']  = $vetModel->getAppointments($vetId);
+        $data['patients']      = $vetModel->getPatientsForVet($vetId);
+        $data['allPets']       = $vetModel->getAllPets();
+        $data['vaccinations']  = $vacModel->getAllWithPets();
+        $data['upcoming']      = $vacModel->getUpcoming();
+        $data['prescriptions'] = $presModel->getByVet($vetId);
+        $data['labResults']    = $medModel->getLabResults($vetId);
+        $data['medicalNotes']  = $medModel->getMedicalNotesByVet($vetId);
+
+        $this->view('Veterinarian/dashboard', $data);
     }
+
+    // ─── (1) Vaccination Scheduler ────────────────────────────────────────────
+
+    public function addVaccination()
+    {
+        Middleware::requireRole('Vet');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+
+            $petId   = trim($_POST['pet_id'] ?? '');
+            $vaccine = $this->clean($_POST['vaccine_name'] ?? '');
+            $date    = trim($_POST['vaccination_date'] ?? '');
+            $next    = trim($_POST['next_date'] ?? '');
+
+            if (empty($petId) || !is_numeric($petId))        $errors[] = "Please select a valid pet.";
+            if (empty($vaccine))                              $errors[] = "Vaccine name is required.";
+            elseif (strlen($vaccine) > 100)                   $errors[] = "Vaccine name must not exceed 100 characters.";
+            if (empty($date) || !strtotime($date))            $errors[] = "A valid vaccination date is required.";
+            if (empty($next) || !strtotime($next))            $errors[] = "A valid next-due date is required.";
+            if (!empty($date) && !empty($next) && strtotime($next) <= strtotime($date))
+                $errors[] = "Next-due date must be after the vaccination date.";
+
+            if (!empty($errors)) {
+                $_SESSION['error'] = implode('<br>', $errors);
+            } else {
+                $vacModel = new Vaccination();
+                $vacModel->addVaccination([
+                    'PetID'           => (int)$petId,
+                    'VaccineName'     => $vaccine,
+                    'VaccinationDate' => $date,
+                    'NextDate'        => $next
+                ]);
+                $_SESSION['success'] = "Vaccination record added successfully!";
+            }
+        }
+        redirect('vet/dashboard');
+    }
+
+    public function viewVaccinations()
+    {
+        Middleware::requireRole('Vet');
+        $vacModel = new Vaccination();
+        $data['vaccinations'] = $vacModel->getAllWithPets();
+        $data['upcoming']     = $vacModel->getUpcoming();
+        $this->view('Veterinarian/dashboard', $data);
+    }
+
+    public function updateVaccination($id)
+    {
+        Middleware::requireRole('Vet');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+
+            $vaccine = $this->clean($_POST['vaccine_name'] ?? '');
+            $date    = trim($_POST['vaccination_date'] ?? '');
+            $next    = trim($_POST['next_date'] ?? '');
+
+            if (empty($vaccine))                           $errors[] = "Vaccine name is required.";
+            if (empty($date) || !strtotime($date))         $errors[] = "A valid vaccination date is required.";
+            if (empty($next) || !strtotime($next))         $errors[] = "A valid next-due date is required.";
+            if (!empty($date) && !empty($next) && strtotime($next) <= strtotime($date))
+                $errors[] = "Next-due date must be after the vaccination date.";
+
+            if (!empty($errors)) {
+                $_SESSION['error'] = implode('<br>', $errors);
+            } else {
+                $vacModel = new Vaccination();
+                $vacModel->updateVaccination($id, [
+                    'VaccineName'     => $vaccine,
+                    'VaccinationDate' => $date,
+                    'NextDate'        => $next
+                ]);
+                $_SESSION['success'] = "Vaccination updated successfully!";
+            }
+        }
+        redirect('vet/dashboard');
+    }
+
+    public function deleteVaccination($id)
+    {
+        Middleware::requireRole('Vet');
+        $vacModel = new Vaccination();
+        $vacModel->deleteVaccination($id);
+        $_SESSION['success'] = "Vaccination record deleted.";
+        redirect('vet/dashboard');
+    }
+
+    // ─── (2) Digital Prescription Engine ─────────────────────────────────────
+
+    public function addPrescription()
+    {
+        Middleware::requireRole('Vet');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $vetId  = $this->getVetId();
+
+            $petId    = trim($_POST['pet_id'] ?? '');
+            $medName  = $this->clean($_POST['medication_name'] ?? '');
+            $dosage   = $this->clean($_POST['dosage'] ?? '');
+            $date     = trim($_POST['date'] ?? '');
+
+            if (empty($petId) || !is_numeric($petId))    $errors[] = "Please select a valid pet.";
+            if (empty($medName))                          $errors[] = "Medication name is required.";
+            elseif (strlen($medName) > 100)               $errors[] = "Medication name must not exceed 100 characters.";
+            if (empty($dosage))                           $errors[] = "Dosage is required.";
+            elseif (strlen($dosage) > 50)                 $errors[] = "Dosage must not exceed 50 characters.";
+            if (empty($date) || !strtotime($date))        $errors[] = "A valid prescription date is required.";
+
+            if (!empty($errors)) {
+                $_SESSION['error'] = implode('<br>', $errors);
+            } else {
+                $presModel = new Prescription();
+                $presModel->addPrescription([
+                    'PetID'          => (int)$petId,
+                    'VetID'          => $vetId,
+                    'MedicationName' => $medName,
+                    'Dosage'         => $dosage,
+                    'Date'           => $date
+                ]);
+                $_SESSION['success'] = "Prescription added successfully!";
+            }
+        }
+        redirect('vet/dashboard');
+    }
+
+    public function viewPrescriptions()
+    {
+        Middleware::requireRole('Vet');
+        $vetId     = $this->getVetId();
+        $presModel = new Prescription();
+        $data['prescriptions'] = $presModel->getByVet($vetId);
+        $this->view('Veterinarian/dashboard', $data);
+    }
+
+    public function deletePrescription($id)
+    {
+        Middleware::requireRole('Vet');
+        $vetId     = $this->getVetId();
+        $presModel = new Prescription();
+        $presModel->deletePrescription($id, $vetId);
+        $_SESSION['success'] = "Prescription deleted.";
+        redirect('vet/dashboard');
+    }
+
+    public function updateAppointmentStatus($id, $status)
+    {
+        Middleware::requireRole('Vet');
+        
+        $allowed = ['Accepted', 'Rejected'];
+        if (!in_array($status, $allowed)) {
+            $_SESSION['error'] = "Invalid status requested.";
+            redirect('vet/dashboard');
+        }
+
+        $appModel = new Appointment();
+        $vetId    = $this->getVetId();
+        
+        // Fetch appointment to verify ownership
+        $appointment = $appModel->query("SELECT * FROM appointment WHERE AppointmentID = :id", ['id' => $id]);
+        
+        if (!empty($appointment)) {
+            $appointment = $appointment[0];
+            if ($appointment['VetID'] == $vetId) {
+                $appModel->updateStatus($id, $status);
+                $_SESSION['success'] = "Appointment #$id successfully marked as $status.";
+            } else {
+                $_SESSION['error'] = "Unauthorized: This appointment is assigned to another veterinarian.";
+            }
+        } else {
+            $_SESSION['error'] = "Appointment not found.";
+        }
+
+        redirect('vet/dashboard');
+    }
+
+    // ─── Legacy stubs (kept for routing compatibility) ────────────────────────
+
+    public function book()        { $this->view('Veterinarian/book'); }
+    public function appointments(){ Middleware::requireRole('Vet'); $this->dashboard(); }
+    public function prescriptions(){ $this->viewPrescriptions(); }
+    public function medical_records(){ $this->viewMedicalNotes(); }
 }

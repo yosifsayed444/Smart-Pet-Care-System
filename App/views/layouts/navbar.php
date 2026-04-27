@@ -1,9 +1,76 @@
 <?php
-$count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+    $count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 ?>
 
-<?php if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin'): ?>
+<?php if (! isset($_SESSION['role']) || $_SESSION['role'] !== 'Admin'): ?>
+<style>
+    /* Navbar height */
+.navbar {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
 
+/* Prevent text wrapping */
+.navbar-nav .nav-link {
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 12px;
+}
+
+/* Align items vertically */
+.navbar-nav {
+    align-items: center;
+}
+
+/* Fix MY APPOINTMENTS wrapping */
+.navbar-nav li {
+    display: flex;
+    align-items: center;
+}
+
+/* Reduce big spacing */
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+/* Cart badge fix */
+.badge {
+    font-size: 11px;
+    padding: 3px 6px;
+    margin-left: 4px;
+}
+
+/* Profile & icons alignment */
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Top bar height */
+.wrap {
+    padding: 5px 0;
+    font-size: 13px;
+}
+
+/* Make navbar more compact */
+.ftco-navbar-light {
+    background: #fff !important;
+}
+
+/* Mobile Fix */
+@media (max-width: 1200px) {
+
+    .navbar-nav .nav-link {
+        font-size: 13px;
+        padding: 8px 8px;
+    }
+
+}
+</style>
 <div class="wrap">
     <div class="container">
         <div class="row">
@@ -98,14 +165,14 @@ $count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
         </li>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/petowner/appointments" class="nav-link">
-                My Appointments
+            <a href="<?php echo ROOT ?>/contact" class="nav-link">
+                Contact
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/contact" class="nav-link">
-                Contact
+            <a href="<?php echo ROOT ?>/petowner/dashboard" class="nav-link">
+                Dashboard
             </a>
         </li>
 

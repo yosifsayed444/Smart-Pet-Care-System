@@ -44,11 +44,7 @@
             <div class="col-md-7 text-center ftco-animate">
                 <h2>Available Services</h2>
                 <p>We offer a wide range of services from certified providers to keep your pets happy and healthy.</p>
-                <?php if(isset($_SESSION['role']) && $_SESSION['role'] === 'Owner'): ?>
-                    <a href="<?= ROOT ?>/petowner/pets" class="btn btn-outline-success mb-3">
-                        🐾 Add or Manage My Pets
-                    </a>
-                <?php endif; ?>
+               
             </div>
         </div>
 

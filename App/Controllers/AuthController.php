@@ -55,6 +55,7 @@ class AuthController extends Controller
                             case 'Provider':
                                 header("Location: " . ROOT . "/serviceprovider/dashboard");
                                 break;
+                            
 
                             default:
                                 header("Location: " . ROOT . "/home");

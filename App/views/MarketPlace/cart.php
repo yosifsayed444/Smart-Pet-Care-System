@@ -38,9 +38,9 @@ $total = 0;
 <td>
 
 <img
-src="<?= ROOT ?>/assets/images/<?= !empty($item['image']) ? $item['image'] : 'pricing-1.jpg'; ?>"
-width="80">
-
+src="<?= ROOT ?>/uploads/products/<?= htmlspecialchars($item['image'] ?? ''); ?>"
+width="100"
+>
 </td>
 
 <td>
