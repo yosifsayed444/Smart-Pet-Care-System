@@ -97,8 +97,8 @@ class ServiceProvider
 
             $isAvailable = $this->checkAvailability($booking['ProviderID'], $new_date, $new_start_time, $new_end_time);
             
-            // Also need to check if another booking exists at that time
-            $hasConflict = $bookingModel->hasConflict($booking['ProviderID'], $new_date, $new_start_time, $new_end_time, $booking_id);
+            // Also need to check if another booking exists at that time for THIS service
+            $hasConflict = $bookingModel->hasConflict($booking['ProviderID'], $new_date, $new_start_time, $new_end_time, $booking['service_id'], $booking_id);
 
             if ($isAvailable && !$hasConflict) {
                 // Resolve conflict by updating booking
@@ -132,7 +132,7 @@ class ServiceProvider
             }
 
             $isAvailable = $this->checkAvailability($provider_id, $date, $start, $end);
-            $hasConflict = $bookingModel->hasConflict($provider_id, $date, $start, $end, $bookingId);
+            $hasConflict = $bookingModel->hasConflict($provider_id, $date, $start, $end, $b['service_id'], $bookingId);
 
             // "Conflict" means: booking outside availability OR overlaps another booking
             if (!$isAvailable || $hasConflict) {
@@ -141,5 +141,40 @@ class ServiceProvider
         }
 
         return false;
+    }
+
+    /**
+     * Get recent services for the home page
+     */
+    public function getRecentServices($limit = 4)
+    {
+        $query = "SELECT s.*, p.Name as provider_name 
+                  FROM provider_services s
+                  LEFT JOIN serviceprovider p ON s.provider_id = p.ProviderID
+                  ORDER BY s.id DESC
+                  LIMIT $limit";
+        return $this->query($query);
+    }
+
+    /**
+     * Get all services for the services page
+     */
+    public function getAllServices()
+    {
+        $query = "SELECT s.*, p.Name as provider_name 
+                  FROM provider_services s
+                  LEFT JOIN serviceprovider p ON s.provider_id = p.ProviderID
+                  ORDER BY s.id DESC";
+        return $this->query($query);
+    }
+
+    public function getServiceById($id)
+    {
+        $query = "SELECT s.*, p.Name as provider_name 
+                  FROM provider_services s
+                  LEFT JOIN serviceprovider p ON s.provider_id = p.ProviderID
+                  WHERE s.id = :id";
+        $result = $this->query($query, ['id' => $id]);
+        return !empty($result) ? $result[0] : false;
     }
 }

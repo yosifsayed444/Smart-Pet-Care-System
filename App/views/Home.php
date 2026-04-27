@@ -156,6 +156,76 @@ Out of Stock
 <?php endif; ?>
 
 </div>
+</section>
+
+<section class="ftco-section bg-light">
+<div class="container">
+
+<div class="row justify-content-center mb-5">
+<div class="col-md-7 text-center">
+
+<h2>Professional Services</h2>
+<p>Book the best care for your pets from verified providers</p>
+
+</div>
+</div>
+
+<div class="row">
+
+<?php if (! empty($services)): ?>
+
+<?php foreach ($services as $service): ?>
+
+<div class="col-md-3 col-sm-6 mb-4 ftco-animate">
+
+<div class="card shadow-sm h-100 border-0">
+
+<?php if (! empty($service['image'])): ?>
+    <img src="<?= ROOT ?>/uploads/services/<?= $service['image'] ?>" class="card-img-top" style="height:200px; object-fit:cover;">
+<?php else: ?>
+    <div class="card-img-top d-flex align-items-center justify-content-center bg-primary text-white" style="height:200px; font-size: 3rem;">
+        <span class="flaticon-dog"></span>
+    </div>
+<?php endif; ?>
+
+<div class="card-body text-center">
+
+<h5 class="card-title">
+<?php echo htmlspecialchars($service['name']); ?>
+</h5>
+
+<p class="text-muted small mb-1">
+    <strong>Provider:</strong> <?php echo htmlspecialchars($service['provider_name']); ?>
+</p>
+
+<p class="badge badge-info">
+    <?php echo htmlspecialchars($service['tier']); ?>
+</p>
+
+<h6 class="text-primary mt-2">
+$<?php echo htmlspecialchars($service['price']); ?>
+</h6>
+
+<a href="<?= ROOT ?>/ServiceProvider/book/<?= $service['id'] ?>" class="btn btn-outline-primary btn-sm mt-2">
+    Book Now 📅
+</a>
+</div>
+
+</div>
+
+</div>
+
+<?php endforeach; ?>
+
+<?php else: ?>
+
+<div class="col-12 text-center">
+<h5>No services listed yet 🐾</h5>
+</div>
+
+<?php endif; ?>
+
+</div>
 
 </div>
 </section>

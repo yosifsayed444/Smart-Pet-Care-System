@@ -98,6 +98,12 @@ $count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
         </li>
 
         <li class="nav-item">
+            <a href="<?php echo ROOT ?>/petowner/appointments" class="nav-link">
+                My Appointments
+            </a>
+        </li>
+
+        <li class="nav-item">
             <a href="<?php echo ROOT ?>/contact" class="nav-link">
                 Contact
             </a>
@@ -144,13 +150,21 @@ $count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
     <?php else: ?>
 
         <li class="nav-item">
-            <a href="<?php echo ROOT ?>/<?php echo strtolower($_SESSION['role']) ?>/dashboard"
+            <a href="<?php echo ROOT ?>/<?php echo $_SESSION['role'] === 'Provider' ? 'serviceprovider' : strtolower($_SESSION['role']) ?>/dashboard"
                class="nav-link">
 
                 Dashboard
 
             </a>
         </li>
+
+        <?php if ($_SESSION['role'] === 'Provider'): ?>
+            <li class="nav-item">
+                <a href="<?php echo ROOT ?>/serviceprovider/bookings" class="nav-link">
+                    Manage Bookings
+                </a>
+            </li>
+        <?php endif; ?>
 
         <li class="nav-item">
             <a href="<?php echo ROOT ?>/profile"

@@ -28,3 +28,7 @@ CREATE TABLE IF NOT EXISTS provider_reviews (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (parent_id) REFERENCES provider_reviews(id) ON DELETE CASCADE
 );
+
+ALTER TABLE provider_services ADD COLUMN image VARCHAR(255) DEFAULT NULL;
+ALTER TABLE booking ADD COLUMN service_id INT DEFAULT NULL;
+ALTER TABLE booking ADD COLUMN status ENUM('Accepted', 'Rejected', 'Under Review') DEFAULT 'Under Review';

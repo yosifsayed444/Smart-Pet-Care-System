@@ -42,10 +42,14 @@
                     <h5 class="mb-0">Tiered Service Pricing Engine</h5>
                 </div>
                 <div class="card-body">
-                    <form action="/SE1_Project/public/ServiceProvider/addService" method="POST" class="mb-4">
+                    <form action="/SE1_Project/public/ServiceProvider/addService" method="POST" enctype="multipart/form-data" class="mb-4">
                         <div class="mb-3">
                             <label class="form-label">Service Name</label>
                             <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Service Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
                         </div>
                         <div class="row mb-3">
                             <div class="col">
@@ -213,6 +217,58 @@
                         </div>
                     <?php endif; ?>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bookings Section -->
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Service Bookings</h5>
+                    <a href="<?= ROOT ?>/ServiceProvider/bookings" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Owner</th>
+                                    <th>Pet</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if(!empty($recentBookings)): ?>
+                                    <?php foreach(array_slice($recentBookings, 0, 5) as $booking): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($booking['owner_name']) ?></td>
+                                            <td><?= htmlspecialchars($booking['PetName']) ?></td>
+                                            <td><?= date('M d, h:i A', strtotime($booking['BookingDate'] . ' ' . $booking['StartTime'])) ?></td>
+                                            <td>
+                                                <span class="badge badge-<?= (($booking['status'] ?? 'Under Review') == 'Accepted' ? 'success' : (($booking['status'] ?? 'Under Review') == 'Rejected' ? 'danger' : 'secondary')) ?>">
+                                                    <?= $booking['status'] ?? 'Under Review' ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <?php if (($booking['status'] ?? 'Under Review') == 'Under Review'): ?>
+                                                    <a href="<?= ROOT ?>/ServiceProvider/updateBookingStatus/<?= $booking['BookingID'] ?>/Accepted" class="btn btn-sm btn-success">Accept</a>
+                                                <?php else: ?>
+                                                    <span class="text-muted small">Handled</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr><td colspan="5" class="text-center text-muted">No new bookings to show.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
