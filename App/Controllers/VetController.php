@@ -228,5 +228,5 @@ class VetController extends Controller
     public function book()        { $this->view('Veterinarian/book'); }
     public function appointments(){ Middleware::requireRole('Vet'); $this->dashboard(); }
     public function prescriptions(){ $this->viewPrescriptions(); }
-    public function medical_records(){ $this->viewMedicalNotes(); }
+
 }
