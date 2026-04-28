@@ -151,7 +151,7 @@ class PetOwnerController extends Controller
 
     protected function redirect($path)
     {
-        header("Location: /SE1_Project/?url=" . $path);
+        header("Location: /smart-pet-care-system/?url=" . $path);
         exit;
     }
 

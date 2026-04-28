@@ -187,5 +187,10 @@
         </div>
     </div>
 </div>
-
+      <script>
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.go(1);
+        };
+    </script>
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

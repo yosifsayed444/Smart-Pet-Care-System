@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /SE1_Project/Public/
+    RewriteBase /smart-pet-care-system/Public/
 
     # If file or folder doesn't exist
     RewriteCond %{REQUEST_FILENAME} !-f
