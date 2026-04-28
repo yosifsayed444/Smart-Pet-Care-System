@@ -2,6 +2,14 @@
 
 class AuthController extends Controller
 {
+    public function index()
+    {
+        if (isset($_SESSION['id'])) {
+            header("Location: " . ROOT . "/home");
+            exit;
+        }
+        $this->login();
+    }
 
     public function login()
     {

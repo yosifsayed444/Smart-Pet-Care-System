@@ -1,5 +1,4 @@
 <?php require __DIR__ . '/layouts/header.php'; ?>
-<?php require __DIR__ . '/layouts/navbar.php'; ?>
 
 <style>
     :root {
@@ -156,4 +155,4 @@
     </div>
 </div>
 
-<?php require __DIR__ . '/layouts/footer.php'; ?>
+

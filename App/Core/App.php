@@ -41,6 +41,12 @@ class App
             if (method_exists($controller, $url[1])) {
 
                 $this->method = $url[1];
+            } else {
+                
+                require_once __DIR__ . '/../Controllers/_404.php';
+                $this->controller = '_404';
+                $controller = new $this->controller;
+                $this->method = 'index';
             }
         }
 

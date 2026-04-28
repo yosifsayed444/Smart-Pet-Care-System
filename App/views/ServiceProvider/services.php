@@ -1,20 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<div class="hero-wrap js-fullheight" style="background-image: url('<?php echo ROOT ?>/assets/images/bg_2.jpg');"
-  data-stellar-background-ratio="0.5">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
-      data-scrollax-parent="true">
-      <div class="col-md-11 ftco-animate text-center">
-        <h1 class="mb-4">Our Professional Pet Services</h1>
-        <p>Find the perfect care for your furry friends</p>
-      </div>
-    </div>
-  </div>
-</div>
-
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row">
