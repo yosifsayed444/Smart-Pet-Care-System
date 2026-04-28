@@ -57,7 +57,7 @@ pet ownership easier and more organized.
 </div>
 </section>
 
-<!-- Features Section -->
+
 
 <section class="ftco-section bg-light">
 

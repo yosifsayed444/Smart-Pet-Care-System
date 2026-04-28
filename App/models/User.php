@@ -11,6 +11,8 @@ class User
         'email',
         'password',
         'phone',
-        'role'   
+        'role',
+        'status',
+        'is_verified'
     ];
 }

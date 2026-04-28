@@ -29,20 +29,21 @@
         </div>
 
         <div class="row">
-            <!-- Sidebar Navigation -->
+            
             <div class="col-md-3">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <a class="nav-link active" id="v-pills-appointments-tab" data-toggle="pill" href="#v-pills-appointments" role="tab"><i class="fa fa-calendar mr-2"></i> Appointments</a>
                     <a class="nav-link" id="v-pills-vaccinations-tab" data-toggle="pill" href="#v-pills-vaccinations" role="tab"><i class="fa fa-shield mr-2"></i> Vaccination Scheduler</a>
                     <a class="nav-link" id="v-pills-prescriptions-tab" data-toggle="pill" href="#v-pills-prescriptions" role="tab"><i class="fa fa-file-text-o mr-2"></i> Prescription Engine</a>
+                    <a class="nav-link" id="v-pills-lost-tab" data-toggle="pill" href="#v-pills-lost" role="tab"><i class="fa fa-bullhorn mr-2"></i> Community Alerts 🚨</a>
                 </div>
             </div>
 
-            <!-- Tab Content -->
+            
             <div class="col-md-9">
                 <div class="tab-content" id="v-pills-tabContent">
                     
-                    <!-- Appointments Tab -->
+                    
                     <div class="tab-pane fade show active" id="v-pills-appointments" role="tabpanel">
                         <h3>Upcoming Appointments</h3>
                         <div class="table-responsive">
@@ -90,7 +91,7 @@
                         </div>
                     </div>
 
-                    <!-- (1) Vaccination Scheduler Tab -->
+                    
                     <div class="tab-pane fade" id="v-pills-vaccinations" role="tabpanel">
                         <div class="d-flex justify-content-between mb-3">
                             <h3>Vaccination Scheduler</h3>
@@ -154,7 +155,7 @@
                         </div>
                     </div>
 
-                    <!-- (2) Prescription Engine Tab -->
+                    
                     <div class="tab-pane fade" id="v-pills-prescriptions" role="tabpanel">
                         <div class="d-flex justify-content-between mb-3">
                             <h3>Digital Prescription Engine</h3>
@@ -190,14 +191,48 @@
                         </div>
                     </div>
 
+                    
+                    <div class="tab-pane fade" id="v-pills-lost" role="tabpanel">
+                        <div class="alert alert-danger mb-4">
+                            <strong><i class="fa fa-bullhorn mr-2"></i>Community Emergency:</strong> 
+                            Lost pets reported by administrators.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="bg-danger text-white">
+                                    <tr>
+                                        <th>Pet ID</th>
+                                        <th>Location</th>
+                                        <th>Description</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if(!empty($lostPets)): ?>
+                                        <?php foreach($lostPets as $lp): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($lp['PetID']) ?></strong></td>
+                                                <td><i class="fa fa-map-marker text-danger mr-1"></i><?= htmlspecialchars($lp['Location']) ?></td>
+                                                <td><?= htmlspecialchars($lp['Description']) ?></td>
+                                                <td><?= date('M d', strtotime($lp['DateReported'])) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr><td colspan="4" class="text-center py-4">No lost pet alerts at this time.</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Modals -->
-<!-- Add Vaccination Modal -->
+
+
 <div class="modal fade" id="addVaccinationModal" tabindex="-1">
     <div class="modal-dialog">
         <form action="<?= ROOT ?>/vet/addVaccination" method="POST" class="modal-content">
@@ -220,7 +255,7 @@
     </div>
 </div>
 
-<!-- Add Prescription Modal -->
+
 <div class="modal fade" id="addPrescriptionModal" tabindex="-1">
     <div class="modal-dialog">
         <form action="<?= ROOT ?>/vet/addPrescription" method="POST" class="modal-content">

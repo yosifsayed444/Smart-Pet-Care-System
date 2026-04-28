@@ -52,7 +52,7 @@ class AuthController extends Controller
                                 header("Location: " . ROOT . "/vet/dashboard");
                                 break;
 
-                            case 'Provider':
+                            case 'ServiceProvider':
                                 header("Location: " . ROOT . "/serviceprovider/dashboard");
                                 break;
                             

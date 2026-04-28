@@ -2,7 +2,7 @@
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
 <style>
-/* Modern Glassmorphism UI */
+
 .glass-panel {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
@@ -65,7 +65,7 @@
         <?php endif; ?>
 
         <div class="row">
-            <!-- Left Side: My Pets -->
+            
             <div class="col-lg-5 mb-5">
                 <div class="glass-panel">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -86,7 +86,7 @@
                                     <?= htmlspecialchars($pet['Age']) ?> yrs | <?= htmlspecialchars($pet['Gender']) ?>
                                 </p>
 
-                                <!-- Medical Center Grid -->
+                                
                                 <div class="bg-light p-3 rounded mb-3">
                                     <label class="small font-weight-bold text-uppercase text-primary d-block mb-2">Medical Center</label>
                                     <div class="row no-gutters text-center">
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            <!-- Right Side: Scheduled Appointments -->
+            
             <div class="col-lg-7">
                 <div class="glass-panel">
                     <h3 class="mb-4" style="font-weight: 800;">Scheduled Events</h3>
@@ -134,10 +134,49 @@
                         <li class="nav-item">
                             <a class="nav-link" id="service-tab" data-toggle="tab" href="#service-pane">Service Bookings</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="order-tab" data-toggle="tab" href="#order-pane">My Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="lost-tab" data-toggle="tab" href="#lost-pane">Lost Pet Alerts 🚨</a>
+                        </li>
                     </ul>
 
                     <div class="tab-content" id="dashboardTabsContent">
-                        <!-- Vet Appointments -->
+                        
+                        <div class="tab-pane fade" id="lost-pane">
+                            <div class="alert alert-danger mb-4">
+                                <strong><i class="fa fa-bullhorn mr-2"></i>Community Emergency:</strong> 
+                                Below are pets reported lost in the community. Please keep an eye out!
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="bg-danger text-white">
+                                        <tr>
+                                            <th>Pet</th>
+                                            <th>Location</th>
+                                            <th>Description</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($lostPets)): ?>
+                                            <?php foreach($lostPets as $lp): ?>
+                                                <tr>
+                                                    <td><strong><?= htmlspecialchars($lp['PetID']) ?></strong></td>
+                                                    <td><i class="fa fa-map-marker text-danger mr-1"></i><?= htmlspecialchars($lp['Location']) ?></td>
+                                                    <td><?= htmlspecialchars($lp['Description']) ?></td>
+                                                    <td><?= date('M d', strtotime($lp['DateReported'])) ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr><td colspan="4" class="text-center py-4">No lost pet alerts at this time.</td></tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
                         <div class="tab-pane fade show active" id="vet-pane">
                             <div class="table-responsive">
                                 <table class="table table-hover">
@@ -181,7 +220,7 @@
                             </div>
                         </div>
 
-                        <!-- Service Bookings -->
+                        
                         <div class="tab-pane fade" id="service-pane">
                             <div class="table-responsive">
                                 <table class="table table-hover">
@@ -222,6 +261,45 @@
                             </div>
                             <div class="text-right mt-3">
                                 <a href="<?= ROOT ?>/ServiceProvider/services" class="btn btn-outline-success btn-sm">Browse All Services</a>
+                            </div>
+                        </div>
+
+                        
+                        <div class="tab-pane fade" id="order-pane">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="bg-dark text-white">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Total</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(!empty($orders)): ?>
+                                            <?php foreach($orders as $order): ?>
+                                                <tr>
+                                                    <td>#<?= $order['OrderID'] ?></td>
+                                                    <td><?= date('Y-m-d', strtotime($order['OrderDate'])) ?></td>
+                                                    <td class="font-weight-bold"><?= number_format($order['TotalPrice'], 2) ?> EGP</td>
+                                                    <td>
+                                                        <?php 
+                                                            $st = $order['Status'];
+                                                            $cls = $st == 'Confirmed' ? 'success' : ($st == 'Cancelled' ? 'danger' : 'warning');
+                                                        ?>
+                                                        <span class="badge badge-<?= $cls ?>"><?= $st ?></span>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr><td colspan="4" class="text-center py-4">You haven't placed any orders yet.</td></tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-right mt-3">
+                                <a href="<?= ROOT ?>/shop" class="btn btn-outline-dark btn-sm">Visit Shop</a>
                             </div>
                         </div>
                     </div>

@@ -24,11 +24,10 @@ Back to Products
 
 <?php if(!empty($row)): ?>
 
-<form method="POST"
-enctype="multipart/form-data"
-action="<?= ROOT ?>/admin/editProduct/<?= $row['ProductID'] ?>">
+<form method="POST" enctype="multipart/form-data" action="<?= ROOT ?>/admin/editProduct/<?= $row['ProductID'] ?>"
+novalidate>
 
-<!-- Product Name -->
+
 
 <div class="form-group">
 
@@ -52,7 +51,7 @@ value="<?= $old['Name'] ?? $row['Name'] ?>">
 </div>
 
 
-<!-- Ingredients -->
+
 
 <div class="form-group">
 
@@ -75,7 +74,7 @@ class="form-control <?= isset($errors['Ingredients']) ? 'is-invalid' : '' ?>"><?
 </div>
 
 
-<!-- Price -->
+
 
 <div class="form-group">
 
@@ -99,7 +98,7 @@ value="<?= $old['Price'] ?? $row['Price'] ?>">
 </div>
 
 
-<!-- Stock -->
+
 
 <div class="form-group">
 
@@ -123,7 +122,7 @@ value="<?= $old['stock'] ?? $row['stock'] ?>">
 </div>
 
 
-<!-- 🖼️ Current Image -->
+
 
 <?php if(!empty($row['image'])): ?>
 
@@ -141,7 +140,7 @@ style="margin-bottom:10px; border-radius:8px;">
 <?php endif; ?>
 
 
-<!-- Upload New Image -->
+
 
 <div class="form-group mt-3">
 

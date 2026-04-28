@@ -11,9 +11,7 @@ class ServiceProvider
         'ServiceType'
     ];
 
-    /**
-     * Tiered Service Pricing Engine
-     */
+    
     public function addService($data)
     {
         $keys = array_keys($data);
@@ -48,9 +46,7 @@ class ServiceProvider
         return $this->query($query, ['provider_id' => $provider_id]);
     }
 
-    /**
-     * Availability Management
-     */
+    
     public function setAvailability($data)
     {
         $keys = array_keys($data);
@@ -69,7 +65,7 @@ class ServiceProvider
 
     public function checkAvailability($provider_id, $date, $start_time, $end_time)
     {
-        // Check if there is an availability slot that covers the requested time
+        
         $query = "SELECT * FROM provider_availability 
                   WHERE provider_id = :provider_id 
                   AND available_date = :date 
@@ -109,11 +105,11 @@ class ServiceProvider
 
             $isAvailable = $this->checkAvailability($booking['ProviderID'], $new_date, $new_start_time, $new_end_time);
             
-            // Also need to check if another booking exists at that time for THIS service
+            
             $hasConflict = $bookingModel->hasConflict($booking['ProviderID'], $new_date, $new_start_time, $new_end_time, $booking['service_id'], $booking_id);
 
             if ($isAvailable && !$hasConflict) {
-                // Resolve conflict by updating booking
+                
                 return $bookingModel->updateByBookingId($booking_id, [
                     'BookingDate' => $new_date,
                     'StartTime' => $new_start_time,
@@ -146,7 +142,7 @@ class ServiceProvider
             $isAvailable = $this->checkAvailability($provider_id, $date, $start, $end);
             $hasConflict = $bookingModel->hasConflict($provider_id, $date, $start, $end, $b['service_id'], $bookingId);
 
-            // "Conflict" means: booking outside availability OR overlaps another booking
+            
             if (!$isAvailable || $hasConflict) {
                 return $b;
             }
@@ -155,9 +151,7 @@ class ServiceProvider
         return false;
     }
 
-    /**
-     * Get recent services for the home page
-     */
+    
     public function getRecentServices($limit = 4)
     {
         $query = "SELECT s.*, p.Name as provider_name 
@@ -168,9 +162,7 @@ class ServiceProvider
         return $this->query($query);
     }
 
-    /**
-     * Get all services for the services page
-     */
+    
     public function getAllServices()
     {
         $query = "SELECT s.*, p.Name as provider_name 

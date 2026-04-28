@@ -54,10 +54,28 @@ class Appointment
         return $this->query($query, ['vet_id' => $vetId]);
     }
 
-    public function hasConflict($vetId, $date)
+    public function hasConflict($vetId, $date, $excludeId = null)
     {
         $query = "SELECT * FROM appointment WHERE VetID = :vet_id AND AppointmentDate = :date";
-        $res = $this->query($query, ['vet_id' => $vetId, 'date' => $date]);
+        $params = ['vet_id' => $vetId, 'date' => $date];
+
+        if ($excludeId) {
+            $query .= " AND AppointmentID != :exclude_id";
+            $params['exclude_id'] = $excludeId;
+        }
+
+        $res = $this->query($query, $params);
         return !empty($res);
+    }
+
+    public function getAllAppointments()
+    {
+        $query = "SELECT a.*, p.PetName, uo.username as OwnerName, uv.username as VetName 
+                  FROM appointment a
+                  JOIN pet p ON a.PetID = p.PetID
+                  JOIN users uo ON a.OwnerID = uo.id
+                  JOIN users uv ON a.VetID = uv.id
+                  ORDER BY a.AppointmentDate DESC";
+        return $this->query($query);
     }
 }

@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <!-- Tabs Header -->
+    
     <ul class="nav nav-tabs mb-4" id="appointmentTabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="vet-tab" data-toggle="tab" href="#vet-content" role="tab">
@@ -46,7 +46,7 @@
 
     <div class="tab-content" id="appointmentTabsContent">
         
-        <!-- VETERINARY APPOINTMENTS TAB -->
+        
         <div class="tab-pane fade show active" id="vet-content" role="tabpanel">
             <div class="card shadow-sm p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -103,7 +103,7 @@
             </div>
         </div>
 
-        <!-- SERVICE BOOKINGS TAB -->
+        
         <div class="tab-pane fade" id="service-content" role="tabpanel">
             <div class="card shadow-sm p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">

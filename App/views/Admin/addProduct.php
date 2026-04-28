@@ -23,9 +23,8 @@ Back to Products
 <?php endif; ?>
 
 
-<form method="POST"
-enctype="multipart/form-data"
-action="<?= ROOT ?>/admin/addProduct">
+<form method="POST" enctype="multipart/form-data" action="<?= ROOT ?>/admin/addProduct"
+novalidate>
 
 
 <div class="form-group">
@@ -50,7 +49,7 @@ value="<?= $old['Name'] ?? '' ?>">
 </div>
 
 
-<!-- Ingredients -->
+
 
 <div class="form-group">
 
@@ -73,7 +72,7 @@ class="form-control <?= isset($errors['Ingredients']) ? 'is-invalid' : '' ?>"><?
 </div>
 
 
-<!-- Price -->
+
 
 <div class="form-group">
 
@@ -97,7 +96,7 @@ value="<?= $old['Price'] ?? '' ?>">
 </div>
 
 
-<!-- Stock -->
+
 
 <div class="form-group">
 
@@ -121,7 +120,7 @@ value="<?= $old['stock'] ?? '' ?>">
 </div>
 
 
-<!-- Image Upload -->
+
 
 <div class="form-group mt-3">
 

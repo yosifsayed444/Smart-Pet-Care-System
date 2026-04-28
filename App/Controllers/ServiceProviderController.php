@@ -16,7 +16,7 @@ class ServiceProviderController extends Controller
 
     public function bookings()
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         $bookingModel = new Booking();
         $provider_id = $_SESSION['id'];
@@ -27,7 +27,7 @@ class ServiceProviderController extends Controller
 
     public function updateBookingStatus($id, $status)
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         $bookingModel = new Booking();
         $booking = $bookingModel->first(['BookingID' => $id]);
@@ -42,7 +42,7 @@ class ServiceProviderController extends Controller
 
     public function dashboard()
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         $provider_id = $_SESSION['id'];
         $providerModel = new ServiceProvider();
@@ -50,17 +50,31 @@ class ServiceProviderController extends Controller
         $bookingModel = new Booking();
 
         $data['services'] = $providerModel->getServices($provider_id);
+        
+        
+        $check = $providerModel->first(['ProviderID' => $provider_id]);
+        if (!$check) {
+            $providerModel->query("INSERT INTO serviceprovider (ProviderID, Name, ServiceType) VALUES (:id, :name, :type)", [
+                'id' => $provider_id,
+                'name' => $_SESSION['username'],
+                'type' => 'General'
+            ]);
+        }
+
         $data['availability'] = $providerModel->getAvailability($provider_id);
         $data['conflictBooking'] = $providerModel->findFirstConflict($provider_id);
         $data['reviews'] = $reviewModel->viewReviews($provider_id);
         $data['recentBookings'] = $bookingModel->getByProvider($provider_id);
+        
+        $lostPetModel = new LostPet();
+        $data['lostPets'] = $lostPetModel->fetchAll();
 
         $this->view('ServiceProvider/dashboard', $data);
     }
 
     public function addService()
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $errors = [];
@@ -84,10 +98,10 @@ class ServiceProviderController extends Controller
                 $errors[] = "Price must be a positive number (max \$99,999).";
             }
 
-            // Image validation
+            
             if (!empty($_FILES['image']['name'])) {
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                $maxSize = 2 * 1024 * 1024; // 2MB
+                $maxSize = 2 * 1024 * 1024; 
                 if (!in_array($_FILES['image']['type'], $allowedTypes)) {
                     $errors[] = "Image must be JPG, PNG, GIF, or WebP.";
                 } elseif ($_FILES['image']['size'] > $maxSize) {
@@ -108,7 +122,7 @@ class ServiceProviderController extends Controller
                 'price'       => (float)$price
             ];
 
-            // Image Upload Handling
+            
             if (!empty($_FILES['image']['name'])) {
                 $folder = "uploads/services/";
                 if (!file_exists($folder)) {
@@ -129,7 +143,7 @@ class ServiceProviderController extends Controller
 
     public function deleteService($id)
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
         $providerModel = new ServiceProvider();
         $providerModel->deleteService($id, $_SESSION['id']);
         $_SESSION['success'] = "Service deleted successfully.";
@@ -138,22 +152,28 @@ class ServiceProviderController extends Controller
 
     public function updateServicePrice()
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $providerModel = new ServiceProvider();
-            $service_id = $_POST['service_id'];
-            $price = $_POST['price'];
+            $service_id = $_POST['service_id'] ?? '';
+            $price = $_POST['price'] ?? '';
 
-            $providerModel->updateServicePrice($service_id, $price);
-            $_SESSION['success'] = "Price updated successfully!";
+            if (empty($service_id) || $price === '') {
+                $_SESSION['error'] = "Price is required.";
+            } elseif (!is_numeric($price) || $price < 0 || $price > 99999) {
+                $_SESSION['error'] = "Please enter a valid price (max \$99,999).";
+            } else {
+                $providerModel = new ServiceProvider();
+                $providerModel->updateServicePrice($service_id, $price);
+                $_SESSION['success'] = "Price updated successfully!";
+            }
         }
         redirect('ServiceProvider/dashboard');
     }
 
     public function setAvailability()
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $errors = [];
@@ -201,7 +221,7 @@ class ServiceProviderController extends Controller
 
     public function deleteSchedule($id)
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
         $providerModel = new ServiceProvider();
         $providerModel->deleteAvailability($id, $_SESSION['id']);
         $_SESSION['success'] = "Schedule slot removed successfully.";
@@ -210,7 +230,7 @@ class ServiceProviderController extends Controller
 
     public function resolveConflict()
     {
-        Middleware::requireRole('Provider');
+        Middleware::requireRole('ServiceProvider');
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $providerModel = new ServiceProvider();
@@ -237,19 +257,19 @@ class ServiceProviderController extends Controller
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $reviewModel = new Review();
             
-            // For a provider reply, we need the provider_id and user_id.
-            // However, the reply might be tied to the same provider_id as the original review.
-            // Let's find the original review to get the provider_id.
+            
+            
+            
             $parent_id = $_POST['parent_id'];
             $original_review = $reviewModel->first(['id' => $parent_id]);
 
             if ($original_review) {
                 $data = [
                     'provider_id' => $original_review['provider_id'],
-                    'user_id' => $_SESSION['id'], // The provider's user ID
+                    'user_id' => $_SESSION['id'], 
                     'comment' => $_POST['comment'],
                     'parent_id' => $parent_id,
-                    'rating' => 0 // Replies don't have ratings
+                    'rating' => 0 
                 ];
 
                 $reviewModel->addReview($data);
@@ -287,14 +307,14 @@ class ServiceProviderController extends Controller
 
             $errors = [];
 
-            // --- Validate pet_id ---
+            
             $pet_id = trim($_POST['pet_id'] ?? '');
             if (empty($pet_id)) {
                 $errors[] = "Please select a pet.";
             } elseif (!is_numeric($pet_id) || (int)$pet_id <= 0) {
                 $errors[] = "Invalid pet selection.";
             } else {
-                // Verify the pet belongs to the logged-in owner
+                
                 $petModel2 = new Pet();
                 $pet = $petModel2->getPetById((int)$pet_id);
                 if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
@@ -302,7 +322,7 @@ class ServiceProviderController extends Controller
                 }
             }
 
-            // --- Validate availability slot ---
+            
             $availability_id = trim($_POST['availability_id'] ?? '');
             if (empty($availability_id)) {
                 $errors[] = "Please select an available time slot.";
@@ -313,7 +333,7 @@ class ServiceProviderController extends Controller
             if (!empty($errors)) {
                 $data['error'] = implode('<br>', $errors);
             } else {
-                // Resolve slot details
+                
                 $date = $start_time = $end_time = null;
 
                 if (!empty($availability_id)) {
@@ -335,12 +355,12 @@ class ServiceProviderController extends Controller
                 if (!$date || !$start_time || !$end_time) {
                     $data['error'] = "Could not resolve the selected time slot. Please try again.";
                 } else {
-                    // 1. Check provider availability covers this window
+                    
                     $isAvailable = $providerModel->checkAvailability(
                         $service['provider_id'], $date, $start_time, $end_time
                     );
 
-                    // 2. Check for overlapping bookings
+                    
                     $hasConflict = $bookingModel->hasConflict(
                         $service['provider_id'], $date, $start_time, $end_time, $service_id
                     );

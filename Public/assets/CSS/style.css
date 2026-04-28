@@ -1,9 +1,4 @@
-/*!
- * Bootstrap v4.2.1 (https://getbootstrap.com/)
- * Copyright 2011-2018 The Bootstrap Authors
- * Copyright 2011-2018 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -8203,16 +8198,16 @@ h1, h2, h3, h4, h5,
     color: rgba(0, 0, 0, 0.7) !important;
     font-size: 14px; }
     .searchform .form-control::-webkit-input-placeholder {
-      /* Chrome/Opera/Safari */
+      
       color: rgba(0, 0, 0, 0.7) !important; }
     .searchform .form-control::-moz-placeholder {
-      /* Firefox 19+ */
+      
       color: rgba(0, 0, 0, 0.7) !important; }
     .searchform .form-control:-ms-input-placeholder {
-      /* IE 0+ */
+      
       color: rgba(0, 0, 0, 0.7) !important; }
     .searchform .form-control:-moz-placeholder {
-      /* Firefox 18- */
+      
       color: rgba(0, 0, 0, 0.7) !important; }
   .searchform .form-control {
     height: 46px !important;
@@ -8982,16 +8977,16 @@ textarea.form-control {
   -webkit-box-shadow: none !important;
   box-shadow: none !important; }
   .appointment .form-control::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
+    
     color: rgba(0, 0, 0, 0.5); }
   .appointment .form-control::-moz-placeholder {
-    /* Firefox 19+ */
+    
     color: rgba(0, 0, 0, 0.5); }
   .appointment .form-control:-ms-input-placeholder {
-    /* IE 10+ */
+    
     color: rgba(0, 0, 0, 0.5); }
   .appointment .form-control:-moz-placeholder {
-    /* Firefox 18- */
+    
     color: rgba(0, 0, 0, 0.5); }
 
 .appointment textarea.form-control {
@@ -9536,16 +9531,16 @@ textarea.form-control {
   box-shadow: none !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
   .contactForm .form-control::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
+    
     color: rgba(0, 0, 0, 0.5) !important; }
   .contactForm .form-control::-moz-placeholder {
-    /* Firefox 19+ */
+    
     color: rgba(0, 0, 0, 0.5) !important; }
   .contactForm .form-control:-ms-input-placeholder {
-    /* IE 0+ */
+    
     color: rgba(0, 0, 0, 0.5) !important; }
   .contactForm .form-control:-moz-placeholder {
-    /* Firefox 18- */
+    
     color: rgba(0, 0, 0, 0.5) !important; }
   .contactForm .form-control:focus, .contactForm .form-control:active {
     border-color: #00bd56 !important; }
@@ -9581,7 +9576,7 @@ textarea.form-control {
     .block-21 .text .meta > div a {
       color: gray; }
 
-/* Blog*/
+
 .post-info {
   font-size: 12px;
   text-transform: uppercase;

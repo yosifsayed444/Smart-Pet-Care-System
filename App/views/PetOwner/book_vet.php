@@ -18,9 +18,9 @@
                         <div class="alert alert-danger"><?= $_SESSION['error']; unset($_SESSION['error']); ?></div>
                     <?php endif; ?>
 
-                    <form action="<?= ROOT ?>/petowner/bookVet" method="POST">
+                    <form action="<?= ROOT ?>/petowner/bookVet" method="POST" novalidate>
                         
-                        <!-- Select Pet -->
+                        
                         <div class="form-group mb-3">
                             <label class="font-weight-bold">Select Your Pet <span class="text-danger">*</span></label>
                             <select name="pet_id" class="form-control" required>
@@ -31,7 +31,7 @@
                             </select>
                         </div>
 
-                        <!-- Select Veterinarian -->
+                        
                         <div class="form-group mb-3">
                             <label class="font-weight-bold">Select Veterinarian <span class="text-danger">*</span></label>
                             <select name="vet_id" class="form-control" required>
@@ -45,7 +45,7 @@
                             </select>
                         </div>
 
-                        <!-- Select Date -->
+                        
                         <div class="form-group mb-4">
                             <label class="font-weight-bold">Appointment Date <span class="text-danger">*</span></label>
                             <input type="date" name="date" class="form-control" 
@@ -65,3 +65,4 @@
 </section>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>
+

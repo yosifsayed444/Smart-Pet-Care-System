@@ -11,6 +11,11 @@ class ShopController extends Controller
 
     public function addToCart($id)
     {
+        if (!isset($_SESSION['id'])) {
+            $_SESSION['error'] = "Please login to add items to cart.";
+            redirect('auth/login');
+        }
+
         $productModel = new Product();
         $product = $productModel->getById($id);
 
@@ -23,18 +28,27 @@ class ShopController extends Controller
             $_SESSION['cart'] = [];
         }
 
+        $currentQty = $_SESSION['cart'][$id]['qty'] ?? 0;
+
+        if ($currentQty >= $product['stock']) {
+            $_SESSION['error'] = "Out of Stock ❌";
+            redirect('shop');
+        }
+
         if (isset($_SESSION['cart'][$id])) {
             $_SESSION['cart'][$id]['qty']++;
         } else {
             $_SESSION['cart'][$id] = [
+                'ProductID' => $product['ProductID'],
                 'name' => $product['Name'],
-                'price' => $product['Price'],
+                'price' => (float)$product['Price'],
+                'image' => $product['image'] ?? "pricing-1.jpg",
                 'qty' => 1
             ];
         }
 
         $_SESSION['success'] = "Added " . $product['Name'] . " to cart!";
-        redirect('shop');
+        redirect('shop/cart');
     }
 
     public function cart()
@@ -53,6 +67,39 @@ class ShopController extends Controller
             unset($_SESSION['cart'][$id]);
             $_SESSION['success'] = "Item removed from cart.";
         }
+        redirect('shop/cart');
+    }
+
+    public function increaseQty($id)
+    {
+        if (isset($_SESSION['cart'][$id])) {
+            $productModel = new Product();
+            $product = $productModel->getById($id);
+            
+            if ($product && $_SESSION['cart'][$id]['qty'] < $product['stock']) {
+                $_SESSION['cart'][$id]['qty']++;
+            } else {
+                $_SESSION['error'] = "No more stock available.";
+            }
+        }
+        redirect('shop/cart');
+    }
+
+    public function decreaseQty($id)
+    {
+        if (isset($_SESSION['cart'][$id])) {
+            $_SESSION['cart'][$id]['qty']--;
+            if ($_SESSION['cart'][$id]['qty'] <= 0) {
+                unset($_SESSION['cart'][$id]);
+            }
+        }
+        redirect('shop/cart');
+    }
+
+    public function clearCart()
+    {
+        unset($_SESSION['cart']);
+        $_SESSION['success'] = "Cart cleared.";
         redirect('shop/cart');
     }
 
@@ -82,7 +129,24 @@ class ShopController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (empty($_SESSION['cart'])) {
                 redirect('shop');
+                return;
             }
+
+            $errors = Validator::validateCheckout($_POST);
+            if (!empty($errors)) {
+                $data['cart'] = $_SESSION['cart'];
+                $data['total'] = 0;
+                foreach ($data['cart'] as $item) {
+                    $data['total'] += $item['price'] * $item['qty'];
+                }
+                $data['errors'] = $errors;
+                $data['old'] = $_POST;
+                $this->view('Shop/checkout', $data);
+                return;
+            }
+
+            $paymentMethod = $_POST['payment'] ?? 'cod';
+            $status = ($paymentMethod === 'card') ? 'Confirmed' : 'Pending';
 
             $orderModel = new Order();
             $total = 0;
@@ -94,10 +158,10 @@ class ShopController extends Controller
                 'UserID' => $_SESSION['id'],
                 'OrderDate' => date('Y-m-d'),
                 'TotalPrice' => $total,
-                'Status' => 'Pending'
+                'Status' => $status
             ];
 
-            // Note: Since 'order' is a reserved word, let's use raw query for insert to be safe
+            
             $db = new class { use Database; };
             $con = $db->connect();
             $query = "INSERT INTO `order` (UserID, OrderDate, TotalPrice, Status) VALUES (:UserID, :OrderDate, :TotalPrice, :Status)";
@@ -110,6 +174,12 @@ class ShopController extends Controller
                 $orderModel->addDetails($orderId, $_SESSION['cart']);
                 unset($_SESSION['cart']);
                 $_SESSION['success'] = "Order placed successfully! Order ID: #$orderId";
+                
+                
+                if ($paymentMethod === 'card') {
+                    $_SESSION['success'] .= " (Payment Confirmed via Card)";
+                }
+
                 redirect('petowner/index');
             } else {
                 $_SESSION['error'] = "Failed to place order. Please try again.";

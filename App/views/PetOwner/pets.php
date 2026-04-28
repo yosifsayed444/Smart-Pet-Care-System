@@ -32,7 +32,7 @@
 .char-count { font-size: 0.75rem; color: #888; text-align: right; }
 </style>
 
-<!-- Hero -->
+
 <div class="hero-wrap js-fullheight pets-hero" data-stellar-background-ratio="0.5">
   <div class="overlay"></div>
   <div class="container">
@@ -51,7 +51,7 @@
 <section class="ftco-section bg-light">
   <div class="container">
 
-    <!-- Flash Messages -->
+    
     <?php if (isset($_SESSION['success'])): ?>
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fa fa-check-circle mr-2"></i><?= htmlspecialchars($_SESSION['success']) ?>
@@ -70,13 +70,13 @@
 
     <div class="row">
 
-      <!-- ===== ADD PET FORM ===== -->
+      
       <div class="col-md-4 mb-4">
         <div class="form-card">
           <h4 class="mb-4"><i class="fa fa-plus-circle text-primary mr-2"></i>Add New Pet</h4>
           <form id="addPetForm" action="<?= ROOT ?>/petowner/pets" method="POST" novalidate>
 
-            <!-- Pet Name -->
+            
             <div class="form-group mb-3">
               <label class="font-weight-bold">Pet Name <span class="text-danger">*</span></label>
               <input type="text" id="petName" name="name" class="form-control"
@@ -84,7 +84,7 @@
               <div class="field-error" id="nameError">Pet name is required (2–50 characters).</div>
             </div>
 
-            <!-- Species -->
+            
             <div class="form-group mb-3">
               <label class="font-weight-bold">Species <span class="text-danger">*</span></label>
               <select id="petSpecies" name="species" class="form-control" required>
@@ -98,7 +98,7 @@
               <div class="field-error" id="speciesError">Please select a species.</div>
             </div>
 
-            <!-- Age & Gender -->
+            
             <div class="row">
               <div class="col-md-6 form-group mb-3">
                 <label class="font-weight-bold">Age (Years) <span class="text-danger">*</span></label>
@@ -117,7 +117,7 @@
               </div>
             </div>
 
-            <!-- Weight -->
+            
             <div class="form-group mb-3">
               <label class="font-weight-bold">Weight (kg)</label>
               <input type="number" id="petWeight" name="weight" class="form-control"
@@ -125,7 +125,7 @@
               <div class="field-error" id="weightError">Weight must be between 0 and 500 kg.</div>
             </div>
 
-            <!-- Allergies -->
+            
             <div class="form-group mb-3">
               <label class="font-weight-bold">Allergies</label>
               <textarea id="petAllergies" name="allergies" class="form-control"
@@ -142,7 +142,7 @@
         </div>
       </div>
 
-      <!-- ===== PETS LIST ===== -->
+      
       <div class="col-md-8">
         <h4 class="mb-4"><i class="fa fa-paw text-secondary mr-2"></i>Your Pets</h4>
         <div class="row">
@@ -171,7 +171,7 @@
 
                   <hr class="my-2">
 
-                  <!-- Action buttons -->
+                  
                   <div class="mb-3">
                     <label class="small font-weight-bold text-uppercase text-primary mb-1">Medical Center</label>
                     <div class="row no-gutters text-center">
@@ -219,11 +219,11 @@
         </div>
       </div>
 
-    </div><!-- /row -->
+    </div>
   </div>
 </section>
 
-<!-- ===== Client-Side Validation Script ===== -->
+
 <script>
 (function () {
     const form       = document.getElementById('addPetForm');
@@ -325,3 +325,4 @@
 </script>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>
+

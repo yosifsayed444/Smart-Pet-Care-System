@@ -1,27 +1,13 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
-<?php require __DIR__ . '/../layouts/navbar.php'; ?>
-<?php if (! empty($_SESSION['success'])): ?> <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <script> Swal.fire({ icon: 'success', title: 'Success', text: '<?php echo $_SESSION['success'] ?>' }); </script> <?php unset($_SESSION['success']); ?> <?php endif; ?>
 
-<div class="container mt-5">
+<div class="admin-layout">
+    <?php require __DIR__ . '/../layouts/admin_sidebar.php'; ?>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h2>Users Management</h2>
-
-        <div><a href="<?php echo ROOT ?>/admin/addUser"
-           class="btn btn-primary">
-
-            Add New User
-
-        </a>
-        <a href="<?php echo ROOT ?>/admin/dashboard"
-           class="btn btn-secondary">
-
-            Back
-
-        </a></div>
-
-    </div>
+    <main class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4">Users Management</h2>
+            <a href="<?php echo ROOT ?>/admin/addUser" class="btn btn-sm btn-primary">Add New User</a>
+        </div>
 
     <div class="card shadow">
 

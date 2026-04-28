@@ -10,7 +10,9 @@ class Product
     protected $allowedColumns = [
         'Name',
         'Ingredients',
-        'Price'
+        'Price',
+        'stock',
+        'image'
     ];
 
     public function getAll()
@@ -28,5 +30,11 @@ class Product
     {
         $query = "SELECT * FROM $this->table ORDER BY ProductID DESC LIMIT $limit";
         return $this->query($query);
+    }
+
+    public function reduceStock($productId, $qty)
+    {
+        $query = "UPDATE $this->table SET stock = stock - :qty WHERE ProductID = :product_id AND stock >= :qty";
+        return $this->query($query, ['qty' => $qty, 'product_id' => $productId]);
     }
 }

@@ -28,7 +28,7 @@ class MedicalRecord
 
     public function addRecord($data)
     {
-        // Filter out non-allowed columns
+        
         $data = array_intersect_key($data, array_flip($this->allowedColumns));
         
         $keys = array_keys($data);
@@ -41,7 +41,7 @@ class MedicalRecord
 
     public function updateRecord($recordId, $data)
     {
-        // Filter out non-allowed columns
+        
         $data = array_intersect_key($data, array_flip($this->allowedColumns));
 
         $keys = array_keys($data);
@@ -64,9 +64,9 @@ class MedicalRecord
         return $this->query($query, ['RecordID' => $recordId]);
     }
 
-    // ==========================================
-    // Chronic Condition Methods (ChronicCondition table)
-    // ==========================================
+    
+    
+    
 
     public function addCondition($data)
     {
@@ -86,9 +86,9 @@ class MedicalRecord
         return $this->query($query, ['id' => $id]);
     }
 
-    // ==========================================
-    // Behavior and Notes Methods (Used by Controllers)
-    // ==========================================
+    
+    
+    
 
     public function getBehavior($petId)
     {
@@ -108,7 +108,7 @@ class MedicalRecord
         return $this->query($query, ['PetID' => $petId]);
     }
 
-    // ── Lab Results ─────────────────────────────────────────────────────────
+    
 
     public function addLabResult($data)
     {
@@ -130,7 +130,7 @@ class MedicalRecord
         return $this->query($query, ['VetID' => $vetId]);
     }
 
-    // ── Medical Notes ────────────────────────────────────────────────────────
+    
 
     public function getMedicalNotesByVet($vetId)
     {

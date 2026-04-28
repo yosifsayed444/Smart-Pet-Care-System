@@ -16,9 +16,9 @@ Back
 
 </div>
 
-<form method="POST"
-action="<?= ROOT ?>/admin/addUser"
-class="mt-4">
+<form method="POST" action="<?= ROOT ?>/admin/addUser"
+class="mt-4"
+novalidate>
 
 <div class="form-group">
 

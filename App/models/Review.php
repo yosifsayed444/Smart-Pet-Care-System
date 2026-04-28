@@ -27,7 +27,7 @@ class Review
 
     public function viewReviews($provider_id)
     {
-        // Get all reviews for a provider, ordered by created_at
+        
         $query = "SELECT r.*, u.username as user_name 
                   FROM provider_reviews r 
                   LEFT JOIN users u ON r.user_id = u.id 

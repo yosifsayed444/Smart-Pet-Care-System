@@ -7,6 +7,20 @@
             <div class="col-md-12">
                 <h2 class="mb-4">Your Shopping Cart</h2>
                 
+                <?php if(isset($_SESSION['success'])): ?>
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                <?php endif; ?>
+
+                <?php if(isset($_SESSION['error'])): ?>
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                <?php endif; ?>
+                
                 <?php if(!empty($cart)): ?>
                     <div class="card shadow-sm p-4">
                         <table class="table table-hover">
@@ -22,10 +36,24 @@
                             <tbody>
                                 <?php foreach($cart as $id => $item): ?>
                                     <tr>
-                                        <td><strong><?= htmlspecialchars($item['name']) ?></strong></td>
-                                        <td><?= number_format($item['price'], 2) ?> EGP</td>
-                                        <td><?= $item['qty'] ?></td>
-                                        <td><?= number_format($item['price'] * $item['qty'], 2) ?> EGP</td>
+                                        <?php 
+                                            $name = $item['name'] ?? $item['Name'] ?? 'Product';
+                                            $price = $item['price'] ?? $item['Price'] ?? 0;
+                                        ?>
+                                        <td><strong><?= htmlspecialchars($name) ?></strong></td>
+                                        <td><?= number_format($price, 2) ?> EGP</td>
+                                        <td class="text-center">
+                                            <div class="input-group mb-3" style="max-width: 120px; margin: 0 auto;">
+                                                <div class="input-group-prepend">
+                                                    <a href="<?= ROOT ?>/shop/decreaseQty/<?= $id ?>" class="btn btn-outline-secondary btn-sm">-</a>
+                                                </div>
+                                                <input type="text" class="form-control form-control-sm text-center" value="<?= $item['qty'] ?>" readonly>
+                                                <div class="input-group-append">
+                                                    <a href="<?= ROOT ?>/shop/increaseQty/<?= $id ?>" class="btn btn-outline-secondary btn-sm">+</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><?= number_format($price * $item['qty'], 2) ?> EGP</td>
                                         <td>
                                             <a href="<?= ROOT ?>/shop/removeFromCart/<?= $id ?>" class="text-danger">
                                                 <i class="fa fa-trash-o fa-lg"></i>

@@ -34,7 +34,7 @@ class Pet
 
     public function addPet($data)
     {
-        // Filter out non-allowed columns
+        
         $data = array_intersect_key($data, array_flip($this->allowedColumns));
         
         $keys = array_keys($data);

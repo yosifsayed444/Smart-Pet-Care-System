@@ -1,35 +1,13 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 
-<!-- SweetAlert Success -->
+<div class="admin-layout">
+    <?php require __DIR__ . '/../layouts/admin_sidebar.php'; ?>
 
-<?php if (!empty($_SESSION['success'])): ?>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-
-Swal.fire({
-
-icon: 'success',
-
-title: 'Success',
-
-text: '<?= $_SESSION['success'] ?>',
-
-confirmButtonColor: '#3085d6'
-
-});
-
-</script>
-
-<?php unset($_SESSION['success']); ?>
-
-<?php endif; ?>
-
-
-<div class="container mt-4">
-
-<h2>Products</h2>
+    <main class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4">Products Management</h2>
+            <a href="<?= ROOT ?>/admin/addProduct" class="btn btn-sm btn-primary">Add Product</a>
+        </div>
 
 <table class="table table-bordered">
 
@@ -38,74 +16,40 @@ confirmButtonColor: '#3085d6'
 <tr>
 
 <th>ID</th>
+<th>Image</th>
 <th>Name</th>
 <th>Ingredients</th>
 <th>Price</th>
 <th>Stock</th>
 <th>Actions</th>
-
 </tr>
-
 </thead>
-
 <tbody>
-
 <?php if(!empty($products)): ?>
-
 <?php foreach ($products as $row): ?>
-
 <tr>
-
 <td><?= $row['ProductID'] ?></td>
-
+<td>
+<?php if (strpos($row['image'], 'http') === 0): ?>
+    <img src="<?= $row['image'] ?>" width="100" style="border-radius: 5px;" alt="Product Image">
+<?php else: ?>
+    <img src="<?= ROOT ?>/uploads/products/<?= $row['image'] ?>" width="100" style="border-radius: 5px;" alt="Product Image">
+<?php endif; ?>
+</td>
 <td><?= $row['Name'] ?></td>
-
 <td><?= $row['Ingredients'] ?></td>
-
-<td><?= $row['Price'] ?></td>
-
+<td><?= number_format($row['Price'], 2) ?> EGP</td>
 <td><?= $row['stock'] ?></td>
 <td>
-
-<img src="<?= ROOT ?>/uploads/products/<?= $row['image'] ?>" width="100" alt="Product Image">
-
+<a href="<?= ROOT ?>/admin/editProduct/<?= $row['ProductID'] ?>" class="btn btn-warning btn-sm">Edit</a>    
+<a href="<?= ROOT ?>/admin/deleteProduct/<?= $row['ProductID'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this product?')">Delete</a>
 </td>
-
-<td>
-
-<a href="<?= ROOT ?>/admin/editProduct/<?= $row['ProductID'] ?>"
-class="btn btn-warning btn-sm">
-
-Edit
-
-</a>    
-
-<a href="<?= ROOT ?>/admin/deleteProduct/<?= $row['ProductID'] ?>"
-class="btn btn-danger btn-sm"
-onclick="return confirm('Delete this product?')">
-
-Delete
-
-</a>
-
-</td>
-
 </tr>
-
 <?php endforeach; ?>
-
 <?php else: ?>
-
 <tr>
-
-<td colspan="6" class="text-center">
-
-No Products Found
-
-</td>
-
+<td colspan="7" class="text-center">No Products Found</td>
 </tr>
-
 <?php endif; ?>
 
 </tbody>

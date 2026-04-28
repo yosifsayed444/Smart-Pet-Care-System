@@ -2,9 +2,9 @@
 
 class VetController extends Controller
 {
-    // ─── Helpers ──────────────────────────────────────────────────────────────
+    
 
-    /** Returns the VetID from the veterinarian table for the logged-in user */
+    
     private function getVetId()
     {
         $vetModel = new Veterinarian();
@@ -17,7 +17,7 @@ class VetController extends Controller
         return htmlspecialchars(trim($v), ENT_QUOTES, 'UTF-8');
     }
 
-    // ─── Dashboard ────────────────────────────────────────────────────────────
+    
 
     public function index()
     {
@@ -43,10 +43,13 @@ class VetController extends Controller
         $data['labResults']    = $medModel->getLabResults($vetId);
         $data['medicalNotes']  = $medModel->getMedicalNotesByVet($vetId);
 
+        $lostPetModel = new LostPet();
+        $data['lostPets'] = $lostPetModel->fetchAll();
+
         $this->view('Veterinarian/dashboard', $data);
     }
 
-    // ─── (1) Vaccination Scheduler ────────────────────────────────────────────
+    
 
     public function addVaccination()
     {
@@ -134,7 +137,7 @@ class VetController extends Controller
         redirect('vet/dashboard');
     }
 
-    // ─── (2) Digital Prescription Engine ─────────────────────────────────────
+    
 
     public function addPrescription()
     {
@@ -205,7 +208,7 @@ class VetController extends Controller
         $appModel = new Appointment();
         $vetId    = $this->getVetId();
         
-        // Fetch appointment to verify ownership
+        
         $appointment = $appModel->query("SELECT * FROM appointment WHERE AppointmentID = :id", ['id' => $id]);
         
         if (!empty($appointment)) {
@@ -223,7 +226,7 @@ class VetController extends Controller
         redirect('vet/dashboard');
     }
 
-    // ─── Legacy stubs (kept for routing compatibility) ────────────────────────
+    
 
     public function book()        { $this->view('Veterinarian/book'); }
     public function appointments(){ Middleware::requireRole('Vet'); $this->dashboard(); }

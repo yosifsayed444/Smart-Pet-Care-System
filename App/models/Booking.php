@@ -89,4 +89,14 @@ class Booking
 
         return $this->query($query, $data);
     }
+    public function getAllBookings()
+    {
+        $query = "SELECT b.*, p.PetName, u.username as OwnerName, s.Name as ProviderName 
+                  FROM booking b
+                  LEFT JOIN pet p ON b.PetID = p.PetID
+                  LEFT JOIN users u ON b.OwnerID = u.id
+                  LEFT JOIN serviceprovider s ON b.ProviderID = s.ProviderID
+                  ORDER BY b.BookingDate DESC";
+        return $this->query($query);
+    }
 }

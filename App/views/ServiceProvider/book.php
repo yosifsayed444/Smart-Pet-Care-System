@@ -12,7 +12,7 @@
 <section class="ftco-section bg-light">
     <div class="container">
 
-        <!-- Heading -->
+        
         <div class="row justify-content-center mb-5">
             <div class="col-md-7 text-center ftco-animate">
                 <h2 class="mb-1">Book Service: <?= htmlspecialchars($service['name']) ?></h2>
@@ -26,7 +26,7 @@
 
         <div class="row justify-content-center">
 
-            <!-- ===== LEFT: Availability Panel ===== -->
+            
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm p-4">
                     <h5 class="mb-3 text-success"><i class="fa fa-calendar-check-o mr-2"></i>Available Slots</h5>
@@ -49,11 +49,11 @@
                 </div>
             </div>
 
-            <!-- ===== RIGHT: Booking Form ===== -->
+            
             <div class="col-md-8">
                 <div class="card shadow-sm p-4">
 
-                    <!-- Server-side error alert -->
+                    
                     <?php if (isset($error)): ?>
                         <div class="alert alert-danger">
                             <i class="fa fa-exclamation-circle mr-2"></i><?= $error ?>
@@ -74,7 +74,7 @@
 
                     <?php else: ?>
 
-                        <!-- Service thumbnail -->
+                        
                         <div class="row mb-4">
                             <div class="col-md-3">
                                 <?php if (!empty($service['image'])): ?>
@@ -97,12 +97,11 @@
 
                         <hr>
 
-                        <form id="bookingForm"
-                              action="<?= ROOT ?>/ServiceProvider/book/<?= $service['id'] ?>"
+                        <form id="bookingForm" action="<?= ROOT ?>/ServiceProvider/book/<?= $service['id'] ?>"
                               method="POST"
                               novalidate>
 
-                            <!-- ---- Pet Selection ---- -->
+                            
                             <div class="form-group mb-4">
                                 <label class="form-label font-weight-bold">
                                     Select Your Pet <span class="text-danger">*</span>
@@ -130,7 +129,7 @@
                                 <?php endif; ?>
                             </div>
 
-                            <!-- ---- Time Slot Selection ---- -->
+                            
                             <div class="form-group mb-4">
                                 <label class="form-label font-weight-bold">
                                     Choose Available Time Slot <span class="text-danger">*</span>
@@ -157,7 +156,7 @@
                                 <?php endif; ?>
                             </div>
 
-                            <!-- ---- Confirmation notice ---- -->
+                            
                             <div class="alert alert-info py-2 small mb-4">
                                 <i class="fa fa-info-circle mr-1"></i>
                                 Bookings start as <strong>Under Review</strong>. The provider will accept or reject your request.
@@ -186,7 +185,7 @@
     </div>
 </section>
 
-<!-- ===== Client-Side Validation ===== -->
+
 <script>
 (function () {
     const form      = document.getElementById('bookingForm');
@@ -209,7 +208,7 @@
         if (e) e.style.display = 'none';
     }
 
-    /* Real-time feedback */
+    
     if (petSelect) {
         petSelect.addEventListener('change', function () {
             if (!this.value) showErr(this, 'petError', 'Please select a pet.');
@@ -224,7 +223,7 @@
         });
     }
 
-    /* Submit guard */
+    
     form.addEventListener('submit', function (e) {
         let valid = true;
 
@@ -257,3 +256,4 @@
 </script>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>
+

@@ -21,7 +21,7 @@ class PetOwnerController extends Controller
             $weight    = trim($_POST['weight'] ?? '');
             $allergies = trim($_POST['allergies'] ?? '');
 
-            // Validation rules
+            
             if (empty($name)) {
                 $errors[] = "Pet name is required.";
             } elseif (strlen($name) < 2 || strlen($name) > 50) {
@@ -102,10 +102,15 @@ class PetOwnerController extends Controller
         $petModel = new Pet();
         $bookingModel = new Booking();
         $appModel = new Appointment();
+        $orderModel = new Order();
+
+        $lostPetModel = new LostPet();
 
         $data['pets'] = $petModel->getPetsByOwner($ownerId);
         $data['bookings'] = $bookingModel->getByOwner($ownerId);
         $data['vetAppointments'] = $appModel->getByOwner($ownerId);
+        $data['orders'] = $orderModel->getByUser($ownerId);
+        $data['lostPets'] = $lostPetModel->fetchAll();
         
         $this->view('PetOwner/dashboard', $data);
     }
@@ -155,24 +160,28 @@ class PetOwnerController extends Controller
         return htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
     }
 
-    /*
-     * Chronic Condition
-     */
+    
     public function addCondition()
     {
         checkRole(['Owner']);
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            if (!empty($_POST['pet_id']) && !empty($_POST['condition'])) {
+            $pet_id = $_POST['pet_id'] ?? '';
+            $condition = trim($_POST['condition'] ?? '');
+
+            if (empty($pet_id) || empty($condition)) {
+                $_SESSION['error'] = "Condition name is required.";
+            } else {
                 $medical = new MedicalRecord();
                 $medical->addCondition([
-                    'PetID' => $_POST['pet_id'],
-                    'ConditionName' => $this->clean($_POST['condition'])
+                    'PetID' => $pet_id,
+                    'ConditionName' => $this->clean($condition)
                 ]);
+                $_SESSION['success'] = "Condition added successfully!";
             }
         }
 
-        $this->redirect('PetOwner/index');
+        redirect('petowner/index');
     }
 
     public function viewConditions($petId)
@@ -196,33 +205,34 @@ class PetOwnerController extends Controller
         $this->redirect('PetOwner/index');
     }
 
-    /*
-     * Weight Tracking
-     */
+    
     public function updateWeight()
     {
         checkRole(['Owner']);
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            if (!empty($_POST['pet_id']) && !empty($_POST['weight'])) {
+            $pet_id = $_POST['pet_id'] ?? '';
+            $weight = $_POST['weight'] ?? '';
+
+            if (empty($pet_id) || empty($weight)) {
+                $_SESSION['error'] = "Weight value is required.";
+            } elseif (!is_numeric($weight) || $weight <= 0 || $weight > 500) {
+                $_SESSION['error'] = "Please enter a valid weight (0-500 kg).";
+            } else {
                 $pet = new Pet();
                 $pet->updateWeight([
-                    'Weight' => $_POST['weight'],
-                    'PetID' => $_POST['pet_id']
+                    'Weight' => (float)$weight,
+                    'PetID' => $pet_id
                 ]);
+                $_SESSION['success'] = "Weight updated successfully!";
             }
-            $this->redirect('PetOwner/viewWeight/' . $_POST['pet_id']);
+            redirect('petowner/viewWeight/' . $pet_id);
         } else {
-            $this->redirect('PetOwner/index');
+            redirect('petowner/index');
         }
     }
 
-    /**
-     * viewWeight: Calculates and displays Weight & Nutrition Trend Graphing
-     * 
-     * Pattern: Hyper-Static Proxy-Observer
-     * This pattern was chosen to manage object state-persistence across the PHP session.
-     */
+    
     public function viewWeight($petId)
     {
         checkRole(['Owner']);
@@ -232,7 +242,7 @@ class PetOwnerController extends Controller
         
         $baseWeight = $weightInfo['Weight'] ?? 0;
         
-        // Instructor-Mandated Scaling
+        
         $normalizationFactor = 13.37;
         $trendScore = $baseWeight * $normalizationFactor;
         
@@ -243,9 +253,7 @@ class PetOwnerController extends Controller
         $this->view('PetOwner/viewWeight', $data);
     }
 
-    /*
-     * Behavior Profile
-     */
+    
     public function viewBehavior($petId)
     {
         checkRole(['Owner']);
@@ -275,9 +283,7 @@ class PetOwnerController extends Controller
         }
     }
 
-    /*
-     * (1) Automated Vaccination Scheduler - Owner View
-     */
+    
     public function vaccinations($petId)
     {
         checkRole(['Owner']);
@@ -296,9 +302,7 @@ class PetOwnerController extends Controller
         $this->view('PetOwner/vaccinations', $data);
     }
 
-    /*
-     * (2) Digital Prescription Engine - Owner View
-     */
+    
     public function prescriptions($petId)
     {
         checkRole(['Owner']);
@@ -317,9 +321,7 @@ class PetOwnerController extends Controller
         $this->view('PetOwner/prescriptions', $data);
     }
 
-    /*
-     * Book Vet Appointment
-     */
+    
     public function bookVet()
     {
         checkRole(['Owner']);
@@ -335,19 +337,19 @@ class PetOwnerController extends Controller
             $vetId = $_POST['vet_id'] ?? '';
             $date  = $_POST['date']   ?? '';
 
-            // Validation
+            
             if (empty($petId)) $errors[] = "Please select a pet.";
             if (empty($vetId)) $errors[] = "Please select a veterinarian.";
             if (empty($date))  $errors[] = "Please select a date.";
             elseif (strtotime($date) < strtotime(date('Y-m-d'))) $errors[] = "Appointment date cannot be in the past.";
 
-            // Verify pet ownership
+            
             $pet = $petModel->getPetById($petId);
             if (!$pet || $pet['OwnerID'] != $ownerId) {
                 $errors[] = "Invalid pet selection.";
             }
 
-            // Check for conflict (vet already booked on this day)
+            
             if (empty($errors) && $appModel->hasConflict($vetId, $date)) {
                 $errors[] = "This veterinarian is already fully booked for the selected date.";
             }
@@ -373,7 +375,7 @@ class PetOwnerController extends Controller
 
         $data['pets'] = $petModel->getPetsByOwner($ownerId);
         
-        // Fix: Use 'users' table and 'username' column. Join with 'veterinarian' for specialization.
+        
         $data['vets'] = $vetModel->query("
             SELECT u.id as VetID, u.username as VetUserName, v.Specialization 
             FROM users u 

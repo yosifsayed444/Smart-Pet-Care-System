@@ -5,9 +5,9 @@
 
 <h2>Edit User</h2>
 
-<form method="POST"
-action="<?= ROOT ?>/admin/editUser/<?= $user['id'] ?>"
-class="mt-4">
+<form method="POST" action="<?= ROOT ?>/admin/editUser/<?= $user['id'] ?>"
+class="mt-4"
+novalidate>
 
 <div class="form-group">
 

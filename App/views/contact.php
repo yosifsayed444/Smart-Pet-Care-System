@@ -1,7 +1,7 @@
 <?php require __DIR__ . '/layouts/header.php'; ?>
 <?php require __DIR__ . '/layouts/navbar.php'; ?>
 
-<!-- Hero Section -->
+
 
 <section class="hero-wrap hero-wrap-2"
 style="background-image: url('<?= ROOT ?>/assets/images/bg_2.jpg');">
@@ -46,7 +46,7 @@ Contact Us
 
 </section>
 
-<!-- Contact Section -->
+
 
 <section class="ftco-section contact-section">
 
@@ -64,7 +64,7 @@ Contact Information
 
 </div>
 
-<!-- Address -->
+
 
 <div class="w-100"></div>
 
@@ -85,7 +85,7 @@ Cairo, Egypt
 
 </div>
 
-<!-- Phone -->
+
 
 <div class="col-md-3 d-flex">
 
@@ -107,7 +107,7 @@ Cairo, Egypt
 
 </div>
 
-<!-- Email -->
+
 
 <div class="col-md-3 d-flex">
 
@@ -129,7 +129,7 @@ info@petcare.com
 
 </div>
 
-<!-- Website -->
+
 
 <div class="col-md-3 d-flex">
 
@@ -153,15 +153,16 @@ www.petcare.com
 
 </div>
 
-<!-- Contact Form -->
 
 <div class="row block-9">
-
-<div class="col-md-6 order-md-last d-flex">
-
-<form action="<?= ROOT ?>/contact/send"
-method="POST"
-class="bg-light p-5 contact-form">
+    <div class="col-md-6 order-md-last d-flex">
+        <form action="<?= ROOT ?>/contact/send" method="POST" class="bg-light p-5 contact-form" novalidate>
+            <?php if(isset($_SESSION['success'])): ?>
+                <div class="alert alert-success"><?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
+            <?php endif; ?>
+            <?php if(isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger"><?= $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <?php endif; ?>
 
 <div class="form-group">
 
@@ -216,7 +217,7 @@ class="btn btn-primary py-3 px-5">
 
 </div>
 
-<!-- Map or Image -->
+
 
 <div class="col-md-6 d-flex">
 

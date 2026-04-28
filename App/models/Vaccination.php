@@ -25,7 +25,7 @@ class Vaccination
 
     public function getByVet($vetId)
     {
-        // All vaccinations for pets that have appointments with this vet
+        
         $query = "SELECT v.*, p.PetName
                   FROM vaccination v
                   JOIN pet p ON v.PetID = p.PetID
@@ -83,7 +83,7 @@ class Vaccination
         return $this->query($query, ['VaccinationID' => $id]);
     }
 
-    // Upcoming vaccinations (NextDate within 30 days)
+    
     public function getUpcoming()
     {
         $query = "SELECT v.*, p.PetName

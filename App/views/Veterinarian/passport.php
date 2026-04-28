@@ -37,7 +37,7 @@
             </div>
         </div>
 
-        <!-- Section 1: Identification of Pet -->
+        
         <div class="info-section">
             <h5>I. Identification of Animal</h5>
             <div class="info-grid">
@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <!-- Section 2: Vaccination Records -->
+        
         <div class="info-section">
             <h5>II. Vaccination Against Rabies & Others</h5>
             <table class="table table-sm table-bordered">
@@ -95,7 +95,7 @@
             </table>
         </div>
 
-        <!-- Section 3: Clinical Examination -->
+        
         <div class="info-section">
             <h5>III. Clinical Examination & Health Notes</h5>
             <?php if (!empty($medNotes)): ?>

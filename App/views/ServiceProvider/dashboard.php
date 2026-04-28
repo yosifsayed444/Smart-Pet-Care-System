@@ -37,7 +37,7 @@
 
     <div class="row">
 
-        <!-- ===== TIERED SERVICE PRICING ENGINE ===== -->
+        
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-primary text-white">
@@ -45,7 +45,7 @@
                 </div>
                 <div class="card-body">
 
-                    <!-- Add Service Form -->
+                    
                     <form id="addServiceForm" action="<?= ROOT ?>/ServiceProvider/addService" method="POST"
                           enctype="multipart/form-data" class="mb-4" novalidate>
 
@@ -106,21 +106,21 @@
                                     <td><span class="badge badge-secondary"><?= htmlspecialchars($service['tier']) ?></span></td>
                                     <td>$<?= number_format($service['price'], 2) ?></td>
                                     <td class="d-flex gap-1" style="gap:4px;">
-                                        <!-- Update Price button -->
+                                        
                                         <button class="btn btn-sm btn-outline-primary"
                                                 data-toggle="modal"
                                                 data-target="#updatePriceModal<?= $service['id'] ?>">
                                             <i class="fa fa-edit"></i>
                                         </button>
 
-                                        <!-- Delete Service button -->
+                                        
                                         <a href="<?= ROOT ?>/ServiceProvider/deleteService/<?= $service['id'] ?>"
                                            class="btn btn-sm btn-danger"
                                            onclick="return confirm('Delete service \'<?= htmlspecialchars(addslashes($service['name'])) ?>\'? This cannot be undone.')">
                                             <i class="fa fa-trash"></i>
                                         </a>
 
-                                        <!-- Update Price Modal -->
+                                        
                                         <div class="modal fade" id="updatePriceModal<?= $service['id'] ?>"
                                              tabindex="-1" role="dialog" aria-hidden="true">
                                           <div class="modal-dialog" role="document">
@@ -168,7 +168,7 @@
             </div>
         </div>
 
-        <!-- ===== AVAILABILITY & CONFLICTS ===== -->
+        
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-info text-white">
@@ -176,7 +176,7 @@
                 </div>
                 <div class="card-body">
 
-                    <!-- Set Availability Form -->
+                    
                     <form id="availabilityForm" action="<?= ROOT ?>/ServiceProvider/setAvailability"
                           method="POST" class="mb-4" novalidate>
 
@@ -239,7 +239,7 @@
                                     data-toggle="modal" data-target="#resolveConflictModal">Resolve</button>
                         </div>
 
-                        <!-- Resolve Conflict Modal -->
+                        
                         <div class="modal fade" id="resolveConflictModal" tabindex="-1" role="dialog" aria-hidden="true">
                           <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -247,7 +247,7 @@
                                 <h5 class="modal-title">Resolve Conflict – Booking #<?= htmlspecialchars($conflictBooking['BookingID']) ?></h5>
                                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                               </div>
-                              <form action="<?= ROOT ?>/ServiceProvider/resolveConflict" method="POST">
+                              <form action="<?= ROOT ?>/ServiceProvider/resolveConflict" method="POST" novalidate>
                                   <div class="modal-body">
                                     <p class="text-muted">Propose a new time for this booking to resolve the overlap.</p>
                                     <input type="hidden" name="booking_id" value="<?= htmlspecialchars($conflictBooking['BookingID']) ?>">
@@ -286,7 +286,7 @@
         </div>
     </div>
 
-    <!-- ===== RECENT BOOKINGS ===== -->
+    
     <div class="row">
         <div class="col-md-12 mb-4">
             <div class="card shadow-sm">
@@ -344,12 +344,51 @@
         </div>
     </div>
 
+    
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fa fa-bullhorn mr-2"></i>Community Emergency Alerts (Lost Pets)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Pet ID</th>
+                                    <th>Location</th>
+                                    <th>Description</th>
+                                    <th>Date Reported</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($lostPets)): ?>
+                                    <?php foreach ($lostPets as $lp): ?>
+                                        <tr class="table-danger">
+                                            <td><strong><?= htmlspecialchars($lp['PetID']) ?></strong></td>
+                                            <td><i class="fa fa-map-marker mr-1"></i><?= htmlspecialchars($lp['Location']) ?></td>
+                                            <td><?= htmlspecialchars($lp['Description']) ?></td>
+                                            <td><?= date('M d, Y', strtotime($lp['DateReported'])) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr><td colspan="4" class="text-center text-muted py-3">No lost pet alerts at this time.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
-<!-- ===== Client-Side Validation ===== -->
+
 <script>
 (function () {
-    /* ---- Helpers ---- */
+    
     function showErr(el, errId, msg) {
         el.classList.add('is-invalid');
         const e = document.getElementById(errId);
@@ -364,9 +403,7 @@
         return new Date().toISOString().split('T')[0];
     }
 
-    /* ============================================================
-       ADD SERVICE FORM
-    ============================================================ */
+    
     const svcForm  = document.getElementById('addServiceForm');
     const svcName  = document.getElementById('svcName');
     const svcTier  = document.getElementById('svcTier');
@@ -432,9 +469,7 @@
         if (!valid) e.preventDefault();
     });
 
-    /* ============================================================
-       UPDATE PRICE MODALS
-    ============================================================ */
+    
     document.querySelectorAll('.updatePriceForm').forEach(function (form) {
         form.addEventListener('submit', function (e) {
             const input = form.querySelector('.updatePriceInput');
@@ -451,9 +486,7 @@
         });
     });
 
-    /* ============================================================
-       AVAILABILITY FORM
-    ============================================================ */
+    
     const avForm  = document.getElementById('availabilityForm');
     const avDate  = document.getElementById('avDate');
     const avStart = document.getElementById('avStart');

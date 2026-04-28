@@ -29,7 +29,7 @@
 
                     <form action="<?= ROOT ?>/petowner/updateBehavior" method="POST" class="mb-5 p-4 bg-light rounded border">
                         <input type="hidden" name="pet_id" value="<?= htmlspecialchars($data['pet_id'] ?? '') ?>">
-                        <!-- Using a dummy record_id for simulation as PetOwnerController requires it -->
+                        
                         <input type="hidden" name="record_id" value="1"> 
                         <div class="form-group">
                             <label class="font-weight-bold">Update Instructions:</label>

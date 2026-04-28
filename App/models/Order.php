@@ -4,7 +4,7 @@ class Order
 {
     use Model;
 
-    protected $table = 'order'; // Note: 'order' is a reserved word in SQL, we must wrap in backticks
+    protected $table = '`order`'; 
     protected $primaryKey = 'OrderID';
 
     protected $allowedColumns = [
@@ -38,5 +38,23 @@ class Order
     {
         $query = "SELECT * FROM `order` WHERE UserID = :user_id ORDER BY OrderDate DESC";
         return $this->query($query, ['user_id' => $userId]);
+    }
+
+    public function getAllOrders()
+    {
+        $query = "SELECT o.*, u.username FROM `order` o JOIN users u ON o.UserID = u.id ORDER BY o.OrderDate DESC";
+        return $this->query($query);
+    }
+
+    public function updateStatus($orderId, $status)
+    {
+        $query = "UPDATE `order` SET Status = :status WHERE OrderID = :order_id";
+        return $this->query($query, ['status' => $status, 'order_id' => $orderId]);
+    }
+
+    public function getOrderItems($orderId)
+    {
+        $query = "SELECT * FROM orderdetails WHERE OrderID = :order_id";
+        return $this->query($query, ['order_id' => $orderId]);
     }
 }

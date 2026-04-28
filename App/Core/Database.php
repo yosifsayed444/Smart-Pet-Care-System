@@ -26,14 +26,14 @@ trait Database
                 if (is_array($result) && count($result) > 0) {
                     return $result;
                 } else {
-                    // للـ INSERT/UPDATE/DELETE نرجع true بدل false
+                    
                     return $stmt->rowCount() > 0 ? true : false;
                 }
             } else {
                 return false;
             }
         } catch (PDOException $e) {
-            // في production غير السطر ده لـ log بدل عرض الخطأ
+            
             error_log("DB Error: " . $e->getMessage());
             return false;
         }
