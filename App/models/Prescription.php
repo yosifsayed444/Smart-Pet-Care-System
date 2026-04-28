@@ -26,9 +26,10 @@ class Prescription
 
     public function getByVet($vetId)
     {
-        $query = "SELECT pr.*, p.PetName
+        $query = "SELECT pr.*, p.PetName, u.username as OwnerName
                   FROM prescription pr
                   JOIN pet p ON pr.PetID = p.PetID
+                  LEFT JOIN users u ON p.OwnerID = u.id
                   WHERE pr.VetID = :VetID
                   ORDER BY pr.Date DESC";
         return $this->query($query, ['VetID' => $vetId]);

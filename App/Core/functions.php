@@ -13,11 +13,7 @@ function checkLogin()
     header("Pragma: no-cache");
 
     if (!isset($_SESSION['id'])) {
-
-        http_response_code(404);
-
-        require "../App/Views/404.php";
-
+        redirect('auth/login');
         exit;
     }
 }

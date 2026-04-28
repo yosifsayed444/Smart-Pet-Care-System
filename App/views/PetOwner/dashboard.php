@@ -33,18 +33,6 @@
 .nav-tabs .nav-link { border: none; color: #777; transition: 0.3s; padding: 15px 25px; }
 </style>
 
-<div class="hero-wrap js-fullheight" style="background-image: url('<?php echo ROOT ?>/assets/images/bg_2.jpg'); height: 300px !important; min-height: 300px;">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" style="height: 300px !important; min-height: 300px;">
-      <div class="col-md-11 ftco-animate text-center">
-        <h1 class="mb-4">Owner Command Center 🐾</h1>
-        <p class="breadcrumbs"><span class="mr-2"><a href="<?= ROOT ?>/">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Dashboard</span></p>
-      </div>
-    </div>
-  </div>
-</div>
-
 <section class="ftco-section bg-light">
     <div class="container">
         
@@ -125,7 +113,7 @@
             
             <div class="col-lg-7">
                 <div class="glass-panel">
-                    <h3 class="mb-4" style="font-weight: 800;">Scheduled Events</h3>
+                    <h3 class="mb-4" style="font-weight: 800;">My Activity</h3>
                     
                     <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
                         <li class="nav-item">
@@ -163,7 +151,7 @@
                                         <?php if(!empty($lostPets)): ?>
                                             <?php foreach($lostPets as $lp): ?>
                                                 <tr>
-                                                    <td><strong><?= htmlspecialchars($lp['PetID']) ?></strong></td>
+                                                    <td><strong><?= htmlspecialchars($lp['PetName'] ?? 'Unknown Pet') ?></strong></td>
                                                     <td><i class="fa fa-map-marker text-danger mr-1"></i><?= htmlspecialchars($lp['Location']) ?></td>
                                                     <td><?= htmlspecialchars($lp['Description']) ?></td>
                                                     <td><?= date('M d', strtotime($lp['DateReported'])) ?></td>

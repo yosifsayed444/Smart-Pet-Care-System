@@ -59,7 +59,7 @@
                                 <?php if (!empty($lostPets)): ?>
                                     <?php foreach ($lostPets as $lp): ?>
                                         <tr>
-                                            <td><?= $lp['PetID'] ?></td>
+                                            <td><?= htmlspecialchars($lp['PetName'] ?? 'Unknown Pet') ?> (ID: <?= $lp['PetID'] ?>)</td>
                                             <td><?= htmlspecialchars($lp['Location']) ?></td>
                                             <td><?= htmlspecialchars($lp['Description']) ?></td>
                                             <td><span class="badge badge-warning"><?= $lp['Status'] ?></span></td>

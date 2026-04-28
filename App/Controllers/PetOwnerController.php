@@ -110,7 +110,7 @@ class PetOwnerController extends Controller
         $data['bookings'] = $bookingModel->getByOwner($ownerId);
         $data['vetAppointments'] = $appModel->getByOwner($ownerId);
         $data['orders'] = $orderModel->getByUser($ownerId);
-        $data['lostPets'] = $lostPetModel->fetchAll();
+        $data['lostPets'] = $lostPetModel->getAllWithDetails();
         
         $this->view('PetOwner/dashboard', $data);
     }

@@ -177,7 +177,7 @@
                                         <?php foreach ($prescriptions as $p): ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($p['Date']) ?></td>
-                                                <td><?= htmlspecialchars($p['PetName']) ?></td>
+                                                <td><?= htmlspecialchars($p['PetName']) ?> (<?= htmlspecialchars($p['OwnerName'] ?? 'Unknown Owner') ?>)</td>
                                                 <td><?= htmlspecialchars($p['MedicationName']) ?></td>
                                                 <td><?= htmlspecialchars($p['Dosage']) ?></td>
                                                 <td>
@@ -265,7 +265,7 @@
                     <label>Pet</label>
                     <select name="pet_id" class="form-control" required>
                         <?php foreach ($allPets as $pet): ?>
-                            <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?></option>
+                            <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?> (<?= htmlspecialchars($pet['OwnerName']) ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>

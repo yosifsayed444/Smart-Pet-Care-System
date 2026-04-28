@@ -7,9 +7,20 @@ class VetController extends Controller
     
     private function getVetId()
     {
+        $userId   = $_SESSION['id'];
         $vetModel = new Veterinarian();
-        $vet = $vetModel->getById($_SESSION['id']);
-        return $vet ? $vet['VetID'] : $_SESSION['id'];
+        $vet      = $vetModel->getById($userId);
+
+        if (!$vet) {
+            // Auto-create a veterinarian profile for this user if missing
+            $username = $_SESSION['username'] ?? 'Veterinarian';
+            $vetModel->query(
+                "INSERT IGNORE INTO veterinarian (VetID, Name, Specialization, LicenseNumber) VALUES (:id, :name, 'General', :lic)",
+                ['id' => $userId, 'name' => $username, 'lic' => 'VET-' . $userId]
+            );
+        }
+
+        return $userId;
     }
 
     private function clean($v)
@@ -170,6 +181,14 @@ class VetController extends Controller
                     'Dosage'         => $dosage,
                     'Date'           => $date
                 ]);
+
+                $petModel = new Pet();
+                $pet = $petModel->getPetById($petId);
+                if ($pet && isset($pet['OwnerID'])) {
+                    $notifModel = new Notification();
+                    $notifModel->sendNotification($pet['OwnerID'], "A new prescription ($medName) for {$pet['PetName']} has been added by your Veterinarian.", "Prescription");
+                }
+
                 $_SESSION['success'] = "Prescription added successfully!";
             }
         }

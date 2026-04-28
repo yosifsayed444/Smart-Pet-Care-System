@@ -362,7 +362,7 @@
         <h1 class="animate__animated animate__fadeInUp"> Modern Care For Your Pets</h1>
         <p class="animate__animated animate__fadeInUp animate__delay-1s">PetCare is the world's most advanced platform for pet management, connecting you with elite veterinarians and premium supplies.</p>
         <div class="hero-btns animate__animated animate__fadeInUp animate__delay-2s">
-          <a href="<?php echo ROOT ?>/petowner/appointments" class="btn-premium btn-white">
+          <a href="<?php echo ROOT ?>/petowner/bookVet" class="btn-premium btn-white">
             <span class="fa fa-calendar"></span> Book A Visit
           </a>
           <a href="<?php echo ROOT ?>/shop" class="btn-premium btn-outline-white">

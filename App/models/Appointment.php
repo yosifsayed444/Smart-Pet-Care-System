@@ -72,9 +72,9 @@ class Appointment
     {
         $query = "SELECT a.*, p.PetName, uo.username as OwnerName, uv.username as VetName 
                   FROM appointment a
-                  JOIN pet p ON a.PetID = p.PetID
-                  JOIN users uo ON a.OwnerID = uo.id
-                  JOIN users uv ON a.VetID = uv.id
+                  LEFT JOIN pet p ON a.PetID = p.PetID
+                  LEFT JOIN users uo ON a.OwnerID = uo.id
+                  LEFT JOIN users uv ON a.VetID = uv.id
                   ORDER BY a.AppointmentDate DESC";
         return $this->query($query);
     }

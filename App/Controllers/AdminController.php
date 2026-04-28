@@ -22,10 +22,28 @@ class AdminController extends Controller
         $appointments = $appointment->fetchAll();
         $bookings     = $booking->fetchAll();
 
+        $upcomingAppointments = 0;
+        if (is_array($appointments)) {
+            foreach ($appointments as $app) {
+                if (strtotime($app['AppointmentDate']) >= strtotime(date('Y-m-d'))) {
+                    $upcomingAppointments++;
+                }
+            }
+        }
+
+        $upcomingServices = 0;
+        if (is_array($bookings)) {
+            foreach ($bookings as $b) {
+                if (strtotime($b['BookingDate']) >= strtotime(date('Y-m-d'))) {
+                    $upcomingServices++;
+                }
+            }
+        }
+
         $data['totalUsers']        = is_array($users) ? count($users) : 0;
         $data['totalOrders']       = is_array($orders) ? count($orders) : 0;
-        $data['totalAppointments'] = is_array($appointments) ? count($appointments) : 0;
-        $data['totalServices']     = is_array($bookings) ? count($bookings) : 0;
+        $data['totalAppointments'] = $upcomingAppointments;
+        $data['totalServices']     = $upcomingServices;
         $data['username']          = $_SESSION['username'] ?? 'Admin';
 
         $this->view("admin/dashboard", $data);
@@ -496,19 +514,18 @@ class AdminController extends Controller
             $notifModel = new Notification();
             $users = $userModel->fetchAll();
             foreach ($users as $user) {
-                $notifModel->insert([
-                    'UserID' => $user['id'],
-                    'Message' => "LOST PET ALERT: A pet has been reported lost in $loc. Description: $desc",
-                    'Type' => 'LostPet',
-                    'IsRead' => 0
-                ]);
+                $notifModel->sendNotification(
+                    $user['id'],
+                    "LOST PET ALERT: A pet has been reported lost in $loc. Description: $desc",
+                    "LostPet"
+                );
             }
 
             $_SESSION['success'] = "Lost pet broadcasted to all users!";
             redirect('admin/lostPetBroadcast');
         }
 
-        $data['lostPets'] = $lostPetModel->fetchAll();
+        $data['lostPets'] = $lostPetModel->getAllWithDetails();
         $data['pets'] = $petModel->fetchAll();
         $data['username'] = $_SESSION['username'] ?? 'Admin';
         $this->view('admin/lost_pets', $data);
@@ -527,12 +544,11 @@ class AdminController extends Controller
             $users = ($role == 'All') ? $userModel->fetchAll() : $userModel->where(['role' => $role]);
             
             foreach ($users as $user) {
-                $notifModel->insert([
-                    'UserID' => $user['id'],
-                    'Message' => $msg,
-                    'Type' => 'System',
-                    'IsRead' => 0
-                ]);
+                $notifModel->sendNotification(
+                    $user['id'],
+                    $msg,
+                    "System"
+                );
             }
 
             $_SESSION['success'] = "System notification sent to $role users.";
