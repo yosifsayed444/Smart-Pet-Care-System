@@ -11,17 +11,14 @@ class AdminController extends Controller
     {
 
         Middleware::requireRole('Admin');
-
         $user        = new User();
         $order       = new Order();
         $appointment = new Appointment();
         $booking     = new Booking();
-
         $users        = $user->fetchAll();
         $orders       = $order->fetchAll();
         $appointments = $appointment->fetchAll();
         $bookings     = $booking->fetchAll();
-
         $upcomingAppointments = 0;
         if (is_array($appointments)) {
             foreach ($appointments as $app) {

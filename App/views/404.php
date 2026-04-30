@@ -78,9 +78,7 @@
         font-family: 'Montserrat', sans-serif;
         font-weight: 900;
         font-size: 100px;
-        background: linear-gradient(45deg, var(--primary-blue), #2196F3);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        background: linear-gradient(45deg, var(--primary-blue), #2196F3);        -webkit-text-fill-color: transparent;
         line-height: 1;
         margin-bottom: 10px;
         letter-spacing: -5px;
