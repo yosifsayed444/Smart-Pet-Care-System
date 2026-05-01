@@ -172,6 +172,7 @@
                                         <tr>
                                             <th>Date</th>
                                             <th>Pet</th>
+                                            <th>Doctor</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -182,12 +183,16 @@
                                                 <tr>
                                                     <td><strong><?= date('M d', strtotime($vApp['AppointmentDate'])) ?></strong></td>
                                                     <td><?= htmlspecialchars($vApp['PetName']) ?></td>
+                                                    <td><?= htmlspecialchars($vApp['VetName']) ?></td>
                                                     <td>
                                                         <?php 
                                                             $st = $vApp['status'] ?? 'Pending';
                                                             $cls = $st == 'Accepted' ? 'success' : ($st == 'Rejected' ? 'danger' : 'warning');
                                                         ?>
                                                         <span class="badge badge-<?= $cls ?>"><?= $st ?></span>
+                                                    </td>
+                                                    <td>
+
                                                     </td>
                                                     <td>
                                                         <a href="<?= ROOT ?>/petowner/deleteVetAppointment/<?= $vApp['AppointmentID'] ?>" 

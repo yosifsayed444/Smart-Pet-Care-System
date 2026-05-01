@@ -115,6 +115,25 @@ class PetOwnerController extends Controller
         $this->view('PetOwner/dashboard', $data);
     }
 
+    public function dashboard()
+    {
+        $this->index();
+    }
+
+    public function appointments()
+    {
+        checkRole(['Owner']);
+        $ownerId = $_SESSION['id'];
+
+        $bookingModel = new Booking();
+        $appModel = new Appointment();
+
+        $data['bookings'] = $bookingModel->getByOwner($ownerId);
+        $data['vetAppointments'] = $appModel->getByOwner($ownerId);
+        
+        $this->view('PetOwner/appointments', $data);
+    }
+
     public function deleteAppointment($id)
     {
         checkRole(['Owner']);

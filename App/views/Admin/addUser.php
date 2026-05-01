@@ -120,9 +120,9 @@ Owner
 Admin
 </option>
 
-<option value="Veterinarian"
-<?= (($old['role'] ?? '') == 'Veterinarian') ? 'selected' : '' ?>>
-Veterinarian
+<option value="Vet"
+<?= (($old['role'] ?? '') == 'Vet') ? 'selected' : '' ?>>
+Vet
 </option>
 
 <option value="ServiceProvider"
@@ -146,4 +146,3 @@ Save User
 
 </div>
 
-<!-- <?php require __DIR__ . '/../layouts/footer.php'; ?> -->
