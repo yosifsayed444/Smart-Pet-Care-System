@@ -182,7 +182,7 @@
                     <p>It's quick and easy to get started.</p>
                 </div>
 
-                <form method="POST" action="<?php echo ROOT ?>/auth/register">
+                <form method="POST" action="<?php echo ROOT ?>/auth/register" novalidate>
                     <div class="form-grid">
                         <div class="form-group-premium">
                             <label>Username</label>

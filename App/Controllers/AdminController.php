@@ -560,7 +560,7 @@ class AdminController extends Controller
             
             
             $notifModel = new Notification();
-            $notifModel->sendNotification($_GET['approve'], "Your account has been verified! You can now use all features of PetCare.", "Verification");
+            $notifModel->sendNotification($_GET['approve'], "Your account has been verified!", "Verification");
             
             $_SESSION['success'] = "User verified successfully.";
             redirect('admin/verifyUsers');

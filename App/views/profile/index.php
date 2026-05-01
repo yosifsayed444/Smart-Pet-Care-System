@@ -218,16 +218,7 @@
                 ?>
                 <span class="role-badge <?= $roleClass ?>"><?= $role ?></span>
 
-                <div class="stat-mini-row">
-                    <div class="stat-mini">
-                        <span class="s-val">12</span>
-                        <span class="s-lab">Posts</span>
-                    </div>
-                    <div class="stat-mini">
-                        <span class="s-val">84</span>
-                        <span class="s-lab">Friends</span>
-                    </div>
-                </div>
+            
             </div>
 
             
@@ -259,11 +250,11 @@
                 <div class="info-grid">
                     <div class="info-item">
                         <label>Account Status</label>
-                        <span style="color: #27500A;">● Active</span>
+                        <span style="color: #27500A;"><?php echo $data['status'] ?? 'N/A'; ?></span>
                     </div>
                     <div class="info-item">
                         <label>Verification</label>
-                        <span>Verified Account ✅</span>
+                        <span><?php echo $data['is_verified'] == 1 ? 'Verified' : 'Not Verified'; ?></span>
                     </div>
                 </div>
 
