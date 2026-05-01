@@ -31,6 +31,33 @@
 }
 .nav-tabs .nav-link.active { border-bottom: 4px solid #007bff; color: #007bff; font-weight: 700; background: none; }
 .nav-tabs .nav-link { border: none; color: #777; transition: 0.3s; padding: 15px 25px; }
+
+
+
+
+form h3 {
+color: #1b652d;
+margin-bottom: 10px;
+}
+
+label {
+display: block;
+margin: 10px 0;
+font-size: 16px;
+cursor: pointer;
+}
+
+button {
+margin-top: 10px;
+padding: 12px 20px;
+background: #28a745;
+color: white;
+border: none;
+cursor: pointer;
+font-size: 16px;
+}
+
+
 </style>
 
 <section class="ftco-section bg-light">
@@ -88,6 +115,7 @@
                                                 <i class="fa fa-file-text-o text-success d-block fa-lg mb-1"></i><small>Prescriptions</small>
                                             </a>
                                         </div>
+                                
                                     </div>
                                 </div>
 
@@ -127,6 +155,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="lost-tab" data-toggle="tab" href="#lost-pane">Lost Pet Alerts 🚨</a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link" id="triage-tab" data-toggle="tab" href="#triage-pane">
+                                Triage 🤖
+                            </a>
                         </li>
                     </ul>
 
@@ -295,6 +329,47 @@
                                 <a href="<?= ROOT ?>/shop" class="btn btn-outline-dark btn-sm">Visit Shop</a>
                             </div>
                         </div>
+
+                        <div class="tab-pane fade" id="triage-pane">
+                            <div class="container">
+                                <h3>Vet Bot Triage System</h3>
+                                <form action="<?= ROOT ?>/petowner/triageResult" method="post" onsubmit="return validateForm()">
+
+                                    <h3>Select Symptoms</h3>
+
+                                    <select class="form-control" name="petId" required>
+                                        <option value="" disabled selected>Select Pet</option>
+                                        <?php foreach ($pets as $pet): ?>
+                                            <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    
+
+                                    <label>
+                                        <input type="checkbox" name="symptoms[]" value="tumor">
+                                        Tumor
+                                    </label>
+
+                                    <label>
+                                        <input type="checkbox" name="symptoms[]" value="aggressive">
+                                        Aggressive Behavior
+                                    </label>
+
+                                    <label>
+                                        <input type="checkbox" name="symptoms[]" value="vomiting">
+                                        Vomiting
+                                    </label>
+
+                                    <button type="submit">
+                                        Check
+                                    </button>
+
+                                </form>
+                            </div>
+                        </div>
+
+
+
                     </div>
                 </div>
             </div>

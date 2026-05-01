@@ -49,7 +49,7 @@
 <td><?php echo $row['role'] ?></td>
 
 <td>
-
+<?php if ($row['role'] != 'Admin'): ?>
 <a href="<?php echo ROOT ?>/admin/editUser/<?php echo $row['id'] ?>"
    class="btn btn-sm btn-warning">
 
@@ -64,7 +64,10 @@ Edit
 Delete
 
 </a>
-
+<?php endif; ?>
+<?php if ($row['role'] == 'Admin'): ?>
+<span class="text-muted">No Actions Available</span>
+<?php endif; ?>
 </td>
 
 </tr>
@@ -95,4 +98,3 @@ No Users Found
 
 </div>
 
-<!-- <?php require __DIR__ . '/../layouts/footer.php'; ?> -->

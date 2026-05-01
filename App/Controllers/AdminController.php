@@ -52,11 +52,7 @@ class AdminController extends Controller
         Middleware::requireRole('Admin');
 
         $user = new User();
-
-        $data['users'] = $user->query(
-            "SELECT * FROM users WHERE role != 'Admin'"
-        );
-
+        $data['users'] = $user->fetchAll();
         $this->view("admin/users", $data);
     }
     public function addUser()
@@ -482,9 +478,6 @@ class AdminController extends Controller
         $this->view("admin/appointments", $data);
     }
 
-    
-    public function manageRoles()
-    {}
     public function lostPetBroadcast()
     {
         Middleware::requireRole('Admin');

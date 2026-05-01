@@ -404,4 +404,30 @@ class PetOwnerController extends Controller
         
         $this->view('PetOwner/book_vet', $data);
     }
+
+
+
+public function triage()
+{
+    $this->view('PetOwner/triage');
+}
+
+public function triageResult()
+{
+    $symptoms = $_POST['symptoms'] ?? [];
+
+    $type = "General Vet";
+
+    if (in_array('tumor', $symptoms)) {
+        $type = "Oncologist";
+    }
+
+    if (in_array('aggressive', $symptoms)) {
+        $type = "Behavioral Specialist";
+    }
+
+    $this->view('PetOwner/triage_result', [
+        'type' => $type
+    ]);
+}
 }
