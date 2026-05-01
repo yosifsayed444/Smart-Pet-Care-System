@@ -144,7 +144,22 @@ class MedicalRecord
 
     public function getMedicalNotesByPet($petId)
     {
-        $query = "SELECT * FROM MedicalRecord WHERE PetID = :PetID ORDER BY RecordDate DESC";
+        $query = "SELECT mr.*, v.Name as VetName 
+                  FROM MedicalRecord mr 
+                  LEFT JOIN veterinarian v ON mr.VetID = v.VetID
+                  WHERE mr.PetID = :PetID 
+                  ORDER BY mr.RecordDate DESC";
+        return $this->query($query, ['PetID' => $petId]);
+    }
+
+    public function getLabResultsByPet($petId)
+    {
+        $query = "SELECT mr.*, v.Name as VetName 
+                  FROM MedicalRecord mr 
+                  LEFT JOIN veterinarian v ON mr.VetID = v.VetID
+                  WHERE mr.PetID = :PetID 
+                  AND (mr.LabFile IS NOT NULL OR mr.LabNotes IS NOT NULL) 
+                  ORDER BY mr.RecordDate DESC";
         return $this->query($query, ['PetID' => $petId]);
     }
 }

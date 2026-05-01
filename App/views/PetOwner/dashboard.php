@@ -105,17 +105,26 @@ font-size: 16px;
                                 <div class="bg-light p-3 rounded mb-3">
                                     <label class="small font-weight-bold text-uppercase text-primary d-block mb-2">Medical Center</label>
                                     <div class="row no-gutters text-center">
-                                        <div class="col-6 mb-2">
+                                        <div class="col-3 mb-2">
                                             <a href="<?= ROOT ?>/petowner/vaccinations/<?= $pet['PetID'] ?>" title="Vaccinations">
                                                 <i class="fa fa-shield text-info d-block fa-lg mb-1"></i><small>Vaccinations</small>
                                             </a>
                                         </div>
-                                        <div class="col-6 mb-2">
+                                        <div class="col-3 mb-2">
                                             <a href="<?= ROOT ?>/petowner/prescriptions/<?= $pet['PetID'] ?>" title="Prescriptions">
                                                 <i class="fa fa-file-text-o text-success d-block fa-lg mb-1"></i><small>Prescriptions</small>
                                             </a>
                                         </div>
-                                
+                                        <div class="col-3 mb-2">
+                                            <a href="<?= ROOT ?>/petowner/labResults/<?= $pet['PetID'] ?>" title="Lab Results">
+                                                <i class="fa fa-flask text-warning d-block fa-lg mb-1"></i><small>Lab Results</small>
+                                            </a>
+                                        </div>
+                                        <div class="col-3 mb-2">
+                                            <a href="<?= ROOT ?>/petowner/medicalNotes/<?= $pet['PetID'] ?>" title="Medical Notes">
+                                                <i class="fa fa-stethoscope text-danger d-block fa-lg mb-1"></i><small>Med Notes</small>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -160,6 +169,14 @@ font-size: 16px;
                         <li class="nav-item">
                             <a class="nav-link" id="triage-tab" data-toggle="tab" href="#triage-pane">
                                 Triage 🤖
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger font-weight-bold" href="<?= ROOT ?>/petowner/incidents">
+                                <i class="fa fa-bell"></i> Incidents
+                                <?php if (!empty($openIncidentsCount)): ?>
+                                    <span class="badge badge-danger badge-pill ml-1"><?= $openIncidentsCount ?></span>
+                                <?php endif; ?>
                             </a>
                         </li>
                     </ul>
@@ -267,16 +284,35 @@ font-size: 16px;
                                                     <td><?= htmlspecialchars($booking['service_name'] ?? 'Booking') ?></td>
                                                     <td>
                                                         <?php 
-                                                            $st = $booking['status'] ?? 'Under Review';
-                                                            $cls = $st == 'Accepted' ? 'success' : ($st == 'Rejected' ? 'danger' : 'secondary');
+                                                            $status = $booking['status'] ?? 'Under Review';
+                                                            if (!empty($booking['CheckOutTime'])) $status = 'Completed';
+                                                            $cls = ($status == 'Accepted') ? 'success' : (($status == 'Completed') ? 'primary' : (($status == 'Rejected') ? 'danger' : 'secondary'));
                                                         ?>
-                                                        <span class="badge badge-<?= $cls ?>"><?= $st ?></span>
+                                                        <span class="badge badge-<?= $cls ?> d-block mb-1"><?= $status ?></span>
+                                                        <?php if (($status == 'Accepted' || $status == 'Completed') && $booking['EscrowStatus'] == 'Held'): ?>
+                                                            <span class="badge badge-warning text-white d-block mb-1"><i class="fa fa-lock"></i> Funds Held</span>
+                                                        <?php elseif (($status == 'Accepted' || $status == 'Completed') && $booking['EscrowStatus'] == 'Released'): ?>
+                                                            <span class="badge badge-success d-block mb-1"><i class="fa fa-unlock"></i> Funds Released</span>
+                                                        <?php endif; ?>
                                                     </td>
                                                     <td>
-                                                        <a href="<?= ROOT ?>/petowner/deleteAppointment/<?= $booking['BookingID'] ?>" 
-                                                           class="text-danger" onclick="return confirm('Cancel booking?')">
-                                                            <i class="fa fa-times-circle fa-lg"></i>
-                                                        </a>
+                                                        <?php if ($status == 'Accepted'): ?>
+                                                            <a href="<?= ROOT ?>/petowner/generateQR/<?= $booking['BookingID'] ?>" 
+                                                               class="btn btn-sm btn-outline-primary d-block mb-1">
+                                                                <i class="fa fa-qrcode"></i> View QR Code
+                                                            </a>
+                                                            <a href="<?= ROOT ?>/petowner/deleteAppointment/<?= $booking['BookingID'] ?>" 
+                                                               class="text-danger small" onclick="return confirm('Cancel booking?')">
+                                                                <i class="fa fa-times-circle"></i> Cancel
+                                                            </a>
+                                                        <?php elseif ($status == 'Under Review'): ?>
+                                                            <a href="<?= ROOT ?>/petowner/deleteAppointment/<?= $booking['BookingID'] ?>" 
+                                                               class="text-danger small" onclick="return confirm('Cancel request?')">
+                                                                <i class="fa fa-times-circle"></i> Cancel Request
+                                                            </a>
+                                                        <?php elseif ($status == 'Completed'): ?>
+                                                            <span class="text-muted small"><i class="fa fa-check-circle"></i> Service Finished</span>
+                                                        <?php endif; ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>

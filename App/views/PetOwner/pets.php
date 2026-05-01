@@ -2,11 +2,7 @@
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
 <style>
-.pets-hero {
-    background-image: url('<?= ROOT ?>/assets/images/bg_2.jpg');
-    height: 300px !important;
-    min-height: 300px;
-}
+
 .pet-card {
     background: #fff;
     border-radius: 14px;
@@ -33,20 +29,7 @@
 </style>
 
 
-<div class="hero-wrap js-fullheight pets-hero" data-stellar-background-ratio="0.5">
-  <div class="overlay"></div>
-  <div class="container">
-    <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" style="height:300px !important;">
-      <div class="col-md-11 ftco-animate text-center">
-        <h1 class="mb-4">My Pets 🐾</h1>
-        <p class="breadcrumbs">
-          <span class="mr-2"><a href="<?= ROOT ?>/">Home <i class="ion-ios-arrow-forward"></i></a></span>
-          <span>My Pets</span>
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <section class="ftco-section bg-light">
   <div class="container">
@@ -182,7 +165,17 @@
                       </div>
                       <div class="col-3">
                         <a href="<?= ROOT ?>/petowner/prescriptions/<?= $pet['PetID'] ?>" title="Prescriptions">
-                          <i class="fa fa-file-text-o fa-lg d-block mb-1 text-success"></i><small>Rx</small>
+                          <i class="fa fa-file-text-o fa-lg d-block mb-0 text-success"></i><small>Rx</small>
+                        </a>
+                      </div>
+                      <div class="col-3">
+                        <a href="<?= ROOT ?>/petowner/labResults/<?= $pet['PetID'] ?>" title="Lab Results">
+                          <i class="fa fa-flask fa-lg d-block mb-0 text-success"></i><small>Lab Results</small>
+                        </a>
+                      </div>
+                      <div class="col-3">
+                        <a href="<?= ROOT ?>/petowner/medicalNotes/<?= $pet['PetID'] ?>" title="Medical Notes">
+                          <i class="fa fa-stethoscope fa-lg d-block mb-1 text-success"></i><small>M.Notes</small>
                         </a>
                       </div>
                     </div>

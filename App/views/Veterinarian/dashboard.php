@@ -35,6 +35,8 @@
                     <a class="nav-link active" id="v-pills-appointments-tab" data-toggle="pill" href="#v-pills-appointments" role="tab"><i class="fa fa-calendar mr-2"></i> Appointments</a>
                     <a class="nav-link" id="v-pills-vaccinations-tab" data-toggle="pill" href="#v-pills-vaccinations" role="tab"><i class="fa fa-shield mr-2"></i> Vaccination Scheduler</a>
                     <a class="nav-link" id="v-pills-prescriptions-tab" data-toggle="pill" href="#v-pills-prescriptions" role="tab"><i class="fa fa-file-text-o mr-2"></i> Prescription Engine</a>
+                    <a class="nav-link" id="v-pills-medical-notes-tab" data-toggle="pill" href="#v-pills-medical-notes" role="tab"><i class="fa fa-stethoscope mr-2"></i> Medical Notes</a>
+                    <a class="nav-link" id="v-pills-lab-results-tab" data-toggle="pill" href="#v-pills-lab-results" role="tab"><i class="fa fa-flask mr-2"></i> Lab Results</a>
                     <a class="nav-link" id="v-pills-lost-tab" data-toggle="pill" href="#v-pills-lost" role="tab"><i class="fa fa-bullhorn mr-2"></i> Community Alerts 🚨</a>
                 </div>
             </div>
@@ -192,6 +194,80 @@
                     </div>
 
                     
+                    <div class="tab-pane fade" id="v-pills-medical-notes" role="tabpanel">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h3>Medical Notes</h3>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#addMedicalNoteModal">Add Medical Note</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Pet</th>
+                                        <th>Diagnosis</th>
+                                        <th>Behavior</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($medicalNotes)): ?>
+                                        <?php foreach ($medicalNotes as $note): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($note['RecordDate']) ?></td>
+                                                <td><?= htmlspecialchars($note['PetName']) ?></td>
+                                                <td><?= htmlspecialchars($note['Diagnosis']) ?></td>
+                                                <td><?= htmlspecialchars($note['Behavior'] ?? 'N/A') ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr><td colspan="4" class="text-center py-3">No medical notes found.</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+                    <div class="tab-pane fade" id="v-pills-lab-results" role="tabpanel">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h3>Lab Results</h3>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#addLabResultModal">Upload Lab Result</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Pet</th>
+                                        <th>Diagnosis / Summary</th>
+                                        <th>File</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($labResults)): ?>
+                                        <?php foreach ($labResults as $lab): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($lab['RecordDate']) ?></td>
+                                                <td><?= htmlspecialchars($lab['PetName']) ?></td>
+                                                <td><?= htmlspecialchars($lab['Diagnosis']) ?></td>
+                                                <td>
+                                                    <?php if (!empty($lab['LabFile'])): ?>
+                                                        <a href="<?= ROOT ?>/uploads/lab_results/<?= htmlspecialchars($lab['LabFile']) ?>" target="_blank" class="btn btn-sm btn-outline-info">View File</a>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">No File</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr><td colspan="4" class="text-center py-3">No lab results found.</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
                     <div class="tab-pane fade" id="v-pills-lost" role="tabpanel">
                         <div class="alert alert-danger mb-4">
                             <strong><i class="fa fa-bullhorn mr-2"></i>Community Emergency:</strong> 
@@ -274,6 +350,51 @@
                 <div class="form-group"><label>Date</label><input type="date" name="date" class="form-control" value="<?= date('Y-m-d') ?>" required></div>
             </div>
             <div class="modal-footer"><button type="submit" class="btn btn-primary">Add</button></div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addMedicalNoteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="<?= ROOT ?>/vet/addMedicalNote" method="POST" class="modal-content">
+            <div class="modal-header"><h5>Add Medical Note</h5></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Pet</label>
+                    <select name="pet_id" class="form-control" required>
+                        <option value="">Select Pet</option>
+                        <?php foreach ($allPets as $pet): ?>
+                            <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?> (<?= htmlspecialchars($pet['OwnerName']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group"><label>Diagnosis / Note</label><textarea name="diagnosis" class="form-control" rows="3" required></textarea></div>
+                <div class="form-group"><label>Observed Behavior</label><input type="text" name="behavior" class="form-control" placeholder="e.g. Lethargic, Normal, Aggressive"></div>
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-info">Save Note</button></div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addLabResultModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="<?= ROOT ?>/vet/addLabResult" method="POST" enctype="multipart/form-data" class="modal-content">
+            <div class="modal-header"><h5>Upload Lab Result</h5></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Pet</label>
+                    <select name="pet_id" class="form-control" required>
+                        <option value="">Select Pet</option>
+                        <?php foreach ($allPets as $pet): ?>
+                            <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?> (<?= htmlspecialchars($pet['OwnerName']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group"><label>Diagnosis / Summary</label><input type="text" name="diagnosis" class="form-control" required></div>
+                <div class="form-group"><label>Detailed Notes (Optional)</label><textarea name="notes" class="form-control" rows="2"></textarea></div>
+                <div class="form-group"><label>Lab Result File (PDF/Image)</label><input type="file" name="lab_file" class="form-control-file" accept=".pdf,image/*"></div>
+            </div>
+            <div class="modal-footer"><button type="submit" class="btn btn-info">Upload Result</button></div>
         </form>
     </div>
 </div>

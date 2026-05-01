@@ -154,7 +154,8 @@ class ServiceProvider
     
     public function getRecentServices($limit = 4)
     {
-        $query = "SELECT s.*, p.Name as provider_name 
+        $query = "SELECT s.*, p.Name as provider_name, 
+                  (SELECT COUNT(*) FROM provider_certifications c WHERE c.ProviderID = s.provider_id AND c.Status = 'Verified') as is_verified
                   FROM provider_services s
                   LEFT JOIN serviceprovider p ON s.provider_id = p.ProviderID
                   ORDER BY s.id DESC
@@ -165,7 +166,8 @@ class ServiceProvider
     
     public function getAllServices()
     {
-        $query = "SELECT s.*, p.Name as provider_name 
+        $query = "SELECT s.*, p.Name as provider_name,
+                  (SELECT COUNT(*) FROM provider_certifications c WHERE c.ProviderID = s.provider_id AND c.Status = 'Verified') as is_verified
                   FROM provider_services s
                   LEFT JOIN serviceprovider p ON s.provider_id = p.ProviderID
                   ORDER BY s.id DESC";
@@ -174,7 +176,8 @@ class ServiceProvider
 
     public function getServiceById($id)
     {
-        $query = "SELECT s.*, p.Name as provider_name 
+        $query = "SELECT s.*, p.Name as provider_name,
+                  (SELECT COUNT(*) FROM provider_certifications c WHERE c.ProviderID = s.provider_id AND c.Status = 'Verified') as is_verified
                   FROM provider_services s
                   LEFT JOIN serviceprovider p ON s.provider_id = p.ProviderID
                   WHERE s.id = :id";

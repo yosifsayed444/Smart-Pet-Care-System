@@ -245,7 +245,75 @@ class VetController extends Controller
         redirect('vet/dashboard');
     }
 
-    
+    /* ── Medical Notes & Lab Results ── */
+    public function addMedicalNote()
+    {
+        Middleware::requireRole('Vet');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $petId = trim($_POST['pet_id'] ?? '');
+            $diagnosis = $this->clean($_POST['diagnosis'] ?? '');
+            $behavior = $this->clean($_POST['behavior'] ?? '');
+            
+            if (empty($petId) || empty($diagnosis)) {
+                $_SESSION['error'] = "Pet and Diagnosis are required.";
+            } else {
+                $medModel = new MedicalRecord();
+                $medModel->addRecord([
+                    'PetID' => $petId,
+                    'VetID' => $this->getVetId(),
+                    'Diagnosis' => $diagnosis,
+                    'Behavior' => $behavior,
+                    'RecordDate' => date('Y-m-d H:i:s')
+                ]);
+                $_SESSION['success'] = "Medical Note added successfully!";
+            }
+        }
+        redirect('vet/dashboard');
+    }
+
+    public function addLabResult()
+    {
+        Middleware::requireRole('Vet');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $petId = trim($_POST['pet_id'] ?? '');
+            $diagnosis = $this->clean($_POST['diagnosis'] ?? '');
+            $notes = $this->clean($_POST['notes'] ?? '');
+            
+            if (empty($petId) || empty($diagnosis)) {
+                $_SESSION['error'] = "Pet and Diagnosis/Summary are required.";
+                redirect('vet/dashboard');
+            }
+            
+            $data = [
+                'PetID' => $petId,
+                'VetID' => $this->getVetId(),
+                'Diagnosis' => $diagnosis,
+                'LabNotes' => $notes,
+                'RecordDate' => date('Y-m-d H:i:s')
+            ];
+
+            if (!empty($_FILES['lab_file']['name'])) {
+                $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+                if (in_array($_FILES['lab_file']['type'], $allowedTypes)) {
+                    $folder = "uploads/lab_results/";
+                    if (!file_exists($folder)) mkdir($folder, 0777, true);
+                    $ext = pathinfo($_FILES['lab_file']['name'], PATHINFO_EXTENSION);
+                    $filename = "lab_" . uniqid() . "." . $ext;
+                    if (move_uploaded_file($_FILES['lab_file']['tmp_name'], $folder . $filename)) {
+                        $data['LabFile'] = $filename;
+                    }
+                } else {
+                    $_SESSION['error'] = "Invalid file type. Only PDF and images are allowed.";
+                    redirect('vet/dashboard');
+                }
+            }
+
+            $medModel = new MedicalRecord();
+            $medModel->addRecord($data);
+            $_SESSION['success'] = "Lab Result added successfully!";
+        }
+        redirect('vet/dashboard');
+    }
 
     public function book()        { $this->view('Veterinarian/book'); }
     public function appointments(){ Middleware::requireRole('Vet'); $this->dashboard(); }

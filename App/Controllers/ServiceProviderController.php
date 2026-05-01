@@ -297,6 +297,9 @@ class ServiceProviderController extends Controller
         $data['service'] = $service;
         $data['pets'] = [];
         $data['availability'] = $providerModel->getAvailability($service['provider_id']);
+        
+        $certModel = new Certification();
+        $data['certifications'] = $certModel->getByProvider($service['provider_id']);
 
         if (isset($_SESSION['id'])) {
             $data['pets'] = $petModel->getPetsByOwner($_SESSION['id']);
@@ -393,4 +396,186 @@ class ServiceProviderController extends Controller
 
         $this->view('ServiceProvider/book', $data);
     }
+    public function certifications()
+    {
+        Middleware::requireRole('ServiceProvider');
+        $certModel = new Certification();
+        $data['certifications'] = $certModel->getByProvider($_SESSION['id']);
+        $this->view('ServiceProvider/certifications', $data);
+    }
+
+    public function uploadCertification()
+    {
+        Middleware::requireRole('ServiceProvider');
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $certName = trim($_POST['cert_name'] ?? '');
+            
+            if (empty($certName)) {
+                $_SESSION['error'] = "Certification name is required.";
+                redirect('ServiceProvider/certifications');
+            }
+
+            if (!empty($_FILES['cert_file']['name'])) {
+                $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+                if (!in_array($_FILES['cert_file']['type'], $allowedTypes)) {
+                    $_SESSION['error'] = "File must be PDF, JPG, PNG, or WebP.";
+                } elseif ($_FILES['cert_file']['size'] > 5 * 1024 * 1024) {
+                    $_SESSION['error'] = "File size must not exceed 5MB.";
+                } else {
+                    $folder = "uploads/certifications/";
+                    if (!file_exists($folder)) {
+                        mkdir($folder, 0777, true);
+                    }
+                    $ext = pathinfo($_FILES['cert_file']['name'], PATHINFO_EXTENSION);
+                    $filename = time() . "_" . uniqid() . "." . $ext;
+                    if (move_uploaded_file($_FILES['cert_file']['tmp_name'], $folder . $filename)) {
+                        $certModel = new Certification();
+                        $certModel->insert([
+                            'ProviderID' => $_SESSION['id'],
+                            'CertName' => htmlspecialchars($certName),
+                            'FilePath' => $filename,
+                            'Status' => 'Pending'
+                        ]);
+                        $_SESSION['success'] = "Certification uploaded and is pending verification.";
+                    } else {
+                        $_SESSION['error'] = "Failed to upload file.";
+                    }
+                }
+            } else {
+                $_SESSION['error'] = "Please select a file to upload.";
+            }
+        }
+        redirect('ServiceProvider/certifications');
+    }
+
+    
+    public function reportIncident($bookingId)
+    {
+        Middleware::requireRole('ServiceProvider');
+        $bookingModel = new Booking();
+        $booking = $bookingModel->first(['BookingID' => $bookingId]);
+
+        if (!$booking || $booking['ProviderID'] != $_SESSION['id']) {
+            redirect('ServiceProvider/bookings');
+        }
+
+        $petModel = new Pet();
+        $data['booking'] = $booking;
+        $data['pet'] = $petModel->getPetById($booking['PetID']);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $severity = $_POST['severity'] ?? 'Low';
+            $description = trim($_POST['description'] ?? '');
+
+            if (empty($description)) {
+                $data['error'] = "Description is required.";
+            } else {
+                $incidentModel = new Incident();
+                $incidentModel->insert([
+                    'BookingID' => $bookingId,
+                    'SitterID' => $_SESSION['id'],
+                    'OwnerID' => $booking['OwnerID'],
+                    'PetID' => $booking['PetID'],
+                    'Severity' => $severity,
+                    'Description' => htmlspecialchars($description),
+                    'Status' => 'Open'
+                ]);
+
+                
+                $notifModel = new Notification();
+                $notifModel->sendNotification($booking['OwnerID'], "URGENT: An incident has been reported for your pet during booking #$bookingId.", "System");
+
+                $_SESSION['success'] = "Incident reported successfully.";
+                redirect('ServiceProvider/bookings');
+            }
+        }
+
+        $this->view('ServiceProvider/report_incident', $data);
+    }
+
+    
+    public function scanQR($bookingId)
+    {
+        Middleware::requireRole('ServiceProvider');
+        $bookingModel = new Booking();
+        $booking = $bookingModel->first(['BookingID' => $bookingId]);
+
+        if (!$booking || $booking['ProviderID'] != $_SESSION['id'] || $booking['status'] != 'Accepted') {
+            $_SESSION['error'] = "Invalid booking for QR verification.";
+            redirect('ServiceProvider/bookings');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $token = trim($_POST['token'] ?? '');
+            
+            if (empty($token)) {
+                $data['error'] = "Verification code is required.";
+            } elseif ($token !== $booking['QRToken']) {
+                $data['error'] = "Invalid verification code. Please check with the pet owner.";
+            } else {
+                
+                if (empty($booking['CheckInTime'])) {
+                    $bookingModel->updateByBookingId($bookingId, ['CheckInTime' => date('Y-m-d H:i:s')]);
+                    $_SESSION['success'] = "Check-in successful!";
+                } elseif (empty($booking['CheckOutTime'])) {
+                    $bookingModel->updateByBookingId($bookingId, [
+                        'CheckOutTime' => date('Y-m-d H:i:s'),
+                        'status' => 'Completed'
+                    ]);
+                    $_SESSION['success'] = "Check-out successful! Service marked as Completed.";
+                } else {
+                    $_SESSION['error'] = "Both Check-in and Check-out have already been completed.";
+                }
+                redirect('ServiceProvider/bookings');
+            }
+        }
+
+        $data['booking'] = $booking;
+        $this->view('ServiceProvider/scan_qr', $data);
+    }
+
+
+public function escrows()
+{
+    Middleware::requireRole('ServiceProvider');
+
+    $bookingModel = new Booking();
+    $provider_id = $_SESSION['id'];
+
+    $data['bookings'] = $bookingModel->getForEscrow($provider_id);
+    $this->view('ServiceProvider/escrows', $data);
+}
+
+
+public function releaseFunds($bookingId)
+{
+    Middleware::requireRole('ServiceProvider');
+    $bookingModel = new Booking();
+    $booking = $bookingModel->first(['BookingID' => $bookingId]);
+
+    if (!$booking || $booking['ProviderID'] != $_SESSION['id'] || $booking['status'] != 'Accepted') {
+        $_SESSION['error'] = "Invalid booking for fund release.";
+        redirect('ServiceProvider/escrows');
+    }
+
+    if ($booking['EscrowStatus'] == 'Released') {
+        $_SESSION['error'] = "Funds have already been released for this booking.";
+        redirect('ServiceProvider/escrows');
+    }
+
+    if (empty($booking['CheckOutTime'])) {
+        $_SESSION['error'] = "You must complete the service and get owner confirmation (scan QR) before releasing funds.";
+        redirect('ServiceProvider/escrows');
+    }
+
+    $success = $bookingModel->releaseFunds($bookingId);
+
+    if ($success) {
+        $_SESSION['success'] = "Funds released successfully!";
+    } else {
+        $_SESSION['error'] = "Failed to release funds. Please contact support.";
+    }
+
+    redirect('ServiceProvider/escrows');
+}
 }

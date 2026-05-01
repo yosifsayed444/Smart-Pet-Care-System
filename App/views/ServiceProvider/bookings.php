@@ -45,6 +45,7 @@
                                                 $status = $booking['status'] ?? 'Under Review';
                                                 $badgeClass = 'badge-secondary';
                                                 if ($status == 'Accepted') $badgeClass = 'badge-success';
+                                                if ($status == 'Completed') $badgeClass = 'badge-primary';
                                                 if ($status == 'Rejected') $badgeClass = 'badge-danger';
                                             ?>
                                             <span class="badge <?= $badgeClass ?>"><?= $status ?></span>
@@ -53,6 +54,14 @@
                                             <?php if ($status == 'Under Review'): ?>
                                                 <a href="<?= ROOT ?>/ServiceProvider/updateBookingStatus/<?= $booking['BookingID'] ?>/Accepted" class="btn btn-success btn-sm">Accept ✅</a>
                                                 <a href="<?= ROOT ?>/ServiceProvider/updateBookingStatus/<?= $booking['BookingID'] ?>/Rejected" class="btn btn-danger btn-sm">Reject ❌</a>
+                                            <?php elseif ($status == 'Accepted'): ?>
+                                                <span class="text-muted small d-block mb-1">Decided</span>
+                                                <?php if (empty($booking['CheckOutTime'])): ?>
+                                                    <a href="<?= ROOT ?>/ServiceProvider/scanQR/<?= $booking['BookingID'] ?>" class="btn btn-outline-info btn-sm d-block mb-1" title="Verify Check-in/Check-out code"><i class="fa fa-qrcode"></i> Scan Code</a>
+                                                <?php else: ?>
+                                                    <span class="badge badge-success d-block mb-1"><i class="fa fa-check"></i> Completed</span>
+                                                <?php endif; ?>
+                                                <a href="<?= ROOT ?>/ServiceProvider/reportIncident/<?= $booking['BookingID'] ?>" class="btn btn-outline-danger btn-sm" title="Report an emergency or issue"><i class="fa fa-exclamation-triangle"></i> Report Incident</a>
                                             <?php else: ?>
                                                 <span class="text-muted small">Decided</span>
                                             <?php endif; ?>

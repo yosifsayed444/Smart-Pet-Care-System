@@ -47,6 +47,27 @@
                         <p class="text-muted small">No available slots listed. Please contact the provider.</p>
                     <?php endif; ?>
                 </div>
+
+                <!-- Certifications Section -->
+                <div class="card shadow-sm p-4 mt-4">
+                    <h5 class="mb-3 text-primary"><i class="fa fa-certificate mr-2"></i>Certifications</h5>
+                    <?php 
+                        $verifiedCerts = array_filter($certifications ?? [], function($c) { return $c['Status'] == 'Verified'; });
+                    ?>
+                    <?php if (!empty($verifiedCerts)): ?>
+                        <ul class="list-unstyled small">
+                            <?php foreach ($verifiedCerts as $cert): ?>
+                                <li class="mb-2">
+                                    <i class="fa fa-check-circle text-primary mr-1"></i>
+                                    <strong><?= htmlspecialchars($cert['CertName']) ?></strong>
+                                    <a href="<?= ROOT ?>/uploads/certifications/<?= htmlspecialchars($cert['FilePath']) ?>" target="_blank" class="text-primary ml-2"><i class="fa fa-external-link"></i></a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="text-muted small">No verified certifications found for this provider.</p>
+                    <?php endif; ?>
+                </div>
             </div>
 
             

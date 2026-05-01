@@ -14,7 +14,12 @@ class Booking
         'status',
         'BookingDate',
         'StartTime',
-        'EndTime'
+        'EndTime',
+        'EscrowStatus',
+        'EscrowAmount',
+        'CheckInTime',
+        'CheckOutTime',
+        'QRToken'
     ];
 
     public function getByProvider($provider_id)
@@ -98,5 +103,22 @@ class Booking
                   LEFT JOIN serviceprovider s ON b.ProviderID = s.ProviderID
                   ORDER BY b.BookingDate DESC";
         return $this->query($query);
+    }
+
+    public function getForEscrow($provider_id)
+    {
+        $query = "SELECT b.*, p.PetName, u.username as owner_name 
+                  FROM booking b
+                  LEFT JOIN pet p ON b.PetID = p.PetID
+                  LEFT JOIN users u ON b.OwnerID = u.id
+                  WHERE b.ProviderID = :provider_id AND b.EscrowStatus IS NOT NULL
+                  ORDER BY b.BookingDate DESC";
+        return $this->query($query, ['provider_id' => $provider_id]);
+    }
+
+    public function releaseFunds($id)
+    {
+        $query = "UPDATE $this->table SET EscrowStatus = 'Released' WHERE BookingID = :id";
+        return $this->query($query, ['id' => $id]);
     }
 }

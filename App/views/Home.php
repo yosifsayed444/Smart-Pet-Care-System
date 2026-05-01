@@ -497,7 +497,12 @@
               <div class="premium-card-body">
                 <span style="font-size: 11px; font-weight: 700; color: #10b981; text-transform: uppercase;"><?= $service['tier'] ?> Service</span>
                 <h3 class="product-name" style="margin-top: 4px;"><?php echo htmlspecialchars($service['name']); ?></h3>
-                <p class="product-meta">Provider: <strong><?php echo htmlspecialchars($service['provider_name']); ?></strong></p>
+                <p class="product-meta">
+                    Provider: <strong><?php echo htmlspecialchars($service['provider_name']); ?></strong>
+                    <?php if (!empty($service['is_verified'])): ?>
+                        <i class="fa fa-check-circle text-primary" title="Verified Professional"></i>
+                    <?php endif; ?>
+                </p>
                 <div class="product-footer">
                   <div class="product-price">$<?php echo htmlspecialchars($service['price']); ?></div>
                   <a href="<?= ROOT ?>/ServiceProvider/book/<?= $service['id'] ?>" class="btn-pill btn-blue">

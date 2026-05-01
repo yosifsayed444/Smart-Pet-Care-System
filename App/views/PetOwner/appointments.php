@@ -138,6 +138,7 @@
                                                 $status = $booking['status'] ?? 'Under Review';
                                                 $badgeClass = 'badge-secondary';
                                                 if ($status == 'Accepted') $badgeClass = 'badge-success';
+                                                if ($status == 'Completed') $badgeClass = 'badge-primary';
                                                 if ($status == 'Rejected') $badgeClass = 'badge-danger';
                                             ?>
                                             <span class="badge <?= $badgeClass ?>"><?= $status ?></span>

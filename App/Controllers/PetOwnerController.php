@@ -112,6 +112,9 @@ class PetOwnerController extends Controller
         $data['orders'] = $orderModel->getByUser($ownerId);
         $data['lostPets'] = $lostPetModel->getAllWithDetails();
         
+        $incidentModel = new Incident();
+        $data['openIncidentsCount'] = $incidentModel->getOpenByOwner($ownerId);
+        
         $this->view('PetOwner/dashboard', $data);
     }
 
@@ -341,6 +344,46 @@ class PetOwnerController extends Controller
     }
 
     
+
+    public function labResults($petId)
+    {
+        checkRole(['Owner']);
+
+        $petModel = new Pet();
+        $pet = $petModel->getPetById($petId);
+        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
+            $_SESSION['error'] = "Unauthorized access.";
+            redirect('petowner/pets');
+        }
+
+        $medical = new MedicalRecord();
+        $data['labResults'] = $medical->getLabResultsByPet($petId);
+        $data['pet'] = $pet;
+
+        $this->view('PetOwner/lab_results', $data);
+    }
+
+    
+
+    public function medicalNotes($petId)
+    {
+        checkRole(['Owner']);
+
+        $petModel = new Pet();
+        $pet = $petModel->getPetById($petId);
+        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
+            $_SESSION['error'] = "Unauthorized access.";
+            redirect('petowner/pets');
+        }
+
+        $medical = new MedicalRecord();
+        $data['notes'] = $medical->getMedicalNotesByPet($petId);
+        $data['pet'] = $pet;
+
+        $this->view('PetOwner/medical_notes', $data);
+    }
+
+    
     public function bookVet()
     {
         checkRole(['Owner']);
@@ -430,4 +473,56 @@ public function triageResult()
         'type' => $type
     ]);
 }
+
+    
+    public function incidents()
+    {
+        checkRole(['Owner']);
+        $incidentModel = new Incident();
+        $data['incidents'] = $incidentModel->getByOwner($_SESSION['id']);
+        
+        
+        $this->view('PetOwner/incidents', $data);
+    }
+    public function confirmCompletion($bookingId)
+    {
+        checkRole(['Owner']);
+        $bookingModel = new Booking();
+        $booking = $bookingModel->first(['BookingID' => $bookingId]);
+
+        if ($booking && $booking['OwnerID'] == $_SESSION['id']) {
+            if ($booking['EscrowStatus'] == 'Held') {
+                $bookingModel->updateByBookingId($bookingId, ['EscrowStatus' => 'Released']);
+                $_SESSION['success'] = "Service confirmed! Payment has been released from escrow.";
+            } else {
+                $_SESSION['error'] = "Escrow is already " . $booking['EscrowStatus'] . ".";
+            }
+        } else {
+            $_SESSION['error'] = "Unauthorized or booking not found.";
+        }
+
+        redirect('petowner/index');
+    }
+
+    
+    public function generateQR($bookingId)
+    {
+        checkRole(['Owner']);
+        $bookingModel = new Booking();
+        $booking = $bookingModel->first(['BookingID' => $bookingId]);
+
+        if ($booking && $booking['OwnerID'] == $_SESSION['id'] && $booking['status'] == 'Accepted') {
+            if (empty($booking['QRToken'])) {
+                
+                $token = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
+                $bookingModel->updateByBookingId($bookingId, ['QRToken' => $token]);
+                $booking['QRToken'] = $token;
+            }
+            $data['booking'] = $booking;
+            $this->view('PetOwner/booking_qr', $data);
+        } else {
+            $_SESSION['error'] = "Booking not found or not accepted yet.";
+            redirect('petowner/index');
+        }
+    }
 }

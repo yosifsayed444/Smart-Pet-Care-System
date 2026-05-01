@@ -51,6 +51,9 @@
                                 <h4 class="card-title"><?php echo htmlspecialchars($service['name']); ?></h4>
                                 <p class="text-muted mb-1">
                                     <strong>Provider:</strong> <?php echo htmlspecialchars($service['provider_name']); ?>
+                                    <?php if (!empty($service['is_verified'])): ?>
+                                        <i class="fa fa-check-circle text-primary" title="Verified Professional"></i>
+                                    <?php endif; ?>
                                 </p>
                                 <span class="badge badge-info px-3 py-2 mb-3"><?php echo htmlspecialchars($service['tier']); ?></span>
                                 <h5 class="text-primary font-weight-bold">$<?php echo number_format($service['price'], 2); ?></h5>

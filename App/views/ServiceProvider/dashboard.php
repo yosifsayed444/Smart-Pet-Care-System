@@ -289,6 +289,21 @@
     
     <div class="row">
         <div class="col-md-12 mb-4">
+            <div class="card shadow-sm border-primary">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fa fa-certificate mr-2"></i>Professional Certifications</h5>
+                    <a href="<?= ROOT ?>/ServiceProvider/certifications" class="btn btn-sm btn-light">Manage Certifications</a>
+                </div>
+                <div class="card-body">
+                    <p class="mb-0 text-muted">Upload and manage your professional certifications (e.g. Pet First Aid, Training Certificates) to earn a Verified badge on your profile and build trust with pet owners.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        <div class="col-md-12 mb-4">
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="fa fa-list mr-2"></i>Recent Service Bookings</h5>
@@ -492,7 +507,7 @@
     const avStart = document.getElementById('avStart');
     const avEnd   = document.getElementById('avEnd');
 
-    // Set min date to today
+    
     avDate.setAttribute('min', todayStr());
 
     avDate.addEventListener('blur', () => {
@@ -504,7 +519,7 @@
     avStart.addEventListener('blur', () => {
         if (!avStart.value) showErr(avStart, 'avStartError', 'Start time is required.');
         else clearErr(avStart, 'avStartError');
-        // Re-check end time if both filled
+        
         if (avEnd.value && avStart.value >= avEnd.value)
             showErr(avEnd, 'avEndError', 'End time must be after start time.');
         else if (avEnd.value) clearErr(avEnd, 'avEndError');

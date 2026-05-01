@@ -94,16 +94,31 @@ class AdminController extends Controller
             $user->insert($insertData);
 
             
-            if ($insertData['role'] === 'ServiceProvider') {
-                $lastRow = $user->query("SELECT id FROM users WHERE email = :email LIMIT 1", ['email' => $insertData['email']]);
-                if (!empty($lastRow)) {
-                    $lastId = $lastRow[0]['id'];
-                    $user->query("INSERT INTO serviceprovider (ProviderID, Name, ServiceType) VALUES (:id, :name, :type)", [
-                        'id' => $lastId,
+            $lastRow = $user->query("SELECT id FROM users WHERE email = :email LIMIT 1", ['email' => $insertData['email']]);
+            $lastId = !empty($lastRow) ? $lastRow[0]['id'] : null;
+
+            
+            if ($insertData['role'] === 'ServiceProvider' && $lastId) {
+                $user->query("INSERT INTO serviceprovider (ProviderID, Name, ServiceType) VALUES (:id, :name, :type)", [
+                    'id' => $lastId,
+                    'name' => $insertData['username'],
+                    'type' => 'General'
+                ]);
+            }
+
+            
+            if ($insertData['role'] === 'Vet' && $lastId) {
+                $specialization = trim($_POST['specialization'] ?? 'General');
+                $licenseNumber  = trim($_POST['license_number'] ?? 'VET-' . $lastId);
+                $user->query(
+                    "INSERT IGNORE INTO veterinarian (VetID, Name, Specialization, LicenseNumber) VALUES (:id, :name, :spec, :lic)",
+                    [
+                        'id'   => $lastId,
                         'name' => $insertData['username'],
-                        'type' => 'General'
-                    ]);
-                }
+                        'spec' => !empty($specialization) ? $specialization : 'General',
+                        'lic'  => !empty($licenseNumber) ? $licenseNumber : 'VET-' . $lastId
+                    ]
+                );
             }
 
             $_SESSION['success'] =
@@ -153,6 +168,39 @@ class AdminController extends Controller
             ];
 
             $user->update($id, $updateData);
+
+            
+            if ($_POST['role'] === 'Vet') {
+                $specialization = trim($_POST['specialization'] ?? 'General');
+                $licenseNumber  = trim($_POST['license_number'] ?? 'VET-' . $id);
+
+                $vetModel = new Veterinarian();
+                $existingVet = $vetModel->getById($id);
+
+                if ($existingVet) {
+                    
+                    $user->query(
+                        "UPDATE veterinarian SET Name = :name, Specialization = :spec, LicenseNumber = :lic WHERE VetID = :id",
+                        [
+                            'id'   => $id,
+                            'name' => $updateData['username'],
+                            'spec' => !empty($specialization) ? $specialization : 'General',
+                            'lic'  => !empty($licenseNumber) ? $licenseNumber : 'VET-' . $id
+                        ]
+                    );
+                } else {
+                    
+                    $user->query(
+                        "INSERT IGNORE INTO veterinarian (VetID, Name, Specialization, LicenseNumber) VALUES (:id, :name, :spec, :lic)",
+                        [
+                            'id'   => $id,
+                            'name' => $updateData['username'],
+                            'spec' => !empty($specialization) ? $specialization : 'General',
+                            'lic'  => !empty($licenseNumber) ? $licenseNumber : 'VET-' . $id
+                        ]
+                    );
+                }
+            }
 
             $_SESSION['success'] =
                 "User Updated Successfully ✅";
@@ -727,5 +775,62 @@ class AdminController extends Controller
         
         $pdf->Output('D', $filename);
         exit;
+    }
+
+    
+    public function certifications()
+    {
+        Middleware::requireRole('Admin');
+        $certModel = new Certification();
+        $data['certifications'] = $certModel->getPending();
+        $data['username'] = $_SESSION['username'] ?? 'Admin';
+        $this->view('admin/certifications', $data);
+    }
+
+    public function verifyCertification($id)
+    {
+        Middleware::requireRole('Admin');
+        if (isset($_GET['status']) && in_array($_GET['status'], ['Verified', 'Rejected'])) {
+            $status = $_GET['status'];
+            $certModel = new Certification();
+            $cert = $certModel->first(['CertID' => $id]);
+            
+            if ($cert) {
+                $certModel->updateStatus($id, $status);
+                
+                $notifModel = new Notification();
+                $msg = "Your certification '" . $cert['CertName'] . "' has been " . $status . ".";
+                $notifModel->sendNotification($cert['ProviderID'], $msg, "System");
+                
+                $_SESSION['success'] = "Certification marked as $status.";
+            }
+        }
+        redirect('admin/certifications');
+    }
+
+    
+    public function escrowManagement()
+    {
+        Middleware::requireRole('Admin');
+        $bookingModel = new Booking();
+        $data['bookings'] = $bookingModel->getAllBookings(); 
+        $data['username'] = $_SESSION['username'] ?? 'Admin';
+        $this->view('admin/escrow', $data);
+    }
+
+    public function forceEscrowAction($bookingId)
+    {
+        Middleware::requireRole('Admin');
+        if (isset($_GET['action']) && in_array($_GET['action'], ['Released', 'Refunded'])) {
+            $action = $_GET['action'];
+            $bookingModel = new Booking();
+            $booking = $bookingModel->first(['BookingID' => $bookingId]);
+            
+            if ($booking) {
+                $bookingModel->updateByBookingId($bookingId, ['EscrowStatus' => $action]);
+                $_SESSION['success'] = "Escrow successfully marked as $action.";
+            }
+        }
+        redirect('admin/escrowManagement');
     }
 }
