@@ -481,11 +481,25 @@ class ServiceProviderController extends Controller
                     'Status' => 'Open'
                 ]);
 
-                
+                // If severe incident, force terminate the booking (ignore QR flow)
+                if ($severity === 'High' || $severity === 'Critical') {
+                    $bookingModel->updateByBookingId($bookingId, [
+                        'status' => 'Completed',
+                        'CheckOutTime' => date('Y-m-d H:i:s')
+                    ]);
+                    $notifMsg = "URGENT: A serious incident has been reported for your pet. Booking #$bookingId has been automatically terminated for safety. Please check your dashboard immediately.";
+                } else {
+                    $notifMsg = "URGENT: An incident has been reported for your pet during booking #$bookingId.";
+                }
+
+                // Send notification
                 $notifModel = new Notification();
-                $notifModel->sendNotification($booking['OwnerID'], "URGENT: An incident has been reported for your pet during booking #$bookingId.", "System");
+                $notifModel->sendNotification($booking['OwnerID'], $notifMsg, "System");
 
                 $_SESSION['success'] = "Incident reported successfully.";
+                if ($severity === 'High' || $severity === 'Critical') {
+                    $_SESSION['success'] .= " Booking has been terminated due to severity.";
+                }
                 redirect('ServiceProvider/bookings');
             }
         }

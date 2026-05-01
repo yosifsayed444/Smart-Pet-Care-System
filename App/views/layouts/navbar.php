@@ -277,14 +277,26 @@
                         }
                     ?>
 
-                    <!-- Bell -->
-                    <li class="nav-item">
-                        <a href="<?= ROOT ?>/notifications" class="pcnav-bell">
+                    <!-- Bell & Incidents -->
+                    <li class="nav-item d-flex align-items-center" style="gap:6px;">
+                        <a href="<?= ROOT ?>/notifications" class="pcnav-bell" title="General Notifications">
                             <span class="fa fa-bell-o"></span>
                             <?php if ($unreadCount > 0): ?>
                                 <span class="pcnav-bell-dot"></span>
                             <?php endif; ?>
                         </a>
+                        
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Owner'): 
+                            $incidentModel = new Incident();
+                            $openIncidents = $incidentModel->getOpenByOwner($_SESSION['id']);
+                        ?>
+                            <?php if ($openIncidents > 0): ?>
+                                <a href="<?= ROOT ?>/petowner/incidents" class="pcnav-bell" style="background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.3); color: #f43f5e;" title="Urgent Incidents!">
+                                    <span class="fa fa-exclamation-triangle"></span>
+                                    <span class="pcnav-bell-dot" style="background: #fff; border: 2px solid #f43f5e;"></span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </li>
 
                     <!-- Cart -->
