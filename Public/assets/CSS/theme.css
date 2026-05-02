@@ -1,4 +1,5 @@
-/* Theme - Simple & Clean Redesign */
+
+
 
 :root {
     --chewy-blue: #128ced;
@@ -26,7 +27,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
-/* --- Buttons --- */
+
 .btn-chewy {
     display: inline-block;
     padding: 12px 24px;
@@ -82,7 +83,7 @@ h1, h2, h3, h4, h5, h6 {
     color: white !important;
 }
 
-/* --- Cards --- */
+
 .chewy-card {
     background: white;
     border: 1px solid var(--chewy-border);
@@ -98,7 +99,7 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Badges --- */
+
 .chewy-badge {
     padding: 4px 12px;
     border-radius: var(--chewy-radius-pill);
@@ -111,7 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 .chewy-badge-green { background: #dcfce7; color: #16a34a; }
 .chewy-badge-orange { background: #ffedd5; color: var(--chewy-orange); }
 
-/* --- Section Styling --- */
+
 .section-chewy {
     padding: 80px 0;
 }
@@ -137,7 +138,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
 }
 
-/* --- Form Controls --- */
+
 .chewy-input {
     border-radius: var(--chewy-radius);
     border: 1px solid var(--chewy-border);
@@ -152,7 +153,7 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 0 0 3px rgba(18, 140, 237, 0.1);
 }
 
-/* Overrides for existing premium classes to migrate easily */
+
 .premium-card {
     background: white !important;
     backdrop-filter: none !important;

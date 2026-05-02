@@ -13,6 +13,21 @@
     display: none;
 }
 
+.pf-brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    text-decoration: none !important;
+}
+
+.pf-brand-logo img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
 .pf-brand-name {
     font-size: 24px;
     font-weight: 800;
@@ -28,6 +43,25 @@
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 24px;
+}
+
+.pf-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.pf-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .pf-socials {
@@ -85,9 +119,34 @@
     text-decoration: underline;
 }
 
+.pf-contact-list {
+    list-style: none;
+    padding: 0;
+}
+
+.pf-contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.pf-contact-list li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pf-contact-list li a:hover {
+    color: white;
+}
+
 .pf-contact-icon {
     color: var(--chewy-blue);
-    margin-right: 10px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
 }
 
 .pf-divider {
@@ -104,15 +163,31 @@
 .pf-copyright {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+.pf-bottom-links {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .pf-bottom-links a {
     color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
-    margin-left: 20px;
     text-decoration: none;
 }
 
 .pf-bottom-links a:hover {
     color: white;
+}
+
+@media (max-width: 768px) {
+    .pf-bottom-links {
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
 }
