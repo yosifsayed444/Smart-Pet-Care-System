@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="Public/assets/images/logo.png" alt="Smart Pet Care Logo" width="120">
-</p>
+
 
 <h1 align="center">🐾 Smart Pet Care & Veterinary Management System</h1>
 
@@ -20,7 +18,6 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
 - [Features](#-features)
 - [Architecture](#-architecture)
 - [Tech Stack](#-tech-stack)
@@ -31,15 +28,6 @@
 - [Screenshots](#-screenshots)
 - [Contributors](#-contributors)
 
----
-
-## 🔍 Overview
-
-**Smart Pet Care** is a full-stack web application designed to digitize and streamline pet healthcare management. The platform serves four distinct user roles — **Pet Owners**, **Veterinarians**, **Service Providers**, and **Administrators** — each with a dedicated dashboard and tailored functionality.
-
-The system enables pet owners to manage their pets' health records, book veterinary appointments, hire pet care services, shop for pet products, and receive real-time notifications — all from a single unified platform.
-
----
 
 ## ✨ Features
 
