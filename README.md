@@ -1,79 +1,23 @@
 
 
-<h1 align="center">🐾 Smart Pet Care & Veterinary Management System</h1>
+<h1 align="center">Smart Pet Care & Veterinary Management System</h1>
 
 <p align="center">
   A comprehensive web-based platform connecting pet owners with veterinarians and service providers — built with a custom PHP MVC framework.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PHP-8.x-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
   <img src="https://img.shields.io/badge/Bootstrap-4.6-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap">
   <img src="https://img.shields.io/badge/XAMPP-Apache-FB7A24?style=for-the-badge&logo=xampp&logoColor=white" alt="XAMPP">
   <img src="https://img.shields.io/badge/Architecture-MVC-2ECC71?style=for-the-badge" alt="MVC">
 </p>
 
----
-
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Database Schema](#-database-schema)
-- [Installation](#-installation)
-- [Project Structure](#-project-structure)
-- [User Roles](#-user-roles)
-- [Screenshots](#-screenshots)
-- [Contributors](#-contributors)
 
 
-## ✨ Features
 
-### 🐕 Pet Owner Portal
-- **Pet Management** — Register pets with full profiles (breed, age, weight tracking, photos)
-- **Appointment Booking** — Book veterinary visits with date/time selection
-- **Medical Records** — View vaccination history, prescriptions, lab results, and medical notes
-- **Chronic Condition Tracking** — Monitor and log chronic conditions over time
-- **Weight Tracker** — Visual weight history with charts
-- **Pet Behavior Log** — Record and track behavioral observations
-- **AI Triage** — Smart symptom checker that recommends the right specialist
-- **Service Booking** — Book pet sitting, grooming, and other services with QR check-in/out
-- **Incident Alerts** — Receive emergency notifications from service providers
-- **Lost Pet Reports** — Report and track lost pets with community broadcasting
-- **Product Marketplace** — Browse and purchase pet food, supplies, and accessories
-- **Cart & Checkout** — Full shopping cart with order tracking
 
-### 🩺 Veterinarian Portal
-- **Dashboard** — Overview of upcoming appointments and patient stats
-- **Appointment Management** — Accept, reschedule, or cancel appointments
-- **Medical Records** — Create/edit vaccination records, prescriptions, and lab results
-- **Pet Travel Passport** — Generate official pet travel documents
-- **Digital Prescriptions** — Issue prescriptions linked to specific pets and owners
-
-### 🏢 Service Provider Portal
-- **Service Management** — Create and manage pet care services (sitting, grooming, training)
-- **Availability Scheduler** — Set available time slots for bookings
-- **Booking Management** — Accept or reject incoming booking requests
-- **QR Code Verification** — Scan QR codes for pet check-in and check-out
-- **Incident Reporting** — Report emergencies or issues during service
-- **Escrow System** — Funds held securely until service completion
-- **Certifications** — Upload and manage professional certifications
-- **Reviews & Ratings** — Receive feedback from pet owners
-
-### 🛡️ Admin Panel
-- **Dashboard** — System-wide analytics with user, order, and revenue stats
-- **User Management** — Add, edit, suspend, verify, and delete users across all roles
-- **Product Inventory** — Full CRUD operations for the marketplace catalog
-- **Order Management** — Track and manage all platform orders
-- **Service Oversight** — Monitor all registered services
-- **Appointment Monitoring** — View all platform appointments
-- **Escrow Management** — Force-release or refund held service payments
-- **Certification Review** — Approve or reject provider certifications
-- **Lost Pet Broadcasting** — Manage and broadcast lost pet alerts
-- **Notification System** — Broadcast messages to all platform users
-- **Reports & Analytics** — Sales reports, user reports, and appointment analytics
 
 ---
 
@@ -118,13 +62,10 @@ URLs map to controllers and methods automatically:
 
 | Layer | Technology |
 |-------|-----------|
-| **Backend** | PHP 8.x (custom MVC framework) |
+| **Backend** | PHP 8.5 (custom MVC framework) |
 | **Database** | MySQL 8.0 via PDO with prepared statements |
 | **Frontend** | HTML5, CSS3, JavaScript |
 | **CSS Framework** | Bootstrap 4.6 |
-| **Typography** | Google Fonts (Montserrat) |
-| **Icons** | Font Awesome 4.7, Flaticon |
-| **Animations** | Animate.css |
 | **Server** | Apache (XAMPP) with mod_rewrite |
 | **Security** | Password hashing (bcrypt), session-based auth, RBAC middleware, cache-control headers |
 
@@ -323,24 +264,7 @@ smart-pet-care-system/
 
 ---
 
-## 🖼️ Screenshots
 
-### Homepage
-> Premium landing page with hero section, featured products, professional services, testimonials, and pet gallery.
-
-### Admin Dashboard
-> Comprehensive analytics panel with user stats, revenue tracking, and quick-action cards for all management functions.
-
-### Pet Owner Dashboard
-> Glassmorphism-styled dashboard showing pet summary, upcoming appointments, recent activity, and quick navigation.
-
-### Veterinarian Dashboard
-> Clinical dashboard with appointment queue, patient records, and prescription management tools.
-
-### Service Provider Dashboard
-> Business dashboard with booking calendar, service management, escrow tracking, and certification uploads.
-
----
 
 ## 🔒 Security Features
 
@@ -352,22 +276,4 @@ smart-pet-care-system/
 - **XSS Protection** — `htmlspecialchars()` applied to all user-generated output
 - **Self-Deletion Guard** — Admins cannot delete their own accounts
 
----
 
-## 👨‍💻 Contributors
-
-| Name | GitHub |
-|------|--------|
-| Yosif Sayed | [@yosifsayed444](https://github.com/yosifsayed444) |
-
----
-
-## 📄 License
-
-This project was developed as part of a **Software Engineering** course (SE1). All rights reserved.
-
----
-
-<p align="center">
-  Made with ❤️ for pets everywhere
-</p>
