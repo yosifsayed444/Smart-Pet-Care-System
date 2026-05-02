@@ -11,23 +11,14 @@
             <?php endif; ?>
 
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">Send Mass Notification</div>
+                <div class="card-header bg-primary text-white">Broadcast System Message</div>
                 <div class="card-body">
-                    <form method="POST" novalidate>
+                    <form method="POST">
                         <div class="form-group mb-3">
-                            <label>Target Audience</label>
-                            <select name="role" class="form-control">
-                                <option value="All">All Users</option>
-                                <option value="Owner">Pet Owners</option>
-                                <option value="Vet">Veterinarians</option>
-                                <option value="Provider">Service Providers</option>
-                            </select>
+                            <label class="mb-2">Message to All Users</label>
+                            <textarea name="message" class="form-control" rows="5" placeholder="Write your announcement here. This will be sent to every user on the platform..." required></textarea>
                         </div>
-                        <div class="form-group mb-3">
-                            <label>Message Content</label>
-                            <textarea name="message" class="form-control" rows="4" placeholder="Enter your system-wide message here..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Send Escalated Notification</button>
+                        <button type="submit" class="btn btn-primary w-100">Broadcast to Everyone 📢</button>
                     </form>
                 </div>
             </div>

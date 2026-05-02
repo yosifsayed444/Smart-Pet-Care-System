@@ -1,11 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<style>
-    .nav-tabs .nav-link.active { border-bottom: 3px solid #007bff; color: #007bff; font-weight: 700; }
-    .nav-tabs .nav-link { border: none; color: #666; transition: 0.3s; }
-    .card { border-radius: 15px; border: none; }
-</style>
 
 <section class="container mt-5">
     <div class="row">

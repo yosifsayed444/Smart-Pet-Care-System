@@ -1,121 +1,10 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<style>
-:root {
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --premium-blue: #185FA5;
-    --premium-green: #2ecc71;
-    --premium-red: #e74c3c;
-    --soft-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
-}
-
-.dashboard-wrapper {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding-top: 40px;
-    padding-bottom: 60px;
-}
-
-.premium-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 24px;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--soft-shadow);
-    padding: 30px;
-    height: 100%;
-}
-
-.section-header {
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-/* Pet Quick Actions Grid */
-.medical-icon-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 16px;
-    background: #fff;
-    transition: all 0.2s;
-    border: 1px solid #f1f5f9;
-}
-.medical-icon-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    border-color: var(--premium-blue);
-}
-.medical-icon-btn i { font-size: 1.25rem; }
-.medical-icon-btn span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #64748b; }
-
-/* Custom Tabs */
-.nav-pills-custom .nav-link {
-    color: #64748b;
-    font-weight: 700;
-    padding: 12px 20px;
-    border-radius: 12px;
-    transition: all 0.2s;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.nav-pills-custom .nav-link.active {
-    background: var(--premium-blue) !important;
-    color: #fff !important;
-    box-shadow: 0 4px 12px rgba(24,95,165,0.3);
-}
-
-/* Status Badges */
-.stat-badge {
-    padding: 6px 12px;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-/* Table Style */
-.table-premium {
-    border-collapse: separate;
-    border-spacing: 0 8px;
-}
-.table-premium tr { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-.table-premium td { padding: 15px !important; vertical-align: middle !important; border: none !important; }
-.table-premium td:first-child { border-radius: 12px 0 0 12px; }
-.table-premium td:last-child { border-radius: 0 12px 12px 0; }
-
-.btn-glass {
-    background: rgba(255,255,255,0.5);
-    border: 1px solid rgba(255,255,255,0.8);
-    backdrop-filter: blur(5px);
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-weight: 600;
-    transition: 0.3s;
-}
-.btn-glass:hover { background: #fff; transform: translateY(-2px); }
-
-/* Pet Selection in Triage */
-.triage-card {
-    background: #f8fafc;
-    border: 2px dashed #e2e8f0;
-    border-radius: 20px;
-    padding: 25px;
-}
-</style>
 
 <div class="dashboard-wrapper">
     <div class="container-fluid px-md-5">
         
-        <!-- Top Statistics/Welcome -->
         <div class="row mb-5 align-items-center">
             <div class="col-md-8">
                 <h6 class="text-uppercase tracking-widest text-primary font-weight-bold mb-2">Pet Owner Dashboard</h6>
@@ -144,7 +33,6 @@
         <?php endif; ?>
 
         <div class="row">
-            <!-- Left Column: Pets Management -->
             <div class="col-lg-4 mb-4">
                 <div class="premium-card">
                     <div class="d-flex justify-content-between align-items-center section-header">
@@ -169,7 +57,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Quick Medical Links -->
                                     <div class="row no-gutters mb-3" style="gap: 8px;">
                                         <div class="col">
                                             <a href="<?= ROOT ?>/petowner/vaccinations/<?= $pet['PetID'] ?>" class="medical-icon-btn">
@@ -217,7 +104,6 @@
                 </div>
             </div>
 
-            <!-- Right Column: Activity Hub -->
             <div class="col-lg-8">
                 <div class="premium-card">
                     <div class="section-header mb-4">
@@ -260,7 +146,6 @@
 
                     <div class="tab-content" id="dashboardTabsContent">
                         
-                        <!-- Vet Checkups Pane -->
                         <div class="tab-pane fade show active" id="vet-pane">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h4 class="font-weight-bold mb-0">Upcoming Checkups</h4>
@@ -312,7 +197,6 @@
                             </div>
                         </div>
 
-                        <!-- Service Bookings Pane -->
                         <div class="tab-pane fade" id="service-pane">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h4 class="font-weight-bold mb-0">Service Bookings</h4>
@@ -378,7 +262,6 @@
                             </div>
                         </div>
 
-                        <!-- Orders Pane -->
                         <div class="tab-pane fade" id="order-pane">
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <h4 class="font-weight-bold mb-0">Shop Orders</h4>
@@ -418,7 +301,6 @@
                             </div>
                         </div>
 
-                        <!-- Community Alerts -->
                         <div class="tab-pane fade" id="lost-pane">
                             <div class="bg-danger-light p-4 rounded-xl border border-danger mb-4" style="background: rgba(231, 76, 60, 0.05);">
                                 <h5 class="text-danger font-weight-bold mb-1"><i class="fa fa-bullhorn mr-2"></i>Community Emergency</h5>
@@ -448,7 +330,6 @@
                             </div>
                         </div>
 
-                        <!-- AI Triage Pane -->
                         <div class="tab-pane fade" id="triage-pane">
                             <div class="triage-card">
                                 <div class="text-center mb-4">

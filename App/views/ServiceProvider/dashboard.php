@@ -1,10 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<style>
-.field-error { font-size: 0.78rem; color: #dc3545; margin-top: 3px; display: none; }
-.is-invalid  { border-color: #dc3545 !important; }
-</style>
 
 <section class="container mt-5">
 

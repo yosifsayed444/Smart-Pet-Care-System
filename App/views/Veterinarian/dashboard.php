@@ -1,14 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<style>
-    .vet-card { border: none; border-radius: 15px; transition: transform 0.3s; }
-    .vet-card:hover { transform: translateY(-5px); }
-    .nav-pills .nav-link.active { background-color: #007bff; border-radius: 10px; }
-    .nav-pills .nav-link { color: #333; font-weight: 600; border-radius: 10px; margin-bottom: 5px; }
-    .tab-content { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .badge-upcoming { background-color: #ffc107; color: #212529; }
-</style>
 
 <section class="ftco-section bg-light">
     <div class="container-fluid px-md-5">

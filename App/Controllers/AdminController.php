@@ -213,20 +213,77 @@ class AdminController extends Controller
             'id' => $id,
         ]);
 
+        if ($data['user'] && $data['user']['role'] === 'Vet') {
+            $vetModel = new Veterinarian();
+            $data['vet'] = $vetModel->getById($id);
+        }
+
         $this->view("admin/editUser", $data);
     }
 
     public function deleteUser($id)
     {
-
         Middleware::requireRole('Admin');
 
-        $user = new User();
+        // Prevent self-deletion
+        if (isset($_SESSION['id']) && $_SESSION['id'] == $id) {
+            $_SESSION['error'] = "You cannot delete your own admin account! ❌";
+            redirect("admin/users");
+            exit;
+        }
 
-        $user->delete($id);
+        $userModel = new User();
+        $user = $userModel->first(['id' => $id]);
 
-        $_SESSION['success'] =
-            "User Deleted Successfully 🗑️";
+        if ($user) {
+            // Delete related records sequentially to avoid foreign key constraint issues
+            
+            // 1. Order Details and Orders
+            $userModel->query("DELETE FROM orderdetails WHERE OrderID IN (SELECT OrderID FROM `order` WHERE UserID = :id)", ['id' => $id]);
+            $userModel->query("DELETE FROM `order` WHERE UserID = :id", ['id' => $id]);
+
+            // 2. Bookings
+            $userModel->query("DELETE FROM booking WHERE OwnerID = :id OR ProviderID = :id", ['id' => $id]);
+
+            // 3. Appointments
+            $userModel->query("DELETE FROM appointment WHERE OwnerID = :id OR VetID = :id", ['id' => $id]);
+
+            // 4. Notifications
+            $userModel->query("DELETE FROM notifications WHERE user_id = :id", ['id' => $id]);
+
+            // 5. Reviews
+            $userModel->query("DELETE FROM provider_reviews WHERE user_id = :id OR provider_id = :id", ['id' => $id]);
+
+            // 6. Role-specific cleanup
+            if ($user['role'] === 'ServiceProvider') {
+                $userModel->query("DELETE FROM provider_services WHERE provider_id = :id", ['id' => $id]);
+                $userModel->query("DELETE FROM provider_availability WHERE provider_id = :id", ['id' => $id]);
+                $userModel->query("DELETE FROM provider_certifications WHERE ProviderID = :id", ['id' => $id]);
+                $userModel->query("DELETE FROM serviceprovider WHERE ProviderID = :id", ['id' => $id]);
+            }
+
+            if ($user['role'] === 'Vet') {
+                $userModel->query("DELETE FROM prescription WHERE VetID = :id", ['id' => $id]);
+                $userModel->query("DELETE FROM MedicalRecord WHERE VetID = :id", ['id' => $id]);
+                $userModel->query("DELETE FROM veterinarian WHERE VetID = :id", ['id' => $id]);
+            }
+
+            // 7. Pets and their related data
+            // Clear all data linked to pets owned by this user
+            $userModel->query("DELETE FROM ChronicCondition WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
+            $userModel->query("DELETE FROM MedicalRecord WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
+            $userModel->query("DELETE FROM vaccination WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
+            $userModel->query("DELETE FROM prescription WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
+            $userModel->query("DELETE FROM lost_pets WHERE OwnerID = :id", ['id' => $id]);
+            $userModel->query("DELETE FROM pet WHERE OwnerID = :id", ['id' => $id]);
+
+            // 8. Finally delete the user record
+            $userModel->delete($id);
+
+            $_SESSION['success'] = "User and all related data deleted successfully 🗑️";
+        } else {
+            $_SESSION['error'] = "User not found or already deleted.";
+        }
 
         redirect("admin/users");
         exit;
@@ -576,20 +633,23 @@ class AdminController extends Controller
         $userModel = new User();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
-            $msg = $_POST['message'];
-            $role = $_POST['role'] ?? 'All';
+            $msg = trim($_POST['message']);
             
-            $users = ($role == 'All') ? $userModel->fetchAll() : $userModel->where(['role' => $role]);
-            
-            foreach ($users as $user) {
-                $notifModel->sendNotification(
-                    $user['id'],
-                    $msg,
-                    "System"
-                );
-            }
+            if (!empty($msg)) {
+                $users = $userModel->fetchAll();
+                
+                foreach ($users as $user) {
+                    $notifModel->sendNotification(
+                        $user['id'],
+                        $msg,
+                        "System Broadcast"
+                    );
+                }
 
-            $_SESSION['success'] = "System notification sent to $role users.";
+                $_SESSION['success'] = "System broadcast sent to all users successfully! 📢";
+            } else {
+                $_SESSION['error'] = "Notification message cannot be empty.";
+            }
             redirect('admin/notificationEscalator');
         }
 

@@ -1,32 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<style>
-
-.pet-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 1px solid #e8e8e8;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.pet-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.11);
-}
-.pet-card h5 { color: #2c3e50; font-weight: 700; }
-.form-card {
-    background: #fff;
-    border-radius: 14px;
-    padding: 28px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
-}
-.field-error { font-size: 0.78rem; color: #dc3545; margin-top: 3px; display: none; }
-.is-invalid { border-color: #dc3545 !important; }
-.char-count { font-size: 0.75rem; color: #888; text-align: right; }
-</style>
 
 
 

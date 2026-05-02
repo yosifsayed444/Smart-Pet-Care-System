@@ -18,7 +18,6 @@
                     <h6 class="m-0 font-weight-bold text-primary">Escrow Ledger</h6>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Funds are held in escrow until the Pet Owner confirms completion, or 24 hours have passed since the scheduled end time. Admins can manually release or refund funds here.</p>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover w-100">
                             <thead class="thead-light">

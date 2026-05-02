@@ -1,19 +1,5 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 
-<style>
-    body { background: #f4f7f6; }
-    .passport-container { max-width: 800px; margin: 50px auto; background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid #2c3e50; position: relative; overflow: hidden; }
-    .passport-header { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-    .passport-header h1 { color: #2c3e50; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
-    .passport-photo { width: 150px; height: 150px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #ccc; margin: 0 auto 20px; border: 3px solid #f8f9fa; }
-    .info-section { margin-bottom: 30px; }
-    .info-section h5 { background: #f8f9fa; padding: 10px; border-left: 5px solid #2c3e50; color: #2c3e50; font-weight: 700; margin-bottom: 15px; }
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .info-item label { color: #7f8c8d; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 2px; display: block; }
-    .info-item span { color: #2c3e50; font-weight: 600; font-size: 1.1rem; }
-    .stamp { position: absolute; top: 40px; right: 40px; width: 100px; height: 100px; border: 4px double #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: rotate(15deg); color: #e74c3c; font-weight: 800; opacity: 0.6; text-align: center; font-size: 0.7rem; line-height: 1; }
-    @media print { .btn-print { display: none; } .passport-container { box-shadow: none; border: 1px solid #000; margin: 0; width: 100%; } }
-</style>
 
 <div class="container">
     <div class="text-right mt-4">

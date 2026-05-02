@@ -76,35 +76,36 @@ value="<?= $old['phone'] ?? $user['phone'] ?>">
 
 
 <div class="form-group">
-
-<label>Role</label>
-
-<select name="role"
-class="form-control">
-
-<option value="Owner"
-<?= (($old['role'] ?? $user['role']) == 'Owner') ? 'selected' : '' ?>>
-Owner
-</option>
-
-<option value="Admin"
-<?= (($old['role'] ?? $user['role']) == 'Admin') ? 'selected' : '' ?>>
-Admin
-</option>
-
-<option value="Veterinarian"
-<?= (($old['role'] ?? $user['role']) == 'Veterinarian') ? 'selected' : '' ?>>
-Veterinarian
-</option>
-
-<option value="ServiceProvider"
-<?= (($old['role'] ?? $user['role']) == 'ServiceProvider') ? 'selected' : '' ?>>
-ServiceProvider
-</option>
-
-</select>
-
+    <label>Role</label>
+    <select name="role" id="roleSelect" class="form-control">
+        <option value="Owner" <?= (($old['role'] ?? $user['role']) == 'Owner') ? 'selected' : '' ?>>Owner</option>
+        <option value="Admin" <?= (($old['role'] ?? $user['role']) == 'Admin') ? 'selected' : '' ?>>Admin</option>
+        <option value="Vet" <?= (($old['role'] ?? $user['role']) == 'Vet') ? 'selected' : '' ?>>Vet</option>
+        <option value="ServiceProvider" <?= (($old['role'] ?? $user['role']) == 'ServiceProvider') ? 'selected' : '' ?>>ServiceProvider</option>
+    </select>
 </div>
+
+<div id="vetFields" style="display: <?= (($old['role'] ?? $user['role']) == 'Vet') ? 'block' : 'none' ?>;">
+    <div class="form-group mt-3">
+        <label>Specialization</label>
+        <input type="text" name="specialization" class="form-control" value="<?= $old['specialization'] ?? $vet['Specialization'] ?? '' ?>">
+    </div>
+    <div class="form-group mt-3">
+        <label>License Number</label>
+        <input type="text" name="license_number" class="form-control" value="<?= $old['license_number'] ?? $vet['LicenseNumber'] ?? '' ?>">
+    </div>
+</div>
+
+<script>
+    document.getElementById('roleSelect').addEventListener('change', function() {
+        var vetFields = document.getElementById('vetFields');
+        if (this.value === 'Vet') {
+            vetFields.style.display = 'block';
+        } else {
+            vetFields.style.display = 'none';
+        }
+    });
+</script>
 
 
 

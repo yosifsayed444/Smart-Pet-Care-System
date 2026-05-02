@@ -1,0 +1,13 @@
+/* Triage Result Styles */
+.triage-body {
+    color: #000000;
+}
+
+.triage-body h2 {
+    color: #1b652d;
+    margin-top: 20px;
+}
+
+.triage-body h3 {
+    color: #28a745;
+}

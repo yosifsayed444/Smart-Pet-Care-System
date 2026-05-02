@@ -20,5 +20,18 @@
     <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/jquery.timepicker.css">
     <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/flaticon.css">
     <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/style.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/navbar.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/footer.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/dashboards.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/shop.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/profile.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/pets.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/appointments.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/passport.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/booking.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/auth.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/home.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/error.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/triage.css">
   </head>
   <body>

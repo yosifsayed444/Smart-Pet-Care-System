@@ -1,13 +1,6 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
-<style>
-.field-error  { font-size: 0.78rem; color: #dc3545; margin-top: 4px; display: none; }
-.is-invalid   { border-color: #dc3545 !important; box-shadow: 0 0 0 .15rem rgba(220,53,69,.15) !important; }
-.slot-card    { border: 2px solid transparent; border-radius: 10px; padding: 10px 14px;
-                cursor: pointer; transition: border-color .2s, background .2s; background: #fff; }
-.slot-card:hover { border-color: #007bff; background: #f0f7ff; }
-</style>
 
 <section class="ftco-section bg-light">
     <div class="container">
