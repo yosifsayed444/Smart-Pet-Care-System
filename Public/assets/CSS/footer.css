@@ -1,264 +1,118 @@
+/* Redesigned Footer - Chewy Style */
+
 .petcare-footer {
-    background: #0f172a;
-    color: rgba(255,255,255,0.75);
+    background: var(--chewy-navy);
+    color: rgba(255, 255, 255, 0.8);
     font-family: 'Montserrat', sans-serif;
-    padding: 64px 0 0;
+    padding: 60px 0 0;
     position: relative;
-    overflow: hidden;
 }
 
+/* Remove shimmer from previous version */
 .petcare-footer::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #185FA5, #3b82f6, #185FA5);
-    background-size: 200% 100%;
-    animation: shimmer 3s linear infinite;
-}
-
-@keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-.pf-brand-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    text-decoration: none;
-}
-
-.pf-brand-logo img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    border-radius: 10px;
-    filter: brightness(1.1);
+    display: none;
 }
 
 .pf-brand-name {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 800;
-    background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
+    color: white;
+}
+
+.pf-brand-name span {
+    color: var(--chewy-blue);
 }
 
 .pf-tagline {
-    font-size: 13px;
-    line-height: 1.7;
-    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
     margin-bottom: 24px;
-    max-width: 240px;
 }
 
 .pf-socials {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     list-style: none;
     padding: 0;
-    margin: 0;
 }
 
 .pf-socials li a {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255,255,255,0.6);
-    font-size: 15px;
-    transition: all 0.25s ease;
+    color: white;
+    transition: all 0.2s;
     text-decoration: none;
 }
 
 .pf-socials li a:hover {
-    background: #185FA5;
-    border-color: #185FA5;
-    color: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(24,95,165,0.4);
+    background: var(--chewy-blue);
+    transform: translateY(-2px);
 }
 
 .pf-heading {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #185FA5;
-    margin-bottom: 20px;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.pf-heading::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 28px;
-    height: 2px;
-    background: #185FA5;
-    border-radius: 2px;
+    color: white;
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
 }
 
 .pf-links {
     list-style: none;
-    padding: 0; margin: 0;
+    padding: 0;
 }
 
 .pf-links li {
-    margin-bottom: 2px;
+    margin-bottom: 12px;
 }
 
 .pf-links li a {
-    color: rgba(255,255,255,0.55);
+    color: rgba(255, 255, 255, 0.7);
     font-size: 14px;
-    font-weight: 500;
     text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 0;
-    transition: all 0.2s ease;
-}
-
-.pf-links li a::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #185FA5;
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: all 0.2s ease;
-    flex-shrink: 0;
+    transition: color 0.2s;
 }
 
 .pf-links li a:hover {
-    color: #fff;
-    padding-left: 4px;
-}
-
-.pf-links li a:hover::before {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.pf-contact-list {
-    list-style: none;
-    padding: 0; margin: 0;
-}
-
-.pf-contact-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 14px;
-    color: rgba(255,255,255,0.55);
-    font-size: 13.5px;
-}
-
-.pf-contact-list li a {
-    color: rgba(255,255,255,0.55);
-    text-decoration: none;
-    transition: color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.pf-contact-list li a:hover {
-    color: #fff;
-    text-decoration: none;
+    color: white;
+    text-decoration: underline;
 }
 
 .pf-contact-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: rgba(24,95,165,0.15);
-    border: 1px solid rgba(24,95,165,0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #3b82f6;
-    font-size: 13px;
-    flex-shrink: 0;
-}
-.pf-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.pf-badge {
-    background: rgba(24,95,165,0.12);
-    border: 1px solid rgba(24,95,165,0.25);
-    color: #93c5fd;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: all 0.2s;
-}
-
-.pf-badge:hover {
-    background: rgba(24,95,165,0.25);
-    color: #fff;
+    color: var(--chewy-blue);
+    margin-right: 10px;
 }
 
 .pf-divider {
     border: none;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    margin: 48px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 48px;
 }
 
 .pf-bottom {
-    background: rgba(0,0,0,0.25);
-    padding: 18px 0;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
 }
 
 .pf-copyright {
-    font-size: 12.5px;
-    color: rgba(255,255,255,0.35);
-    margin: 0;
-}
-
-.pf-copyright span {
-    color: #3b82f6;
-    font-weight: 700;
-}
-
-.pf-bottom-links {
-    display: flex;
-    gap: 20px;
-    justify-content: flex-end;
-    list-style: none;
-    padding: 0; margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .pf-bottom-links a {
+    color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
-    color: rgba(255,255,255,0.35);
+    margin-left: 20px;
     text-decoration: none;
-    transition: color 0.2s;
 }
 
 .pf-bottom-links a:hover {
-    color: rgba(255,255,255,0.8);
-}
-
-@media (max-width: 768px) {
-    .pf-bottom-links { justify-content: flex-start; margin-top: 8px; }
-    .pf-tagline { max-width: 100%; }
+    color: white;
 }

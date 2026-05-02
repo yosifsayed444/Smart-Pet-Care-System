@@ -1,35 +1,31 @@
-/* Common Dashboard Styles */
-:root {
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --premium-blue: #185FA5;
-    --premium-green: #2ecc71;
-    --premium-red: #e74c3c;
-    --soft-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
-}
+/* Redesigned Dashboards - Chewy Style */
 
 .dashboard-wrapper {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f6f9fc;
     min-height: 100vh;
     padding-top: 40px;
     padding-bottom: 60px;
 }
 
 .premium-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 24px;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--soft-shadow);
-    padding: 30px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    padding: 24px;
     height: 100%;
 }
 
 .section-header {
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.section-header h2 {
+    color: var(--chewy-navy);
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 .medical-icon-btn {
@@ -37,80 +33,122 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    padding: 12px;
-    border-radius: 16px;
-    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid #e2e8f0;
     transition: all 0.2s;
-    border: 1px solid #f1f5f9;
+    text-decoration: none !important;
 }
+
 .medical-icon-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    border-color: var(--premium-blue);
+    border-color: var(--chewy-blue);
+    background: #f0f7ff;
+    transform: translateY(-2px);
 }
-.medical-icon-btn i { font-size: 1.25rem; }
-.medical-icon-btn span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #64748b; }
+
+.medical-icon-btn i {
+    font-size: 1.5rem;
+    color: var(--chewy-blue);
+}
+
+.medical-icon-btn span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--chewy-navy);
+    text-transform: uppercase;
+}
 
 .nav-pills-custom .nav-link {
     color: #64748b;
-    font-weight: 700;
+    font-weight: 600;
     padding: 12px 20px;
-    border-radius: 12px;
+    border-radius: 10px;
     transition: all 0.2s;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    background: transparent;
 }
+
+.nav-pills-custom .nav-link:hover {
+    background: #f1f5f9;
+    color: var(--chewy-navy);
+}
+
 .nav-pills-custom .nav-link.active {
-    background: var(--premium-blue) !important;
-    color: #fff !important;
-    box-shadow: 0 4px 12px rgba(24,95,165,0.3);
+    background: var(--chewy-navy) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 46, 109, 0.2);
+}
+
+.table-premium {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table-premium tr {
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border: 1px solid #f1f5f9;
+}
+
+.table-premium td {
+    padding: 16px !important;
+    vertical-align: middle !important;
+    border-top: 1px solid #f1f5f9 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.table-premium td:first-child {
+    border-left: 1px solid #f1f5f9 !important;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.table-premium td:last-child {
+    border-right: 1px solid #f1f5f9 !important;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .stat-badge {
     padding: 6px 12px;
-    border-radius: 100px;
+    border-radius: 20px;
     font-size: 0.75rem;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
 }
 
-.table-premium {
-    border-collapse: separate;
-    border-spacing: 0 8px;
-}
-.table-premium tr { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-.table-premium td { padding: 15px !important; vertical-align: middle !important; border: none !important; }
-.table-premium td:first-child { border-radius: 12px 0 0 12px; }
-.table-premium td:last-child { border-radius: 0 12px 12px 0; }
-
 .btn-glass {
-    background: rgba(255,255,255,0.5);
-    border: 1px solid rgba(255,255,255,0.8);
-    backdrop-filter: blur(5px);
-    border-radius: 10px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
     padding: 8px 16px;
     font-weight: 600;
-    transition: 0.3s;
+    color: var(--chewy-navy);
+    transition: 0.2s;
 }
-.btn-glass:hover { background: #fff; transform: translateY(-2px); }
+
+.btn-glass:hover {
+    background: #e2e8f0;
+    color: var(--chewy-blue);
+}
 
 .triage-card {
     background: #f8fafc;
-    border: 2px dashed #e2e8f0;
-    border-radius: 20px;
-    padding: 25px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 24px;
 }
 
-/* Vet Dashboard Specific */
-.vet-card { border: none; border-radius: 15px; transition: transform 0.3s; }
-.vet-card:hover { transform: translateY(-5px); }
-.nav-pills .nav-link.active { background-color: #007bff; border-radius: 10px; }
-.nav-pills .nav-link { color: #333; font-weight: 600; border-radius: 10px; margin-bottom: 5px; }
-.tab-content { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-.badge-upcoming { background-color: #ffc107; color: #212529; }
-
-/* Service Provider Specific */
-.field-error { font-size: 0.78rem; color: #dc3545; margin-top: 3px; display: none; }
-.is-invalid  { border-color: #dc3545 !important; }
+/* Tab Content Styling */
+.tab-content {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}

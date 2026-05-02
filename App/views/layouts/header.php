@@ -33,5 +33,6 @@
     <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/home.css">
     <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/error.css">
     <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/triage.css">
+    <link rel="stylesheet" href="<?= ROOT ?>/assets/CSS/theme.css">
   </head>
   <body>
