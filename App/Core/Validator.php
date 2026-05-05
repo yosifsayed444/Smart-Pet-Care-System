@@ -19,7 +19,7 @@ class Validator
 
         if (empty($email)) {
             $errors['email'] = "Email is required";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        } elseif (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = "Invalid email format";
         }
 
@@ -30,10 +30,9 @@ class Validator
 
         if (empty($phone)) {
             $errors['phone'] = "Phone is required";
-        } elseif (!preg_match("/^[0-9]{11}$/", $phone)) {
-            $errors['phone'] = "Phone must be 11 digits";
+        } elseif (! preg_match("/^[0-9]{10,15}$/", $phone)) {
+            $errors['phone'] = "Invalid phone number format (use 10-15 digits)";
         }
-
         if ($ignoreId === null) {
             if (empty($password)) {
                 $errors['password'] = "Password is required";
@@ -61,7 +60,7 @@ class Validator
 
         if (empty($data['Price'])) {
             $errors['Price'] = "Price is required";
-        } elseif (!is_numeric($data['Price'])) {
+        } elseif (! is_numeric($data['Price'])) {
             $errors['Price'] = "Price must be numeric";
         } elseif ($data['Price'] <= 0) {
             $errors['Price'] = "Price must be greater than 0";
@@ -69,23 +68,23 @@ class Validator
 
         if (($data['stock'] ?? '') === '') {
             $errors['stock'] = "Stock is required";
-        } elseif (!is_numeric($data['stock'])) {
+        } elseif (! is_numeric($data['stock'])) {
             $errors['stock'] = "Stock must be numeric";
         } elseif ($data['stock'] < 0) {
             $errors['stock'] = "Stock cannot be negative";
         }
 
-        if (!$isEdit && empty($_FILES['image']['name'])) {
+        if (! $isEdit && empty($_FILES['image']['name'])) {
             $errors['image'] = "Product image is required";
         }
 
-        if (!empty($_FILES['image']['name'])) {
-            $allowed = ['jpg','jpeg','png','webp'];
+        if (! empty($_FILES['image']['name'])) {
+            $allowed   = ['jpg', 'jpeg', 'png', 'webp'];
             $imageName = $_FILES['image']['name'];
             $imageSize = $_FILES['image']['size'];
-            $ext = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+            $ext       = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
 
-            if (!in_array($ext, $allowed)) {
+            if (! in_array($ext, $allowed)) {
                 $errors['image'] = "Image must be jpg, jpeg, png or webp";
             }
             if ($imageSize > 2 * 1024 * 1024) {
@@ -99,21 +98,21 @@ class Validator
     public static function validateCheckout($data)
     {
         $errors = [];
-        
+
         if (empty(trim($data['address'] ?? ''))) {
             $errors['address'] = "Shipping address is required";
         }
 
         if (empty(trim($data['phone'] ?? ''))) {
             $errors['phone'] = "Phone number is required";
-        } elseif (!preg_match("/^[0-9]{10,15}$/", trim($data['phone']))) {
+        } elseif (! preg_match("/^[0-9]{10,15}$/", trim($data['phone']))) {
             $errors['phone'] = "Invalid phone number format (use 10-15 digits)";
         }
 
         if (($data['payment'] ?? '') === 'card') {
             if (empty(trim($data['card_number'] ?? ''))) {
                 $errors['card_number'] = "Card number is required";
-            } elseif (!preg_match("/^[0-9]{16}$/", trim($data['card_number']))) {
+            } elseif (! preg_match("/^[0-9]{16}$/", trim($data['card_number']))) {
                 $errors['card_number'] = "Card number must be 16 digits";
             }
 
@@ -123,7 +122,7 @@ class Validator
 
             if (empty(trim($data['card_cvv'] ?? ''))) {
                 $errors['card_cvv'] = "CVV is required";
-            } elseif (!preg_match("/^[0-9]{3,4}$/", trim($data['card_cvv']))) {
+            } elseif (! preg_match("/^[0-9]{3,4}$/", trim($data['card_cvv']))) {
                 $errors['card_cvv'] = "CVV must be 3 or 4 digits";
             }
         }

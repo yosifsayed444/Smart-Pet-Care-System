@@ -1,6 +1,7 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
 
+
 <div class="container mt-5">
 
 <h2>Edit User</h2>
@@ -119,4 +120,3 @@ Update User
 
 </div>
 
-<!-- <?php require __DIR__ . '/../layouts/footer.php'; ?> -->

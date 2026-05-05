@@ -5,13 +5,13 @@
     <div class="row">
                 <?php require __DIR__ . '/../layouts/admin_sidebar.php'; ?>
 
-      
+
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
             <h2 class="mb-4">Lost Pet Broadcast System</h2>
-            
+
             <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert alert-success"><?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
+                <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
             <?php endif; ?>
 
             <div class="card shadow-sm mb-4">
@@ -22,9 +22,12 @@
                             <div class="col-md-4 mb-3">
                                 <label>Select Pet</label>
                                 <select name="pet_id" class="form-control" required>
-                                    <?php foreach ($pets as $pet): ?>
-                                        <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?></option>
+                                    <option value="">-- Select a Pet --</option>
+                                    <?php if (! empty($data['pets'])): ?>
+                                    <?php foreach ($data['pets'] as $pet): ?>
+                                        <option value="<?php echo $pet['PetID'] ?>"><?php echo htmlspecialchars($pet['PetName']) ?></option>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -56,14 +59,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($lostPets)): ?>
-                                    <?php foreach ($lostPets as $lp): ?>
+                                <?php if (! empty($data['lostPets'])): ?>
+                                    <?php foreach ($data['lostPets'] as $lp): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($lp['PetName'] ?? 'Unknown Pet') ?> (ID: <?= $lp['PetID'] ?>)</td>
-                                            <td><?= htmlspecialchars($lp['Location']) ?></td>
-                                            <td><?= htmlspecialchars($lp['Description']) ?></td>
-                                            <td><span class="badge badge-warning"><?= $lp['Status'] ?></span></td>
-                                            <td><?= $lp['DateReported'] ?></td>
+                                            <td><?php echo htmlspecialchars($lp['PetName'] ?? 'Unknown Pet') ?> (ID: <?php echo $lp['PetID'] ?>)</td>
+                                            <td><?php echo htmlspecialchars($lp['Location']) ?></td>
+                                            <td><?php echo htmlspecialchars($lp['Description']) ?></td>
+                                            <td><span class="badge badge-warning"><?php echo $lp['Status'] ?></span></td>
+                                            <td><?php echo $lp['DateReported'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -76,4 +79,3 @@
     </div>
 </div>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
