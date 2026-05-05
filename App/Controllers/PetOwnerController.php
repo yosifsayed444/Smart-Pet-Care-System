@@ -171,15 +171,16 @@ class PetOwnerController extends Controller
         redirect('petowner/index');
     }
 
-    protected function redirect($path)
+    private function verifyPetOwnership($petId, $redirectTo = 'petowner/pets')
     {
-        header("Location: /smart-pet-care-system/?url=" . $path);
-        exit;
-    }
-
-    private function clean($value)
-    {
-        return htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
+        $petModel = new Pet();
+        $pet = $petModel->getPetById($petId);
+        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
+            $_SESSION['error'] = "Unauthorized access.";
+            redirect($redirectTo);
+            exit;
+        }
+        return $pet;
     }
 
     
@@ -197,7 +198,7 @@ class PetOwnerController extends Controller
                 $medical = new MedicalRecord();
                 $medical->addCondition([
                     'PetID' => $pet_id,
-                    'ConditionName' => $this->clean($condition)
+                    'ConditionName' => Helpers::clean($condition)
                 ]);
                 $_SESSION['success'] = "Condition added successfully!";
             }
@@ -224,7 +225,7 @@ class PetOwnerController extends Controller
         $medical = new MedicalRecord();
         $medical->deleteCondition($id);
 
-        $this->redirect('PetOwner/index');
+        redirect('petowner/index');
     }
 
     
@@ -295,13 +296,13 @@ class PetOwnerController extends Controller
             if (!empty($_POST['record_id']) && !empty($_POST['behavior'])) {
                 $medical = new MedicalRecord();
                 $medical->updateBehavior([
-                    'Behavior' => $this->clean($_POST['behavior']),
+                    'Behavior' => Helpers::clean($_POST['behavior']),
                     'RecordID' => $_POST['record_id']
                 ]);
             }
-            $this->redirect('PetOwner/viewBehavior/' . (!empty($_POST['pet_id']) ? $_POST['pet_id'] : ''));
+            redirect('petowner/viewBehavior/' . (!empty($_POST['pet_id']) ? $_POST['pet_id'] : ''));
         } else {
-            $this->redirect('PetOwner/index');
+            redirect('petowner/index');
         }
     }
 
@@ -310,12 +311,7 @@ class PetOwnerController extends Controller
     {
         checkRole(['Owner']);
         
-        $petModel = new Pet();
-        $pet = $petModel->getPetById($petId);
-        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
-            $_SESSION['error'] = "Unauthorized access.";
-            redirect('petowner/pets');
-        }
+        $pet = $this->verifyPetOwnership($petId);
 
         $vacModel = new Vaccination();
         $data['vaccinations'] = $vacModel->getByPet($petId);
@@ -329,12 +325,7 @@ class PetOwnerController extends Controller
     {
         checkRole(['Owner']);
         
-        $petModel = new Pet();
-        $pet = $petModel->getPetById($petId);
-        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
-            $_SESSION['error'] = "Unauthorized access.";
-            redirect('petowner/index');
-        }
+        $pet = $this->verifyPetOwnership($petId, 'petowner/index');
 
         $presModel = new Prescription();
         $data['prescriptions'] = $presModel->getByPet($petId);
@@ -349,12 +340,7 @@ class PetOwnerController extends Controller
     {
         checkRole(['Owner']);
 
-        $petModel = new Pet();
-        $pet = $petModel->getPetById($petId);
-        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
-            $_SESSION['error'] = "Unauthorized access.";
-            redirect('petowner/pets');
-        }
+        $pet = $this->verifyPetOwnership($petId);
 
         $medical = new MedicalRecord();
         $data['labResults'] = $medical->getLabResultsByPet($petId);
@@ -369,12 +355,7 @@ class PetOwnerController extends Controller
     {
         checkRole(['Owner']);
 
-        $petModel = new Pet();
-        $pet = $petModel->getPetById($petId);
-        if (!$pet || $pet['OwnerID'] != $_SESSION['id']) {
-            $_SESSION['error'] = "Unauthorized access.";
-            redirect('petowner/pets');
-        }
+        $pet = $this->verifyPetOwnership($petId);
 
         $medical = new MedicalRecord();
         $data['notes'] = $medical->getMedicalNotesByPet($petId);

@@ -224,8 +224,6 @@ class AdminController extends Controller
     public function deleteUser($id)
     {
         Middleware::requireRole('Admin');
-
-        // Prevent self-deletion
         if (isset($_SESSION['id']) && $_SESSION['id'] == $id) {
             $_SESSION['error'] = "You cannot delete your own admin account! ❌";
             redirect("admin/users");
@@ -234,53 +232,8 @@ class AdminController extends Controller
 
         $userModel = new User();
         $user = $userModel->first(['id' => $id]);
-
         if ($user) {
-            // Delete related records sequentially to avoid foreign key constraint issues
-            
-            // 1. Order Details and Orders
-            $userModel->query("DELETE FROM orderdetails WHERE OrderID IN (SELECT OrderID FROM `order` WHERE UserID = :id)", ['id' => $id]);
-            $userModel->query("DELETE FROM `order` WHERE UserID = :id", ['id' => $id]);
-
-            // 2. Bookings
-            $userModel->query("DELETE FROM booking WHERE OwnerID = :id OR ProviderID = :id", ['id' => $id]);
-
-            // 3. Appointments
-            $userModel->query("DELETE FROM appointment WHERE OwnerID = :id OR VetID = :id", ['id' => $id]);
-
-            // 4. Notifications
-            $userModel->query("DELETE FROM notifications WHERE user_id = :id", ['id' => $id]);
-
-            // 5. Reviews
-            $userModel->query("DELETE FROM provider_reviews WHERE user_id = :id OR provider_id = :id", ['id' => $id]);
-
-            // 6. Role-specific cleanup
-            if ($user['role'] === 'ServiceProvider') {
-                $userModel->query("DELETE FROM provider_services WHERE provider_id = :id", ['id' => $id]);
-                $userModel->query("DELETE FROM provider_availability WHERE provider_id = :id", ['id' => $id]);
-                $userModel->query("DELETE FROM provider_certifications WHERE ProviderID = :id", ['id' => $id]);
-                $userModel->query("DELETE FROM serviceprovider WHERE ProviderID = :id", ['id' => $id]);
-            }
-
-            if ($user['role'] === 'Vet') {
-                $userModel->query("DELETE FROM prescription WHERE VetID = :id", ['id' => $id]);
-                $userModel->query("DELETE FROM MedicalRecord WHERE VetID = :id", ['id' => $id]);
-                $userModel->query("DELETE FROM veterinarian WHERE VetID = :id", ['id' => $id]);
-            }
-
-            // 7. Pets and their related data
-            // Clear all data linked to pets owned by this user
-            $userModel->query("DELETE FROM ChronicCondition WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
-            $userModel->query("DELETE FROM MedicalRecord WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
-            $userModel->query("DELETE FROM vaccination WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
-            $userModel->query("DELETE FROM prescription WHERE PetID IN (SELECT PetID FROM pet WHERE OwnerID = :id)", ['id' => $id]);
-            $userModel->query("DELETE FROM lost_pets WHERE OwnerID = :id", ['id' => $id]);
-            $userModel->query("DELETE FROM pet WHERE OwnerID = :id", ['id' => $id]);
-
-            // 8. Finally delete the user record
-            $userModel->delete($id);
-
-            $_SESSION['success'] = "User and all related data deleted successfully 🗑️";
+            Helpers::deleteRelatedData($userModel, $id, $user);
         } else {
             $_SESSION['error'] = "User not found or already deleted.";
         }
@@ -319,22 +272,7 @@ class AdminController extends Controller
                 return;
             }
 
-            $imageName = null;
-
-            if (! empty($_FILES['image']['name'])) {
-
-                $imageName = time() . "_" . $_FILES['image']['name'];
-
-                $tmp = $_FILES['image']['tmp_name'];
-
-                $folder = "uploads/products/";
-
-                if (! is_dir($folder)) {
-                    mkdir($folder, 0777, true);
-                }
-
-                move_uploaded_file($tmp, $folder . $imageName);
-            }
+            $imageName = Helpers::uploadFile('image', 'uploads/products/', ['jpg', 'jpeg', 'png', 'webp']);
 
             $data = [
 
@@ -390,56 +328,11 @@ class AdminController extends Controller
 
                 $imageName = $row['image'];
 
-                if (! empty($_FILES['image']['name'])) {
-
-                    $allowed =
-                        ['jpg', 'jpeg', 'png', 'webp'];
-
-                    $ext = strtolower(
-                        pathinfo(
-                            $_FILES['image']['name'],
-                            PATHINFO_EXTENSION
-                        )
-                    );
-
-                    if (in_array($ext, $allowed)) {
-
-                        $imageName =
-                            time() . "_" .
-                            $_FILES['image']['name'];
-
-                        $tmp =
-                            $_FILES['image']['tmp_name'];
-
-                        $folder =
-                            "uploads/products/";
-
-                        
-
-                        if (! is_dir($folder)) {
-
-                            mkdir($folder, 0777, true);
-                        }
-
-                        
-
-                        move_uploaded_file(
-                            $tmp,
-                            $folder . $imageName
-                        );
-
-                        
-
-                        if (! empty($row['image'])) {
-
-                            $oldImage =
-                                $folder . $row['image'];
-
-                            if (file_exists($oldImage)) {
-
-                                unlink($oldImage);
-                            }
-                        }
+                if (!empty($_FILES['image']['name'])) {
+                    $newImage = Helpers::uploadFile('image', 'uploads/products/', ['jpg', 'jpeg', 'png', 'webp']);
+                    if ($newImage) {
+                        Helpers::deleteOldFile('uploads/products/', $row['image']);
+                        $imageName = $newImage;
                     }
                 }
 
@@ -459,7 +352,7 @@ class AdminController extends Controller
 
                 ];
 
-                $product->updateProduct($id, $data);
+                $product->update($id, $data);
 
                 $_SESSION['success'] =
                     "Product Updated Successfully ✏️";
@@ -491,15 +384,9 @@ class AdminController extends Controller
         $row = $product->first(['ProductID' => $id]);
 
         if ($row) {
+            Helpers::deleteOldFile('uploads/products/', $row['image']);
             
-            if (!empty($row['image']) && strpos($row['image'], 'http') !== 0) {
-                $filePath = "uploads/products/" . $row['image'];
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
-            }
-            
-            $product->deleteProduct($id);
+            $product->delete($id);
             $_SESSION['success'] = "Product Deleted Successfully 🗑️";
         } else {
             $_SESSION['error'] = "Product not found.";
@@ -656,8 +543,7 @@ class AdminController extends Controller
         $data['username'] = $_SESSION['username'] ?? 'Admin';
         $this->view('admin/notifications', $data);
     }
-    public function manageDisputes()
-    {}
+
     public function verifyUsers()
     {
         Middleware::requireRole('Admin');
@@ -716,8 +602,8 @@ class AdminController extends Controller
     public function salesReport()
     {
         Middleware::requireRole('Admin');
-        $db = new class { use Database; };
-        $data['sales'] = $db->query("SELECT DATE(OrderDate) as date, SUM(TotalPrice) as total FROM `order` GROUP BY DATE(OrderDate)");
+        $userModel = new User();
+        $data['sales'] = $userModel->query("SELECT DATE(OrderDate) as date, SUM(TotalPrice) as total FROM `order` GROUP BY DATE(OrderDate)");
         $data['username'] = $_SESSION['username'] ?? 'Admin';
         $this->view('admin/reports/sales', $data);
     }
@@ -734,8 +620,8 @@ class AdminController extends Controller
     public function appointmentReport()
     {
         Middleware::requireRole('Admin');
-        $db = new class { use Database; };
-        $data['appointments'] = $db->query("SELECT DATE(AppointmentDate) as date, COUNT(*) as count FROM appointment GROUP BY DATE(AppointmentDate)");
+        $userModel = new User();
+        $data['appointments'] = $userModel->query("SELECT DATE(AppointmentDate) as date, COUNT(*) as count FROM appointment GROUP BY DATE(AppointmentDate)");
         $data['username'] = $_SESSION['username'] ?? 'Admin';
         $this->view('admin/reports/appointments', $data);
     }
@@ -757,84 +643,11 @@ class AdminController extends Controller
         
         require_once dirname(__DIR__, 2) . '/lib/fpdf186/fpdf.php';
 
-        $db = new class { use Database; };
+        $db = new User();
         $pdf = new FPDF();
         $pdf->AddPage();
         $pdf->SetFont('Arial', 'B', 16);
-        
-        $filename = "";
-        $title = "";
-
-        if ($type == 'sales') {
-            $title = "Sales Report";
-            $filename = "sales_report_" . date('Y-m-d') . ".pdf";
-            $data = $db->query("SELECT DATE(OrderDate) as date, SUM(TotalPrice) as total FROM `order` GROUP BY DATE(OrderDate)");
-            
-            $pdf->Cell(0, 10, $title, 0, 1, 'C');
-            $pdf->Ln(10);
-            $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(95, 10, 'Date', 1);
-            $pdf->Cell(95, 10, 'Total Revenue (EGP)', 1);
-            $pdf->Ln();
-            $pdf->SetFont('Arial', '', 12);
-            if (!empty($data)) {
-                foreach ($data as $row) {
-                    $pdf->Cell(95, 10, $row['date'], 1);
-                    $pdf->Cell(95, 10, number_format($row['total'], 2), 1);
-                    $pdf->Ln();
-                }
-            }
-        } elseif ($type == 'users') {
-            $title = "User Analytics Report";
-            $filename = "user_report_" . date('Y-m-d') . ".pdf";
-            $data = $db->query("SELECT role, COUNT(*) as count FROM users GROUP BY role");
-            
-            $pdf->Cell(0, 10, $title, 0, 1, 'C');
-            $pdf->Ln(10);
-            $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(95, 10, 'Role', 1);
-            $pdf->Cell(95, 10, 'User Count', 1);
-            $pdf->Ln();
-            $pdf->SetFont('Arial', '', 12);
-            if (!empty($data)) {
-                foreach ($data as $row) {
-                    $pdf->Cell(95, 10, $row['role'], 1);
-                    $pdf->Cell(95, 10, $row['count'], 1);
-                    $pdf->Ln();
-                }
-            }
-        } elseif ($type == 'appointments') {
-            $title = "Appointment Report";
-            $filename = "appointment_report_" . date('Y-m-d') . ".pdf";
-            $data = $db->query("SELECT DATE(AppointmentDate) as date, COUNT(*) as count FROM appointment GROUP BY DATE(AppointmentDate)");
-            
-            $pdf->Cell(0, 10, $title, 0, 1, 'C');
-            $pdf->Ln(10);
-            $pdf->SetFont('Arial', 'B', 12);
-            $pdf->Cell(95, 10, 'Date', 1);
-            $pdf->Cell(95, 10, 'Appointment Count', 1);
-            $pdf->Ln();
-            $pdf->SetFont('Arial', '', 12);
-            if (!empty($data)) {
-                foreach ($data as $row) {
-                    $pdf->Cell(95, 10, $row['date'], 1);
-                    $pdf->Cell(95, 10, $row['count'], 1);
-                    $pdf->Ln();
-                }
-            }
-        }
-
-        
-        $reportsDir = "uploads/reports/";
-        if (!is_dir($reportsDir)) {
-            mkdir($reportsDir, 0777, true);
-        }
-        $savePath = $reportsDir . $filename;
-        $pdf->Output('F', $savePath);
-
-        
-        $pdf->Output('D', $filename);
-        exit;
+        Helpers::generatePDFReport($type, $db, $pdf);
     }
 
     

@@ -4,6 +4,7 @@ class Notification
 {
     use Model;
     protected $table = 'notifications';
+    protected $primaryKey = 'notification_id';
     protected $allowedColumns = ['user_id', 'title', 'message', 'status', 'created_at'];
 
     public function viewNotifications($userId)

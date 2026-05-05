@@ -54,10 +54,7 @@ class ShopController extends Controller
     public function cart()
     {
         $data['cart'] = $_SESSION['cart'] ?? [];
-        $data['total'] = 0;
-        foreach ($data['cart'] as $item) {
-            $data['total'] += $item['price'] * $item['qty'];
-        }
+        $data['total'] = Helpers::calculateCartTotal($data['cart']);
         $this->view('Shop/cart', $data);
     }
 
@@ -116,10 +113,7 @@ class ShopController extends Controller
         }
 
         $data['cart'] = $_SESSION['cart'];
-        $data['total'] = 0;
-        foreach ($data['cart'] as $item) {
-            $data['total'] += $item['price'] * $item['qty'];
-        }
+        $data['total'] = Helpers::calculateCartTotal($data['cart']);
 
         $this->view('Shop/checkout', $data);
     }
@@ -135,10 +129,7 @@ class ShopController extends Controller
             $errors = Validator::validateCheckout($_POST);
             if (!empty($errors)) {
                 $data['cart'] = $_SESSION['cart'];
-                $data['total'] = 0;
-                foreach ($data['cart'] as $item) {
-                    $data['total'] += $item['price'] * $item['qty'];
-                }
+                $data['total'] = Helpers::calculateCartTotal($data['cart']);
                 $data['errors'] = $errors;
                 $data['old'] = $_POST;
                 $this->view('Shop/checkout', $data);
@@ -149,10 +140,7 @@ class ShopController extends Controller
             $status = ($paymentMethod === 'card') ? 'Confirmed' : 'Pending';
 
             $orderModel = new Order();
-            $total = 0;
-            foreach ($_SESSION['cart'] as $item) {
-                $total += $item['price'] * $item['qty'];
-            }
+            $total = Helpers::calculateCartTotal($_SESSION['cart']);
 
             $orderData = [
                 'UserID' => $_SESSION['id'],
@@ -162,8 +150,7 @@ class ShopController extends Controller
             ];
 
             
-            $db = new class { use Database; };
-            $con = $db->connect();
+            $con = $orderModel->connect();
             $query = "INSERT INTO `order` (UserID, OrderDate, TotalPrice, Status) VALUES (:UserID, :OrderDate, :TotalPrice, :Status)";
             $stmt = $con->prepare($query);
             $stmt->execute($orderData);

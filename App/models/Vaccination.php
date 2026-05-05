@@ -5,6 +5,7 @@ class Vaccination
     use Model;
 
     protected $table = 'vaccination';
+    protected $primaryKey = 'VaccinationID';
 
     protected $allowedColumns = [
         'PetID',
@@ -56,25 +57,12 @@ class Vaccination
 
     public function addVaccination($data)
     {
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-        $keys    = array_keys($data);
-        $columns = implode(',', $keys);
-        $values  = ':' . implode(', :', $keys);
-        $query   = "INSERT INTO vaccination ($columns) VALUES ($values)";
-        return $this->query($query, $data);
+        return $this->insertFiltered($data);
     }
 
     public function updateVaccination($id, $data)
     {
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-        $set = '';
-        foreach (array_keys($data) as $key) {
-            $set .= "$key = :$key, ";
-        }
-        $set = rtrim($set, ', ');
-        $data['VaccinationID'] = $id;
-        $query = "UPDATE vaccination SET $set WHERE VaccinationID = :VaccinationID";
-        return $this->query($query, $data);
+        return $this->updateFiltered($id, $data);
     }
 
     public function deleteVaccination($id)

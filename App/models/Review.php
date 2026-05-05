@@ -17,12 +17,7 @@ class Review
 
     public function addReview($data)
     {
-        $keys = array_keys($data);
-        $columns = implode(',', $keys);
-        $values  = ':' . implode(', :', $keys);
-
-        $query = "INSERT INTO provider_reviews ($columns) VALUES ($values)";
-        return $this->query($query, $data);
+        return $this->insert($data);
     }
 
     public function viewReviews($provider_id)

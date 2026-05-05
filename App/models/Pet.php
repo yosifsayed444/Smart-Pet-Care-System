@@ -5,6 +5,7 @@ class Pet
     use Model;
 
     protected $table = 'pet';
+    protected $primaryKey = 'PetID';
 
     protected $allowedColumns = [
         'OwnerID',
@@ -34,33 +35,12 @@ class Pet
 
     public function addPet($data)
     {
-        
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-        
-        $keys = array_keys($data);
-        $columns = implode(',', $keys);
-        $values  = ':' . implode(', :', $keys);
-
-        $query = "INSERT INTO $this->table ($columns) VALUES ($values)";
-        return $this->query($query, $data);
+        return $this->insertFiltered($data);
     }
 
     public function updatePet($petId, $data)
     {
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-
-        $keys = array_keys($data);
-        $set  = "";
-
-        foreach ($keys as $key) {
-            $set .= "$key = :$key, ";
-        }
-        $set = rtrim($set, ', ');
-
-        $data['PetID'] = $petId;
-        $query = "UPDATE $this->table SET $set WHERE PetID = :PetID";
-        
-        return $this->query($query, $data);
+        return $this->updateFiltered($petId, $data);
     }
 
     public function deletePet($petId)

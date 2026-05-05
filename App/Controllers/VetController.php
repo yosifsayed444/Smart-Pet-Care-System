@@ -23,11 +23,6 @@ class VetController extends Controller
         return $userId;
     }
 
-    private function clean($v)
-    {
-        return htmlspecialchars(trim($v), ENT_QUOTES, 'UTF-8');
-    }
-
     
 
     public function index()
@@ -70,7 +65,7 @@ class VetController extends Controller
             $errors = [];
 
             $petId   = trim($_POST['pet_id'] ?? '');
-            $vaccine = $this->clean($_POST['vaccine_name'] ?? '');
+            $vaccine = Helpers::clean($_POST['vaccine_name'] ?? '');
             $date    = trim($_POST['vaccination_date'] ?? '');
             $next    = trim($_POST['next_date'] ?? '');
 
@@ -114,7 +109,7 @@ class VetController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors = [];
 
-            $vaccine = $this->clean($_POST['vaccine_name'] ?? '');
+            $vaccine = Helpers::clean($_POST['vaccine_name'] ?? '');
             $date    = trim($_POST['vaccination_date'] ?? '');
             $next    = trim($_POST['next_date'] ?? '');
 
@@ -159,8 +154,8 @@ class VetController extends Controller
             $vetId  = $this->getVetId();
 
             $petId    = trim($_POST['pet_id'] ?? '');
-            $medName  = $this->clean($_POST['medication_name'] ?? '');
-            $dosage   = $this->clean($_POST['dosage'] ?? '');
+            $medName  = Helpers::clean($_POST['medication_name'] ?? '');
+            $dosage   = Helpers::clean($_POST['dosage'] ?? '');
             $date     = trim($_POST['date'] ?? '');
 
             if (empty($petId) || !is_numeric($petId))    $errors[] = "Please select a valid pet.";
@@ -251,8 +246,8 @@ class VetController extends Controller
         Middleware::requireRole('Vet');
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $petId = trim($_POST['pet_id'] ?? '');
-            $diagnosis = $this->clean($_POST['diagnosis'] ?? '');
-            $behavior = $this->clean($_POST['behavior'] ?? '');
+            $diagnosis = Helpers::clean($_POST['diagnosis'] ?? '');
+            $behavior = Helpers::clean($_POST['behavior'] ?? '');
             
             if (empty($petId) || empty($diagnosis)) {
                 $_SESSION['error'] = "Pet and Diagnosis are required.";
@@ -276,8 +271,8 @@ class VetController extends Controller
         Middleware::requireRole('Vet');
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $petId = trim($_POST['pet_id'] ?? '');
-            $diagnosis = $this->clean($_POST['diagnosis'] ?? '');
-            $notes = $this->clean($_POST['notes'] ?? '');
+            $diagnosis = Helpers::clean($_POST['diagnosis'] ?? '');
+            $notes = Helpers::clean($_POST['notes'] ?? '');
             
             if (empty($petId) || empty($diagnosis)) {
                 $_SESSION['error'] = "Pet and Diagnosis/Summary are required.";
@@ -293,17 +288,11 @@ class VetController extends Controller
             ];
 
             if (!empty($_FILES['lab_file']['name'])) {
-                $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
-                if (in_array($_FILES['lab_file']['type'], $allowedTypes)) {
-                    $folder = "uploads/lab_results/";
-                    if (!file_exists($folder)) mkdir($folder, 0777, true);
-                    $ext = pathinfo($_FILES['lab_file']['name'], PATHINFO_EXTENSION);
-                    $filename = "lab_" . uniqid() . "." . $ext;
-                    if (move_uploaded_file($_FILES['lab_file']['tmp_name'], $folder . $filename)) {
-                        $data['LabFile'] = $filename;
-                    }
+                $filename = Helpers::uploadFile('lab_file', 'uploads/lab_results/', ['pdf', 'jpg', 'jpeg', 'png', 'webp'], 5 * 1024 * 1024, 'lab_');
+                if ($filename) {
+                    $data['LabFile'] = $filename;
                 } else {
-                    $_SESSION['error'] = "Invalid file type. Only PDF and images are allowed.";
+                    // Helpers::uploadFile already set $_SESSION['error'] if it failed
                     redirect('vet/dashboard');
                 }
             }

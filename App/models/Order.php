@@ -21,8 +21,7 @@ class Order
 
     public function addDetails($orderId, $cart)
     {
-        $db = new class { use Database; };
-        $con = $db->connect();
+        $con = $this->connect();
         
         foreach ($cart as $id => $item) {
             $query = "INSERT INTO orderdetails (OrderID, ProductID, Quantity) VALUES (:order_id, :product_id, :qty)";

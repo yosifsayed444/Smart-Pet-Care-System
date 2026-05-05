@@ -5,6 +5,7 @@ class ServiceProvider
     use Model;
 
     protected $table = 'serviceprovider';
+    protected $primaryKey = 'ProviderID';
 
     protected $allowedColumns = [
         'Name',
@@ -17,7 +18,6 @@ class ServiceProvider
         $keys = array_keys($data);
         $columns = implode(',', $keys);
         $values  = ':' . implode(', :', $keys);
-
         $query = "INSERT INTO provider_services ($columns) VALUES ($values)";
         return $this->query($query, $data);
     }
@@ -52,7 +52,6 @@ class ServiceProvider
         $keys = array_keys($data);
         $columns = implode(',', $keys);
         $values  = ':' . implode(', :', $keys);
-
         $query = "INSERT INTO provider_availability ($columns) VALUES ($values)";
         return $this->query($query, $data);
     }

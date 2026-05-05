@@ -5,6 +5,7 @@ class Veterinarian
     use Model;
 
     protected $table = 'veterinarian';
+    protected $primaryKey = 'VetID';
 
     protected $allowedColumns = [
         'Name',

@@ -5,6 +5,7 @@ class Booking
     use Model;
 
     protected $table = 'booking';
+    protected $primaryKey = 'BookingID';
 
     protected $allowedColumns = [
         'PetID',
@@ -45,11 +46,6 @@ class Booking
         return $this->query($query, ['owner_id' => $owner_id]);
     }
 
-    public function delete($id)
-    {
-        $query = "DELETE FROM $this->table WHERE BookingID = :id";
-        return $this->query($query, ['id' => $id]);
-    }
 
     public function hasConflict($provider_id, $date, $start, $end, $service_id, $exclude_id = null)
     {
@@ -80,19 +76,7 @@ class Booking
 
     public function updateByBookingId($id, $data)
     {
-        $keys = array_keys($data);
-        $set  = "";
-
-        foreach ($keys as $key) {
-            $set .= "$key = :$key, ";
-        }
-
-        $set        = rtrim($set, ', ');
-        $data['id'] = $id;
-
-        $query = "UPDATE $this->table SET $set WHERE BookingID = :id";
-
-        return $this->query($query, $data);
+        return $this->update($id, $data);
     }
     public function getAllBookings()
     {

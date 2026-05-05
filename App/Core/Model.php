@@ -4,6 +4,11 @@ trait Model
 {
     use Database;
 
+    protected function getPrimaryKey()
+    {
+        return property_exists($this, 'primaryKey') ? $this->primaryKey : 'id';
+    }
+
     public function insert($data)
     {
         $keys = array_keys($data);
@@ -28,42 +33,34 @@ trait Model
         $set        = rtrim($set, ', ');
         $data['id'] = $id;
 
-        $query = "UPDATE $this->table SET $set WHERE id = :id";
+        $pk = $this->getPrimaryKey();
+        $query = "UPDATE $this->table SET $set WHERE $pk = :id";
 
         return $this->query($query, $data);
-    }
-    public function updateProduct($id, $data)
-    {
-        $keys = array_keys($data);
-
-        $query = "UPDATE $this->table SET ";
-
-        foreach ($keys as $key) {
-
-            $query .= "$key = :$key,";
-        }
-
-        $query = rtrim($query, ",");
-
-        $query .= " WHERE $this->primaryKey = :id";
-
-        $data['id']  = $id;
-
-        return $this->query($query, $data);
-    }
-    public function deleteProduct($id)
-    {
-        $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id";
-        return $this->query($sql, [
-            'id' => $id,
-        ]);
     }
 
     public function delete($id)
     {
-        $query = "DELETE FROM $this->table WHERE id = :id";
+        $pk = $this->getPrimaryKey();
+        $query = "DELETE FROM $this->table WHERE $pk = :id";
 
         return $this->query($query, ['id' => $id]);
+    }
+
+    public function insertFiltered($data)
+    {
+        if (!empty($this->allowedColumns)) {
+            $data = array_intersect_key($data, array_flip($this->allowedColumns));
+        }
+        return $this->insert($data);
+    }
+
+    public function updateFiltered($id, $data)
+    {
+        if (!empty($this->allowedColumns)) {
+            $data = array_intersect_key($data, array_flip($this->allowedColumns));
+        }
+        return $this->update($id, $data);
     }
 
     public function where($data)

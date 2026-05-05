@@ -5,6 +5,7 @@ class MedicalRecord
     use Model;
 
     protected $table = 'MedicalRecord';
+    protected $primaryKey = 'RecordID';
     protected $allowedColumns = [
         'PetID',
         'VetID',
@@ -28,34 +29,12 @@ class MedicalRecord
 
     public function addRecord($data)
     {
-        
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-        
-        $keys = array_keys($data);
-        $columns = implode(',', $keys);
-        $values  = ':' . implode(', :', $keys);
-
-        $query = "INSERT INTO $this->table ($columns) VALUES ($values)";
-        return $this->query($query, $data);
+        return $this->insertFiltered($data);
     }
 
     public function updateRecord($recordId, $data)
     {
-        
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-
-        $keys = array_keys($data);
-        $set  = "";
-
-        foreach ($keys as $key) {
-            $set .= "$key = :$key, ";
-        }
-        $set = rtrim($set, ', ');
-
-        $data['RecordID'] = $recordId;
-        $query = "UPDATE $this->table SET $set WHERE RecordID = :RecordID";
-        
-        return $this->query($query, $data);
+        return $this->updateFiltered($recordId, $data);
     }
 
     public function deleteRecord($recordId)
@@ -112,12 +91,7 @@ class MedicalRecord
 
     public function addLabResult($data)
     {
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-        $keys    = array_keys($data);
-        $columns = implode(',', $keys);
-        $values  = ':' . implode(', :', $keys);
-        $query   = "INSERT INTO MedicalRecord ($columns) VALUES ($values)";
-        return $this->query($query, $data);
+        return $this->addRecord($data);
     }
 
     public function getLabResults($vetId)
@@ -134,12 +108,7 @@ class MedicalRecord
 
     public function getMedicalNotesByVet($vetId)
     {
-        $query = "SELECT mr.*, p.PetName
-                  FROM MedicalRecord mr
-                  JOIN pet p ON mr.PetID = p.PetID
-                  WHERE mr.VetID = :VetID
-                  ORDER BY mr.RecordDate DESC";
-        return $this->query($query, ['VetID' => $vetId]);
+        return $this->getLabResults($vetId);
     }
 
     public function getMedicalNotesByPet($petId)
@@ -162,4 +131,4 @@ class MedicalRecord
                   ORDER BY mr.RecordDate DESC";
         return $this->query($query, ['PetID' => $petId]);
     }
-}
+}

@@ -5,6 +5,7 @@ class Prescription
     use Model;
 
     protected $table = 'prescription';
+    protected $primaryKey = 'PrescriptionID';
 
     protected $allowedColumns = [
         'PetID',
@@ -16,12 +17,7 @@ class Prescription
 
     public function addPrescription($data)
     {
-        $data = array_intersect_key($data, array_flip($this->allowedColumns));
-        $keys    = array_keys($data);
-        $columns = implode(',', $keys);
-        $values  = ':' . implode(', :', $keys);
-        $query   = "INSERT INTO prescription ($columns) VALUES ($values)";
-        return $this->query($query, $data);
+        return $this->insertFiltered($data);
     }
 
     public function getByVet($vetId)

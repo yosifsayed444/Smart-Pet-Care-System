@@ -172,7 +172,7 @@ smart-pet-care-system/
 │   │   ├── AboutController.php
 │   │   ├── ContactController.php
 │   │   ├── NotificationsController.php
-│   │   └── _404.php
+│   │   └── Error404Controller.php
 │   │
 │   ├── models/                  # Data models
 │   │   ├── User.php

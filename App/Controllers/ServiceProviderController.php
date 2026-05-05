@@ -99,15 +99,7 @@ class ServiceProviderController extends Controller
             }
 
             
-            if (!empty($_FILES['image']['name'])) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                $maxSize = 2 * 1024 * 1024; 
-                if (!in_array($_FILES['image']['type'], $allowedTypes)) {
-                    $errors[] = "Image must be JPG, PNG, GIF, or WebP.";
-                } elseif ($_FILES['image']['size'] > $maxSize) {
-                    $errors[] = "Image size must not exceed 2MB.";
-                }
-            }
+
 
             if (!empty($errors)) {
                 $_SESSION['error'] = implode('<br>', $errors);
@@ -117,22 +109,16 @@ class ServiceProviderController extends Controller
             $providerModel = new ServiceProvider();
             $data = [
                 'provider_id' => $_SESSION['id'],
-                'name'        => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
+                'name'        => Helpers::clean($name),
                 'tier'        => $tier,
                 'price'       => (float)$price
             ];
 
-            
-            if (!empty($_FILES['image']['name'])) {
-                $folder = "uploads/services/";
-                if (!file_exists($folder)) {
-                    mkdir($folder, 0777, true);
-                }
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $filename = time() . "_" . uniqid() . "." . $ext;
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $folder . $filename)) {
-                    $data['image'] = $filename;
-                }
+            $image = Helpers::uploadFile('image', 'uploads/services/', ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+            if ($image) {
+                $data['image'] = $image;
+            } elseif (!empty($_FILES['image']['name'])) {
+                redirect('ServiceProvider/dashboard');
             }
 
             $providerModel->addService($data);
@@ -415,34 +401,18 @@ class ServiceProviderController extends Controller
                 redirect('ServiceProvider/certifications');
             }
 
-            if (!empty($_FILES['cert_file']['name'])) {
-                $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
-                if (!in_array($_FILES['cert_file']['type'], $allowedTypes)) {
-                    $_SESSION['error'] = "File must be PDF, JPG, PNG, or WebP.";
-                } elseif ($_FILES['cert_file']['size'] > 5 * 1024 * 1024) {
-                    $_SESSION['error'] = "File size must not exceed 5MB.";
-                } else {
-                    $folder = "uploads/certifications/";
-                    if (!file_exists($folder)) {
-                        mkdir($folder, 0777, true);
-                    }
-                    $ext = pathinfo($_FILES['cert_file']['name'], PATHINFO_EXTENSION);
-                    $filename = time() . "_" . uniqid() . "." . $ext;
-                    if (move_uploaded_file($_FILES['cert_file']['tmp_name'], $folder . $filename)) {
-                        $certModel = new Certification();
-                        $certModel->insert([
-                            'ProviderID' => $_SESSION['id'],
-                            'CertName' => htmlspecialchars($certName),
-                            'FilePath' => $filename,
-                            'Status' => 'Pending'
-                        ]);
-                        $_SESSION['success'] = "Certification uploaded and is pending verification.";
-                    } else {
-                        $_SESSION['error'] = "Failed to upload file.";
-                    }
-                }
+            $filename = Helpers::uploadFile('cert_file', 'uploads/certifications/', ['pdf', 'jpg', 'jpeg', 'png', 'webp'], 5 * 1024 * 1024);
+            if ($filename) {
+                $certModel = new Certification();
+                $certModel->insert([
+                    'ProviderID' => $_SESSION['id'],
+                    'CertName' => Helpers::clean($certName),
+                    'FilePath' => $filename,
+                    'Status' => 'Pending'
+                ]);
+                $_SESSION['success'] = "Certification uploaded and is pending verification.";
             } else {
-                $_SESSION['error'] = "Please select a file to upload.";
+                // error set by uploadFile
             }
         }
         redirect('ServiceProvider/certifications');

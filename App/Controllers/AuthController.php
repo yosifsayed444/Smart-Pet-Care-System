@@ -97,88 +97,29 @@ class AuthController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-            $username = trim($_POST['username'] ?? '');
-            $email    = trim($_POST['email'] ?? '');
-            $phone    = trim($_POST['phone'] ?? '');
-            $password = trim($_POST['password'] ?? '');
+            $user = new User();
 
-            $errors = [];
-
-            if (empty($username)) {
-
-                $errors['username'] = "Username is required";
-
-            } elseif (strlen($username) < 3) {
-
-                $errors['username'] =
-                    "Username must be at least 3 characters";
-            }
-
-            if (empty($email)) {
-
-                $errors['email'] = "Email is required";
-
-            } elseif (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-                $errors['email'] = "Invalid email format";
-            }
-
-            if (empty($phone)) {
-
-                $errors['phone'] = "Phone is required";
-
-            } elseif (! preg_match("/^[0-9]{11}$/", $phone)) {
-
-                $errors['phone'] =
-                    "Phone must be 11 digits";
-            }
-
-            if (empty($password)) {
-
-                $errors['password'] = "Password is required";
-
-            } elseif (strlen($password) < 6) {
-
-                $errors['password'] =
-                    "Password must be at least 6 characters";
-            }
-
-            if (empty($errors)) {
-
-                $user = new User();
-
-                $exists = $user->first([
-                    'email' => $email,
-                ]);
-
-                if ($exists) {
-
-                    $errors['email'] =
-                        "Email already exists";
-                }
-            }
+            $errors = Validator::validateUser($_POST, $user);
 
             if (empty($errors)) {
 
                 $data = [
 
-                    'username' => $username,
-                    'email'    => $email,
-                    'phone'    => $phone,
+                    'username' => trim($_POST['username'] ?? ''),
+                    'email'    => trim($_POST['email'] ?? ''),
+                    'phone'    => trim($_POST['phone'] ?? ''),
                     'role'     => 'Owner',
 
                     'password' => password_hash(
-                        $password,
+                        $_POST['password'],
                         PASSWORD_DEFAULT
                     ),
                 ];
 
-                $user = new User();
-
                 $user->insert($data);
 
                 $newUser = $user->first([
-                    'email' => $email,
+                    'email' => trim($_POST['email'] ?? ''),
                 ]);
 
                 $_SESSION['id']       = $newUser['id'];

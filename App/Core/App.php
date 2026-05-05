@@ -30,8 +30,8 @@ class App
 
         } else {
 
-            require_once __DIR__ . '/../Controllers/_404.php';
-            $this->controller = '_404';
+            require_once __DIR__ . '/../Controllers/Error404Controller.php';
+            $this->controller = 'Error404Controller';
         }
 
         $controller = new $this->controller;
@@ -43,8 +43,8 @@ class App
                 $this->method = $url[1];
             } else {
                 
-                require_once __DIR__ . '/../Controllers/_404.php';
-                $this->controller = '_404';
+                require_once __DIR__ . '/../Controllers/Error404Controller.php';
+                $this->controller = 'Error404Controller';
                 $controller = new $this->controller;
                 $this->method = 'index';
             }
