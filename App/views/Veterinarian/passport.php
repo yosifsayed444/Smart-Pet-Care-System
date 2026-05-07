@@ -1,31 +1,25 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <div class="container">
-    <div class="text-right mt-4">
-        <button onclick="window.print()" class="btn btn-dark btn-print"><i class="fa fa-print mr-2"></i> Print Passport</button>
+    <div class="text-right mt-4 no-print">
+        <button id="download-pdf" class="btn btn-danger btn-print shadow-sm">
+            <i class="fa fa-file-pdf-o mr-2"></i> Download Official PDF Passport
+        </button>
+            <a href="<?= ROOT ?>/petowner/dashboard" class="btn btn-secondary btn-print shadow-sm"> Back to dashboard</a>
+        
     </div>
     
-    <div class="passport-container">
-        <div class="stamp">OFFICIAL<br>VET STAMP<br><?= date('Y-m-d') ?></div>
-        
-        <div class="passport-header">
-            <img src="<?= ROOT ?>/assets/images/logo.png" width="50" class="mb-2" alt="">
-            <h1>Pet Travel Passport</h1>
-            <p class="text-muted">International Veterinary Certificate of Health</p>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="passport-photo">
-                    <i class="flaticon-dog"></i>
-                </div>
+    <div id="passport-content">
+        <div class="passport-container">            
+            <div class="passport-header">
+                <img src="<?= ROOT ?>/assets/images/logo.png" width="50" class="mb-2" alt="">
+                <h1>Pet Travel Passport</h1>
             </div>
-        </div>
 
         
         <div class="info-section">
-            <h5>I. Identification of Animal</h5>
+            <h5> Identification of Animal</h5>
             <div class="info-grid">
                 <div class="info-item">
                     <label>Name</label>
@@ -47,68 +41,39 @@
                     <label>Weight</label>
                     <span><?= htmlspecialchars($pet['Weight']) ?> KG</span>
                 </div>
-                <div class="info-item">
-                    <label>Microchip/ID</label>
-                    <span>#PET-<?= str_pad($pet['PetID'], 6, '0', STR_PAD_LEFT) ?></span>
-                </div>
+                
             </div>
         </div>
-
-        
         <div class="info-section">
-            <h5>II. Vaccination Against Rabies & Others</h5>
-            <table class="table table-sm table-bordered">
-                <thead class="bg-light">
-                    <tr>
-                        <th>Vaccine Name</th>
-                        <th>Date Administered</th>
-                        <th>Valid Until</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($vaccinations)): ?>
-                        <?php foreach ($vaccinations as $v): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($v['VaccineName']) ?></td>
-                                <td><?= htmlspecialchars($v['VaccinationDate']) ?></td>
-                                <td><?= htmlspecialchars($v['NextDate']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr><td colspan="3" class="text-center">No vaccination records found.</td></tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        
-        <div class="info-section">
-            <h5>III. Clinical Examination & Health Notes</h5>
-            <?php if (!empty($medNotes)): ?>
-                <?php foreach (array_slice($medNotes, 0, 3) as $note): ?>
-                    <div class="mb-2 p-2 border-bottom">
-                        <small class="text-muted d-block"><?= htmlspecialchars($note['RecordDate']) ?></small>
-                        <strong>Result:</strong> <?= htmlspecialchars($note['Diagnosis']) ?>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="small text-center italic">No clinical examination notes found.</p>
-            <?php endif; ?>
-        </div>
-
-        <div class="mt-5 pt-4 border-top">
-            <div class="row">
-                <div class="col-6">
-                    <p class="small mb-0">Authorized Veterinarian ID:</p>
-                    <p><strong>VET-<?= str_pad($vetId, 4, '0', STR_PAD_LEFT) ?></strong></p>
+            <h5> Owner Information</h5>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Name</label>
+                    <span><?= htmlspecialchars($user['username']) ?></span>
                 </div>
-                <div class="col-6 text-right">
-                    <p class="small mb-4 text-muted italic">Electronic Signature and Validation</p>
-                    <div style="font-family: 'Dancing Script', cursive; font-size: 1.5rem;">Verified Digital Passport</div>
+                <div class="info-item">
+                    <label>Email</label>
+                    <span><?= htmlspecialchars($user['email']) ?></span>
+                </div>
+                <div class="info-item">
+                    <label>Phone</label>
+                    <span><?= htmlspecialchars($user['phone']) ?></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
+<script>
+    document.getElementById('download-pdf').addEventListener('click', function() {
+        const element = document.getElementById('passport-content');
+        const opt = {
+            margin:       0.5,
+            filename:     'Pet-Passport-<?= $pet['PetName'] ?>.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    });
+</script>

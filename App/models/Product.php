@@ -12,7 +12,8 @@ class Product
         'Ingredients',
         'Price',
         'stock',
-        'image'
+        'image',
+        'VendorID'
     ];
 
     public function getAll()

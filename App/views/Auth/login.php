@@ -1,6 +1,13 @@
 <?php require __DIR__ . '/../layouts/header.php'; ?>
 <?php require __DIR__ . '/../layouts/navbar.php'; ?>
-
+<style>
+    .error-hint {
+        color: #d9534f;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
 
 <div class="auth-section">
     <div class="container">

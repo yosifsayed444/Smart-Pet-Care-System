@@ -20,12 +20,43 @@ class Booking
         'EscrowAmount',
         'CheckInTime',
         'CheckOutTime',
-        'QRToken'
+        'QRToken',
+        'TotalPrice'
     ];
+
+    public function calculateTotalCost($service_id, $duration_hours = 1, $pet_count = 1, $is_holiday = false)
+    {
+        $query = "SELECT * FROM provider_services WHERE id = :id";
+        $service = $this->query($query, ['id' => $service_id]);
+
+        if (empty($service)) return 0;
+        $service = $service[0];
+
+        $base = (float)$service['price'];
+        $durMult = (float)($service['duration_multiplier'] ?? 1.0);
+        $specMult = (float)($service['species_multiplier'] ?? 1.0);
+        $holidaySurcharge = (float)($service['holiday_surcharge'] ?? 0.0);
+        $multiPetDiscount = (float)($service['multi_pet_discount'] ?? 0.0);
+
+        
+        $total = ($base * $durMult * $duration_hours) * $specMult;
+
+        
+        if ($is_holiday) {
+            $total += $holidaySurcharge;
+        }
+
+        
+        if ($pet_count > 1) {
+            $total -= ($multi_pet_discount * ($pet_count - 1));
+        }
+
+        return max($total, $base); 
+    }
 
     public function getByProvider($provider_id)
     {
-        $query = "SELECT b.*, p.PetName, u.username as owner_name 
+        $query = "SELECT b.*, p.PetName, p.HandlingInstructions, p.BehaviorNotes, u.username as owner_name 
                   FROM booking b
                   LEFT JOIN pet p ON b.PetID = p.PetID
                   LEFT JOIN users u ON b.OwnerID = u.id

@@ -439,13 +439,22 @@ public function triage()
 public function triageResult()
 {
     $symptoms = $_POST['symptoms'] ?? [];
+    $petId = $_POST['petId'] ?? null;
+
+    // Emergency Red Flags (No DB needed, pure logic)
+    $emergencySymptoms = ['breathing', 'bleeding', 'unconscious', 'seizure'];
+    $redFlags = array_intersect($emergencySymptoms, $symptoms);
+
+    if (!empty($redFlags)) {
+        $_SESSION['red_flag'] = $redFlags;
+        $_SESSION['red_flag_pet'] = $petId;
+        redirect('petowner/emergencyAlert');
+    }
 
     $type = "General Vet";
-
     if (in_array('tumor', $symptoms)) {
         $type = "Oncologist";
     }
-
     if (in_array('aggressive', $symptoms)) {
         $type = "Behavioral Specialist";
     }
@@ -486,6 +495,87 @@ public function triageResult()
     }
 
     
+    public function submitCommunityReview()
+    {
+        checkRole(['Owner']);
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $bookingId = $_POST['booking_id'];
+            $revieweeId = $_POST['reviewee_id'];
+            $rating = $_POST['rating'];
+            $comment = trim($_POST['comment'] ?? '');
+
+            $reviewModel = new Review();
+            if ($reviewModel->hasReviewed($bookingId, $_SESSION['id'])) {
+                $_SESSION['error'] = "You have already reviewed this booking.";
+            } else {
+                $reviewModel->insertCommunityReview([
+                    'BookingID' => $bookingId,
+                    'ReviewerID' => $_SESSION['id'],
+                    'RevieweeID' => $revieweeId,
+                    'ReviewerRole' => 'Owner',
+                    'Rating' => $rating,
+                    'Comment' => Helpers::clean($comment)
+                ]);
+                $_SESSION['success'] = "Thank you for your feedback!";
+            }
+        }
+        redirect('petowner/index');
+    }
+
+    public function addLog()
+    {
+        checkRole(['Owner']);
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $petId = $_POST['pet_id'] ?? '';
+            $description = trim($_POST['description'] ?? '');
+            
+            if (empty($petId) || empty($description)) {
+                $_SESSION['error'] = "Description is required.";
+                redirect('petowner/index');
+            }
+
+            $medModel = new MedicalRecord();
+            $redFlags = $medModel->checkRedFlags($description);
+
+            $data = [
+                'PetID' => $petId,
+                'Diagnosis' => Helpers::clean($description),
+                'RecordDate' => date('Y-m-d'),
+                'VetID' => null 
+            ];
+
+            $medModel->addRecord($data);
+
+            if (!empty($redFlags)) {
+                
+                $_SESSION['red_flag'] = $redFlags;
+                $_SESSION['red_flag_pet'] = $petId;
+                redirect('petowner/emergencyAlert');
+            } else {
+                $_SESSION['success'] = "Daily log saved successfully.";
+                redirect('petowner/index');
+            }
+        }
+    }
+
+    public function emergencyAlert()
+    {
+        checkRole(['Owner']);
+        if (empty($_SESSION['red_flag'])) {
+            redirect('petowner/index');
+        }
+
+        $data['flags'] = $_SESSION['red_flag'];
+        $data['pet_id'] = $_SESSION['red_flag_pet'];
+        
+        
+        $this->view('PetOwner/emergency_alert', $data);
+        
+        
+        unset($_SESSION['red_flag']);
+        unset($_SESSION['red_flag_pet']);
+    }
+
     public function generateQR($bookingId)
     {
         checkRole(['Owner']);

@@ -14,7 +14,9 @@ class Pet
         'Age',
         'Gender',
         'Weight',
-        'Allergies'
+        'Allergies',
+        'HandlingInstructions',
+        'BehaviorNotes'
     ];
 
     public function getPetsByOwner($owner_id)

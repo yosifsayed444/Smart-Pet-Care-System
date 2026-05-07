@@ -29,6 +29,7 @@
                     <a class="nav-link" id="v-pills-prescriptions-tab" data-toggle="pill" href="#v-pills-prescriptions" role="tab"><i class="fa fa-file-text-o mr-2"></i> Prescription Engine</a>
                     <a class="nav-link" id="v-pills-medical-notes-tab" data-toggle="pill" href="#v-pills-medical-notes" role="tab"><i class="fa fa-stethoscope mr-2"></i> Medical Notes</a>
                     <a class="nav-link" id="v-pills-lab-results-tab" data-toggle="pill" href="#v-pills-lab-results" role="tab"><i class="fa fa-flask mr-2"></i> Lab Results</a>
+                    <a class="nav-link" id="v-pills-passport-tab" data-toggle="pill" href="#v-pills-passport" role="tab"><i class="fa fa-globe mr-2"></i> Travel Passport</a>
                     <a class="nav-link" id="v-pills-lost-tab" data-toggle="pill" href="#v-pills-lost" role="tab"><i class="fa fa-bullhorn mr-2"></i> Community Alerts 🚨</a>
                 </div>
             </div>
@@ -68,6 +69,7 @@
                                                     <span class="badge badge-<?= $badge ?>"><?= $status ?></span>
                                                 </td>
                                                 <td>
+                                                    <a href="<?= ROOT ?>/vet/passport/<?= $app['PetID'] ?>" class="btn btn-sm btn-outline-dark" title="Generate Travel Passport"><i class="fa fa-globe"></i></a>
                                                     <?php if ($status == 'Pending'): ?>
                                                         <a href="<?= ROOT ?>/vet/updateAppointmentStatus/<?= $app['AppointmentID'] ?>/Accepted" class="btn btn-sm btn-success">Accept</a>
                                                         <a href="<?= ROOT ?>/vet/updateAppointmentStatus/<?= $app['AppointmentID'] ?>/Rejected" class="btn btn-sm btn-danger" onclick="return confirm('Reject this appointment?')">Reject</a>
@@ -257,6 +259,52 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-passport" role="tabpanel">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h3>Pet Travel Passports</h3>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle mr-2"></i> Select a pet to generate an official International Veterinary Certificate of Health (Pet Passport).
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Pet Name</th>
+                                        <th>Owner</th>
+                                        <th>Species</th>
+                                        <th>Gender</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($allPets)): ?>
+                                        <?php foreach ($allPets as $pet): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($pet['PetName']) ?></strong></td>
+                                                <td><?= htmlspecialchars($pet['OwnerName']) ?></td>
+                                                <td><?= htmlspecialchars($pet['Species']) ?></td>
+                                                <td><?= htmlspecialchars($pet['Gender']) ?></td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="<?= ROOT ?>/vet/passport/<?= $pet['PetID'] ?>" class="btn btn-sm btn-dark">
+                                                            <i class="fa fa-globe mr-1"></i> Preview
+                                                        </a>
+                                                        <a href="<?= ROOT ?>/vet/togglePassportStatus/<?= $pet['PetID'] ?>" class="btn btn-sm <?= $pet['passport_ready'] ? 'btn-success' : 'btn-outline-success' ?>">
+                                                            <i class="fa <?= $pet['passport_ready'] ? 'fa-check-circle' : 'fa-circle-o' ?> mr-1"></i> <?= $pet['passport_ready'] ? 'Ready' : 'Validate' ?>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr><td colspan="5" class="text-center">No pets found.</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     </div>
 
                     

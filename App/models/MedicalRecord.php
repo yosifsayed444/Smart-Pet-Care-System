@@ -43,6 +43,24 @@ class MedicalRecord
         return $this->query($query, ['RecordID' => $recordId]);
     }
 
+    public function checkRedFlags($text)
+    {
+        $redFlags = [
+            'seizure', 'unresponsive', 'bloat', 'bleeding', 
+            'poisoning', 'breathing', 'choking', 'unconscious',
+            'fracture', 'trauma', 'collapse'
+        ];
+
+        $found = [];
+        foreach ($redFlags as $flag) {
+            if (stripos($text, $flag) !== false) {
+                $found[] = $flag;
+            }
+        }
+
+        return $found;
+    }
+
     
     
     

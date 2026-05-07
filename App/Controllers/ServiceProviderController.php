@@ -40,6 +40,81 @@ class ServiceProviderController extends Controller
         redirect('ServiceProvider/bookings');
     }
 
+    public function submitCommunityReview()
+    {
+        Middleware::requireRole('ServiceProvider');
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $bookingId = $_POST['booking_id'];
+            $revieweeId = $_POST['reviewee_id'];
+            $rating = $_POST['rating'];
+            $comment = trim($_POST['comment'] ?? '');
+
+            $reviewModel = new Review();
+            if ($reviewModel->hasReviewed($bookingId, $_SESSION['id'])) {
+                $_SESSION['error'] = "You have already reviewed this booking.";
+            } else {
+                $reviewModel->insertCommunityReview([
+                    'BookingID' => $bookingId,
+                    'ReviewerID' => $_SESSION['id'],
+                    'RevieweeID' => $revieweeId,
+                    'ReviewerRole' => 'Provider',
+                    'Rating' => $rating,
+                    'Comment' => Helpers::clean($comment)
+                ]);
+                $_SESSION['success'] = "Review submitted successfully!";
+            }
+        }
+        redirect('ServiceProvider/dashboard');
+    }
+
+    public function analytics()
+    {
+        Middleware::requireRole('ServiceProvider');
+        $provider_id = $_SESSION['id'];
+        
+        
+        $query = "SELECT 
+                    COUNT(*) as total_bookings,
+                    SUM(EscrowAmount) as gross_bookings,
+                    SUM(CASE WHEN EscrowStatus = 'Released' THEN EscrowAmount ELSE 0 END) as released_bookings
+                  FROM booking 
+                  WHERE ProviderID = :id AND status = 'Completed'";
+        $bookingStats = (new Booking())->query($query, ['id' => $provider_id]);
+        $bookingStats = !empty($bookingStats) ? $bookingStats[0] : [
+            'total_bookings' => 0,
+            'gross_bookings' => 0,
+            'released_bookings' => 0
+        ];
+
+        
+        $query = "SELECT 
+                    SUM(GrossAmount) as gross_market,
+                    SUM(PlatformFee) as total_fees,
+                    SUM(NetAmount) as net_market,
+                    COUNT(*) as total_payouts
+                  FROM payouts 
+                  WHERE VendorID = :id";
+        $marketStats = (new Booking())->query($query, ['id' => $provider_id]);
+        $marketStats = !empty($marketStats) ? $marketStats[0] : [
+            'gross_market' => 0,
+            'total_fees' => 0,
+            'net_market' => 0,
+            'total_payouts' => 0
+        ];
+
+        
+        $data['stats'] = [
+            'gross_earnings' => ($bookingStats['gross_bookings'] ?? 0) + ($marketStats['gross_market'] ?? 0),
+            'platform_fees' => ($marketStats['total_fees'] ?? 0) + (($bookingStats['gross_bookings'] ?? 0) * 0.1), 
+            'net_earnings' => ($bookingStats['released_bookings'] ?? 0) + ($marketStats['net_market'] ?? 0),
+            'pending_payouts' => ($bookingStats['gross_bookings'] ?? 0) - ($bookingStats['released_bookings'] ?? 0),
+            'simulated_mileage' => ($bookingStats['total_bookings'] ?? 0) * 8.5, 
+            'tax_deduction' => (($bookingStats['total_bookings'] ?? 0) * 8.5) * 0.67 
+        ];
+
+        $this->view('ServiceProvider/analytics', $data);
+    }
+
     public function dashboard()
     {
         Middleware::requireRole('ServiceProvider');
@@ -63,9 +138,36 @@ class ServiceProviderController extends Controller
 
         $data['availability'] = $providerModel->getAvailability($provider_id);
         $data['conflictBooking'] = $providerModel->findFirstConflict($provider_id);
-        $data['reviews'] = $reviewModel->viewReviews($provider_id);
+        $data['reviews'] = $reviewModel->getReviewsForUser($provider_id);
+        // Debug: echo "Found " . count($data['reviews']) . " reviews for provider $provider_id"; 
         $data['recentBookings'] = $bookingModel->getByProvider($provider_id);
-        
+        // Fetch Analytics Stats
+        $query = "SELECT 
+                    COUNT(*) as total_bookings,
+                    SUM(EscrowAmount) as gross_bookings,
+                    SUM(CASE WHEN EscrowStatus = 'Released' THEN EscrowAmount ELSE 0 END) as released_bookings
+                  FROM booking 
+                  WHERE ProviderID = :id AND status = 'Completed'";
+        $bookingStats = $bookingModel->query($query, ['id' => $provider_id]);
+        $bookingStats = !empty($bookingStats) ? $bookingStats[0] : ['total_bookings' => 0, 'gross_bookings' => 0, 'released_bookings' => 0];
+
+        $query = "SELECT 
+                    SUM(GrossAmount) as gross_market,
+                    SUM(PlatformFee) as total_fees,
+                    SUM(NetAmount) as net_market
+                  FROM payouts 
+                  WHERE VendorID = :id";
+        $marketStats = $bookingModel->query($query, ['id' => $provider_id]);
+        $marketStats = !empty($marketStats) ? $marketStats[0] : ['gross_market' => 0, 'total_fees' => 0, 'net_market' => 0];
+
+        $data['stats'] = [
+            'gross_earnings' => ($bookingStats['gross_bookings'] ?? 0) + ($marketStats['gross_market'] ?? 0),
+            'net_earnings' => ($bookingStats['released_bookings'] ?? 0) + ($marketStats['net_market'] ?? 0),
+            'pending_payouts' => ($bookingStats['gross_bookings'] ?? 0) - ($bookingStats['released_bookings'] ?? 0),
+            'simulated_mileage' => ($bookingStats['total_bookings'] ?? 0) * 8.5,
+            'tax_deduction' => (($bookingStats['total_bookings'] ?? 0) * 8.5) * 0.67
+        ];
+
         $lostPetModel = new LostPet();
         $data['lostPets'] = $lostPetModel->fetchAll();
 
@@ -451,15 +553,16 @@ class ServiceProviderController extends Controller
                     'Status' => 'Open'
                 ]);
 
-                // If severe incident, force terminate the booking (ignore QR flow)
+                // Force terminate the booking regardless of severity (ignore QR flow)
+                $bookingModel->updateByBookingId($bookingId, [
+                    'status' => 'Completed',
+                    'CheckOutTime' => date('Y-m-d H:i:s')
+                ]);
+
                 if ($severity === 'High' || $severity === 'Critical') {
-                    $bookingModel->updateByBookingId($bookingId, [
-                        'status' => 'Completed',
-                        'CheckOutTime' => date('Y-m-d H:i:s')
-                    ]);
                     $notifMsg = "URGENT: A serious incident has been reported for your pet. Booking #$bookingId has been automatically terminated for safety. Please check your dashboard immediately.";
                 } else {
-                    $notifMsg = "URGENT: An incident has been reported for your pet during booking #$bookingId.";
+                    $notifMsg = "URGENT: An incident has been reported for your pet during booking #$bookingId. The service has been terminated as a precaution.";
                 }
 
                 // Send notification

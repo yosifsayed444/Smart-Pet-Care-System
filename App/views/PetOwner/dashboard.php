@@ -8,20 +8,8 @@
         <div class="row mb-5 align-items-center">
             <div class="col-md-8">
                 <h6 class="text-uppercase tracking-widest text-primary font-weight-bold mb-2">Pet Owner Dashboard</h6>
-                <h1 class="font-weight-800" style="font-size: 2.8rem; letter-spacing: -0.04em;">My Pet Family 🐾</h1>
-                <p class="text-muted">Welcome back! Here's what's happening with your pets today.</p>
             </div>
-            <div class="col-md-4 text-md-right">
-                <?php if (!empty($openIncidentsCount)): ?>
-                    <div class="d-inline-flex align-items-center bg-danger text-white px-4 py-2 rounded-pill shadow">
-                        <i class="fa fa-exclamation-triangle mr-3"></i>
-                        <div class="text-left">
-                            <small class="d-block font-weight-bold" style="line-height: 1;">Incident Alert</small>
-                            <span class="font-weight-800" style="font-size: 1.1rem;"><?= $openIncidentsCount ?> Open</span>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
+
         </div>
 
         <?php if(isset($_SESSION['success'])): ?>
@@ -67,7 +55,7 @@
                                         <div class="col">
                                             <a href="<?= ROOT ?>/petowner/prescriptions/<?= $pet['PetID'] ?>" class="medical-icon-btn">
                                                 <i class="fa fa-file-text-o text-success"></i>
-                                                <span>Rx List</span>
+                                                <span>Perscriptions</span>
                                             </a>
                                         </div>
                                         <div class="col">
@@ -84,7 +72,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-between mb-2">
                                         <a href="<?= ROOT ?>/petowner/viewConditions/<?= $pet['PetID'] ?>" class="btn btn-sm btn-light border flex-grow-1 mr-2 font-weight-bold text-danger">
                                             Conditions
                                         </a>
@@ -92,6 +80,15 @@
                                             Weight
                                         </a>
                                     </div>
+                                    <?php if (!empty($pet['passport_ready'])): ?>
+                                        <a href="<?= ROOT ?>/vet/passport/<?= $pet['PetID'] ?>" target="_blank" class="btn btn-sm btn-block btn-outline-dark rounded-pill font-weight-bold">
+                                            <i class="fa fa-plane mr-1"></i> Generate Travel Passport
+                                        </a>
+                                    <?php else: ?>
+                                        <div class="alert alert-danger py-2 mb-0 text-center rounded-pill small font-weight-bold" style="border: 1px dashed #dc3545; background: rgba(220, 53, 69, 0.05);">
+                                            <i class="fa fa-lock mr-1"></i>Passport Not Assigned by Vet Yet
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -130,7 +127,7 @@
                             </li>
                             <li class="nav-item mr-2">
                                 <a class="nav-link" data-toggle="pill" href="#triage-pane">
-                                    <i class="fa fa-android"></i> AI Triage
+                                    <i class="fa fa-user-md"></i> Specialist Triage
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -139,6 +136,11 @@
                                     <?php if (!empty($openIncidentsCount)): ?>
                                         <span class="badge badge-danger badge-pill ml-1"><?= $openIncidentsCount ?></span>
                                     <?php endif; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link bg-danger-soft text-danger font-weight-bold" data-toggle="pill" href="#emergency-pane">
+                                    <i class="fa fa-heartbeat"></i> Emergency Red Flags
                                 </a>
                             </li>
                         </ul>
@@ -229,13 +231,14 @@
                                                         <span class="stat-badge bg-light text-<?= $cls ?> d-inline-block mt-1"><?= $status ?></span>
                                                     </td>
                                                     <td>
-                                                        <?php if (($status == 'Accepted' || $status == 'Completed') && $booking['EscrowStatus'] == 'Held'): ?>
-                                                            <span class="badge badge-warning text-white small px-2 py-1"><i class="fa fa-lock mr-1"></i> Funds Held</span>
-                                                        <?php elseif (($status == 'Accepted' || $status == 'Completed') && $booking['EscrowStatus'] == 'Released'): ?>
-                                                            <span class="badge badge-success small px-2 py-1"><i class="fa fa-unlock mr-1"></i> Funds Released</span>
-                                                        <?php else: ?>
-                                                            <span class="text-muted small">Pending Escrow</span>
-                                                        <?php endif; ?>
+                                                         <?php if (($status == 'Accepted' || $status == 'Completed') && $booking['EscrowStatus'] == 'Held'): ?>
+                                                             <span class="badge badge-warning text-white small px-2 py-1"><i class="fa fa-lock mr-1"></i> Funds Held</span>
+                                                         <?php elseif (($status == 'Accepted' || $status == 'Completed') && $booking['EscrowStatus'] == 'Released'): ?>
+                                                             <span class="badge badge-success small px-2 py-1"><i class="fa fa-unlock mr-1"></i> Funds Released</span>
+                                                         <?php endif; ?>
+                                                         <div class="mt-1 font-weight-bold text-dark small">
+                                                             <i class="fa fa-money mr-1"></i> Cost: <?= number_format($booking['TotalPrice'] ?? 0, 2) ?> EGP
+                                                         </div>
                                                     </td>
                                                     <td class="text-right">
                                                         <?php if ($status == 'Accepted'): ?>
@@ -249,7 +252,10 @@
                                                                 Cancel Request
                                                             </a>
                                                         <?php elseif ($status == 'Completed'): ?>
-                                                            <span class="text-muted small"><i class="fa fa-check-circle text-success mr-1"></i> Completed</span>
+                                                             <span class="text-muted small"><i class="fa fa-check-circle text-success mr-1"></i> Completed</span>
+                                                             <button class="btn btn-sm btn-outline-warning rounded-pill px-3 ml-2" data-toggle="modal" data-target="#rateSitter<?= $booking['BookingID'] ?>">
+                                                                 <i class="fa fa-star mr-1"></i> Rate Sitter
+                                                             </button>
                                                         <?php endif; ?>
                                                     </td>
                                                 </tr>
@@ -333,8 +339,8 @@
                         <div class="tab-pane fade" id="triage-pane">
                             <div class="triage-card">
                                 <div class="text-center mb-4">
-                                    <h3 class="font-weight-800 text-primary">Vet Bot Triage AI</h3>
-                                    <p class="text-muted">Select your pet and check symptoms for immediate guidance.</p>
+                                    <h3 class="font-weight-800 text-primary">Specialist Triage</h3>
+                                    <p class="text-muted">Select symptoms to find the right veterinary specialist.</p>
                                 </div>
                                 <form action="<?= ROOT ?>/petowner/triageResult" method="post" class="bg-white p-4 rounded-xl shadow-sm">
                                     <div class="form-group mb-4">
@@ -347,34 +353,79 @@
                                         </select>
                                     </div>
                                     
-                                    <label class="small font-weight-bold text-uppercase tracking-wider mb-3 d-block">Presenting Symptoms</label>
+                                    <label class="small font-weight-bold text-uppercase tracking-wider mb-3 d-block">Non-Emergency Symptoms</label>
                                     <div class="row mb-4">
                                         <div class="col-md-4">
                                             <div class="custom-control custom-checkbox custom-control-inline mb-3">
                                                 <input type="checkbox" name="symptoms[]" value="tumor" id="symp1" class="custom-control-input">
-                                                <label class="custom-control-label font-weight-bold" for="symp1">Abnormal Growth/Tumor</label>
+                                                <label class="custom-control-label font-weight-bold" for="symp1">Abnormal Growth</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="custom-control custom-checkbox custom-control-inline mb-3">
                                                 <input type="checkbox" name="symptoms[]" value="aggressive" id="symp2" class="custom-control-input">
-                                                <label class="custom-control-label font-weight-bold" for="symp2">Unusual Aggression</label>
+                                                <label class="custom-control-label font-weight-bold" for="symp2">Aggression</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="custom-control custom-checkbox custom-control-inline mb-3">
                                                 <input type="checkbox" name="symptoms[]" value="vomiting" id="symp3" class="custom-control-input">
-                                                <label class="custom-control-label font-weight-bold" for="symp3">Frequent Vomiting</label>
+                                                <label class="custom-control-label font-weight-bold" for="symp3">Vomiting</label>
                                             </div>
                                         </div>
                                     </div>
-
                                     <button type="submit" class="btn btn-primary btn-block rounded-pill py-3 font-weight-800 shadow">
-                                        <i class="fa fa-magic mr-2"></i> ANALYZE SYMPTOMS
+                                        <i class="fa fa-user-md mr-2"></i> ANALYZE SYMPTOMS
                                     </button>
                                 </form>
                             </div>
                         </div>
+
+                        <div class="tab-pane fade" id="emergency-pane">
+                            <div class="triage-card border-danger" style="border-width: 2px;">
+                                <div class="text-center mb-4">
+                                    <h3 class="font-weight-800 text-danger">Emergency Red Flags</h3>
+                                    <p class="text-muted">Select life-threatening symptoms for immediate medical protocol.</p>
+                                </div>
+                                <form action="<?= ROOT ?>/petowner/triageResult" method="post" class="bg-white p-4 rounded-xl shadow-sm border border-danger">
+                                    <div class="form-group mb-4">
+                                        <label class="small font-weight-bold text-uppercase tracking-wider">Target Patient</label>
+                                        <select class="form-control rounded-lg border-danger" name="petId" required style="height: 50px; font-weight: 600;">
+                                            <option value="" disabled selected>Choose a Pet...</option>
+                                            <?php foreach ($pets as $pet): ?>
+                                                <option value="<?= $pet['PetID'] ?>"><?= htmlspecialchars($pet['PetName']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    
+                                    <label class="small font-weight-bold text-uppercase tracking-wider mb-3 d-block text-danger font-weight-bold">CRITICAL INDICATORS (SELECT ANY):</label>
+                                    <div class="row mb-4">
+                                        <div class="col-md-4">
+                                            <div class="custom-control custom-checkbox custom-control-inline mb-3">
+                                                <input type="checkbox" name="symptoms[]" value="breathing" id="esymp1" class="custom-control-input">
+                                                <label class="custom-control-label font-weight-bold text-danger h5" for="esymp1"><i class="fa fa-heartbeat mr-1"></i> Breathing Difficulty</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="custom-control custom-checkbox custom-control-inline mb-3">
+                                                <input type="checkbox" name="symptoms[]" value="bleeding" id="esymp2" class="custom-control-input">
+                                                <label class="custom-control-label font-weight-bold text-danger h5" for="esymp2"><i class="fa fa-tint mr-1"></i> Severe Bleeding</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="custom-control custom-checkbox custom-control-inline mb-3">
+                                                <input type="checkbox" name="symptoms[]" value="seizure" id="esymp3" class="custom-control-input">
+                                                <label class="custom-control-label font-weight-bold text-danger h5" for="esymp3"><i class="fa fa-bolt mr-1"></i> Seizures</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger btn-block rounded-pill py-3 font-weight-800 shadow animate-pulse">
+                                        <i class="fa fa-ambulance mr-2"></i> ACTIVATE EMERGENCY PROTOCOL
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
@@ -382,5 +433,49 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Section for Recursive Reviews -->
+<?php if(!empty($bookings)): ?>
+    <?php foreach($bookings as $booking): ?>
+        <?php if(($booking['status'] ?? '') == 'Completed' || !empty($booking['CheckOutTime'])): ?>
+            <div class="modal fade" id="rateSitter<?= $booking['BookingID'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                        <div class="modal-header bg-warning text-dark border-0 py-4" style="border-radius: 20px 20px 0 0;">
+                            <h5 class="modal-title font-weight-800 ml-3"><i class="fa fa-star mr-2"></i>Rate Service Provider</h5>
+                            <button type="button" class="close mr-2" data-dismiss="modal"><span>&times;</span></button>
+                        </div>
+                        <form action="<?= ROOT ?>/petowner/submitCommunityReview" method="POST">
+                            <div class="modal-body p-4">
+                                <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?>">
+                                <input type="hidden" name="reviewee_id" value="<?= $booking['ProviderID'] ?>">
+                                
+                                <div class="form-group mb-4">
+                                    <label class="small font-weight-bold text-uppercase tracking-wider">Service Quality</label>
+                                    <select name="rating" class="form-control rounded-lg" required style="height: 50px;">
+                                        <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                                        <option value="4">⭐⭐⭐⭐ - Good</option>
+                                        <option value="3">⭐⭐⭐ - Average</option>
+                                        <option value="2">⭐⭐ - Poor</option>
+                                        <option value="1">⭐ - Terrible</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="small font-weight-bold text-uppercase tracking-wider">Your Feedback</label>
+                                    <textarea name="comment" class="form-control rounded-lg" rows="4" placeholder="How was the experience? Your feedback helps the community." required></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 p-4">
+                                <button type="button" class="btn btn-light rounded-pill px-4" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-warning rounded-pill px-5 font-weight-bold shadow">Submit Review</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <?php require __DIR__ . '/../layouts/footer.php'; ?>

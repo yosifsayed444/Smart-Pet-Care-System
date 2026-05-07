@@ -22,14 +22,38 @@ class Order
     public function addDetails($orderId, $cart)
     {
         $con = $this->connect();
+        $commissionRate = 0.15; 
         
         foreach ($cart as $id => $item) {
+            
             $query = "INSERT INTO orderdetails (OrderID, ProductID, Quantity) VALUES (:order_id, :product_id, :qty)";
             $con->prepare($query)->execute([
                 'order_id' => $orderId,
                 'product_id' => $id,
                 'qty' => $item['qty']
             ]);
+
+            
+            $pQuery = "SELECT Price, VendorID FROM product WHERE ProductID = :id";
+            $stmt = $con->prepare($pQuery);
+            $stmt->execute(['id' => $id]);
+            $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($product) {
+                $gross = $product['Price'] * $item['qty'];
+                $fee = $gross * $commissionRate;
+                $net = $gross - $fee;
+
+                $payQuery = "INSERT INTO payouts (OrderID, VendorID, GrossAmount, PlatformFee, NetAmount, Status) 
+                             VALUES (:order_id, :vendor_id, :gross, :fee, :net, 'Pending')";
+                $con->prepare($payQuery)->execute([
+                    'order_id' => $orderId,
+                    'vendor_id' => $product['VendorID'],
+                    'gross' => $gross,
+                    'fee' => $fee,
+                    'net' => $net
+                ]);
+            }
         }
     }
 

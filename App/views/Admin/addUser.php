@@ -22,7 +22,7 @@ novalidate>
 
 <div class="form-group">
 
-<label>Username</label>
+<label>Username</label> 
 
 <input type="text"
 name="username"
