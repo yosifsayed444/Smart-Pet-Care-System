@@ -158,7 +158,7 @@ class ShopController extends Controller
             $orderId = $con->lastInsertId();
 
             if ($orderId) {
-                $orderModel->addDetails($orderId, $_SESSION['cart']);
+                $orderModel->payouts($orderId, $_SESSION['cart']);
                 unset($_SESSION['cart']);
                 $_SESSION['success'] = "Order placed successfully! Order ID: #$orderId";
                 

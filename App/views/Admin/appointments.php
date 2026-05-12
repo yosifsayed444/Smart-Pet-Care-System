@@ -9,9 +9,8 @@
             <p class="text-muted small">Manage veterinary checkups bookings</p>
         </div>
 
-
         <div class="tab-content" id="appointmentTabsContent">
-            
+
             <div class="tab-pane fade show active" id="vet-pane" role="tabpanel">
                 <div class="table-container">
                     <table class="admin-table">
@@ -33,7 +32,7 @@
                                         <td><?= htmlspecialchars($app['OwnerName']) ?></td>
                                         <td><?= htmlspecialchars($app['VetName']) ?></td>
                                         <td>
-                                            <?php 
+                                            <?php
                                                 $st = $app['status'] ?? 'Pending';
                                                 $cls = strtolower($st);
                                             ?>
@@ -48,7 +47,6 @@
                     </table>
                 </div>
             </div>
-
 
         </div>
     </main>

@@ -23,10 +23,10 @@ class Certification
 
     public function getPending()
     {
-        $query = "SELECT c.*, u.username as ProviderName 
-                  FROM provider_certifications c 
-                  JOIN users u ON c.ProviderID = u.id 
-                  WHERE c.Status = 'Pending' 
+        $query = "SELECT c.*, u.username as ProviderName
+                  FROM provider_certifications c
+                  JOIN users u ON c.ProviderID = u.id
+                  WHERE c.Status = 'Pending'
                   ORDER BY c.SubmittedAt ASC";
         return $this->query($query);
     }

@@ -6,10 +6,10 @@ class NotificationsController extends Controller
     {
         Middleware::requireLogin();
         $notifModel = new Notification();
-        
+
         $data['notifications'] = $notifModel->viewNotifications($_SESSION['id']);
         $data['username'] = $_SESSION['username'] ?? 'User';
-        
+
         $this->view('notifications', $data);
     }
 

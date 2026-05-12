@@ -130,8 +130,8 @@
                                     <i class="fa fa-user-md"></i> Specialist Triage
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-danger font-weight-bold" href="<?= ROOT ?>/petowner/incidents">
+                            <li class="nav-item mr-2">
+                                <a class="nav-link text-danger font-weight-bold" data-toggle="pill" href="#incident-pane">
                                     <i class="fa fa-bell"></i> Incidents
                                     <?php if (!empty($openIncidentsCount)): ?>
                                         <span class="badge badge-danger badge-pill ml-1"><?= $openIncidentsCount ?></span>
@@ -336,6 +336,56 @@
                             </div>
                         </div>
 
+                        <div class="tab-pane fade" id="incident-pane">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="font-weight-bold mb-0 text-danger">Incident Alerts</h4>
+                                <a href="<?= ROOT ?>/petowner/incidents" class="text-muted small font-weight-bold">View History <i class="fa fa-arrow-right"></i></a>
+                            </div>
+
+                            <?php if (empty($incidents)): ?>
+                                <div class="alert alert-success p-4 text-center rounded-xl border-0 shadow-sm">
+                                    <i class="fa fa-check-circle fa-2x mb-3 text-success"></i>
+                                    <h5>All Clear!</h5>
+                                    <p class="mb-0 text-muted">There are no reported incidents or emergencies for any of your pets.</p>
+                                </div>
+                            <?php else: ?>
+                                <div class="row">
+                                    <?php foreach ($incidents as $incident): ?>
+                                        <div class="col-md-6 mb-4">
+                                            <?php 
+                                                $borderColor = 'border-warning';
+                                                $headerColor = 'bg-warning text-dark';
+                                                if ($incident['Severity'] == 'High' || $incident['Severity'] == 'Critical') {
+                                                    $borderColor = 'border-danger';
+                                                    $headerColor = 'bg-danger text-white';
+                                                }
+                                            ?>
+                                            <div class="card shadow-sm border-0 h-100" style="border-radius: 15px; overflow: hidden; border-left: 5px solid <?= ($incident['Severity'] == 'High' || $incident['Severity'] == 'Critical') ? '#dc3545' : '#ffc107' ?> !important;">
+                                                <div class="card-body p-4">
+                                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                                        <span class="badge <?= ($incident['Severity'] == 'High' || $incident['Severity'] == 'Critical') ? 'badge-danger' : 'badge-warning' ?> px-3 py-2 rounded-pill">
+                                                            <?= htmlspecialchars($incident['Severity']) ?> Priority
+                                                        </span>
+                                                        <small class="text-muted font-weight-bold"><?= date('M d, g:i A', strtotime($incident['ReportedAt'])) ?></small>
+                                                    </div>
+                                                    <h6 class="font-weight-800 mb-2">Pet: <?= htmlspecialchars($incident['PetName']) ?></h6>
+                                                    <p class="small text-muted mb-3">
+                                                        <i class="fa fa-user-circle mr-1"></i> Sitter: <?= htmlspecialchars($incident['SitterName'] ?? 'Unknown Sitter') ?>
+                                                        <br>
+                                                        <i class="fa fa-hashtag mr-1"></i> Booking ID: #<?= htmlspecialchars($incident['BookingID']) ?>
+                                                    </p>
+                                                    <div class="p-3 bg-light rounded-lg border-0 small text-dark" style="background: #f8f9fa;">
+                                                        <strong>Report Details:</strong><br>
+                                                        <?= nl2br(htmlspecialchars($incident['Description'])) ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
                         <div class="tab-pane fade" id="triage-pane">
                             <div class="triage-card">
                                 <div class="text-center mb-4">
@@ -434,7 +484,7 @@
     </div>
 </div>
 
-<!-- Modal Section for Recursive Reviews -->
+
 <?php if(!empty($bookings)): ?>
     <?php foreach($bookings as $booking): ?>
         <?php if(($booking['status'] ?? '') == 'Completed' || !empty($booking['CheckOutTime'])): ?>

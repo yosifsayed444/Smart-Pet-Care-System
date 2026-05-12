@@ -23,7 +23,7 @@
 
                     <form action="<?= ROOT ?>/ServiceProvider/scanQR/<?= $booking['BookingID'] ?>" method="POST" class="px-md-5">
                         <div class="form-group mb-4">
-                            <input type="text" name="token" class="form-control form-control-lg text-center font-weight-bold" 
+                            <input type="text" name="token" class="form-control form-control-lg text-center font-weight-bold"
                                    placeholder="ENTER 6-CHAR CODE" maxlength="6" style="letter-spacing: 5px; text-transform: uppercase;" required>
                         </div>
                         <button type="submit" class="btn btn-info btn-lg btn-block"><i class="fa fa-check"></i> Verify Code</button>

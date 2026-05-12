@@ -13,7 +13,7 @@ class Product
         'Price',
         'stock',
         'image',
-        'VendorID'
+        'ProviderID'
     ];
 
     public function getAll()

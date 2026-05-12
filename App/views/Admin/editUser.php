@@ -56,10 +56,11 @@ value="<?= $old['email'] ?? $user['email'] ?>">
 
 <label>Phone</label>
 
-<input type="text"
+<input type="tel"
 name="phone"
 class="form-control <?= isset($errors['phone']) ? 'is-invalid' : '' ?>"
-value="<?= $old['phone'] ?? $user['phone'] ?>">
+value="<?= $old['phone'] ?? $user['phone'] ?>"
+>
 
 <?php if (!empty($errors['phone'])): ?>
 

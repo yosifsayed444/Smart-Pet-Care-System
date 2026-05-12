@@ -41,7 +41,7 @@
                     <?php endif; ?>
                 </div>
 
-                <!-- Certifications Section -->
+                
                 <div class="card shadow-sm p-4 mt-4">
                     <h5 class="mb-3 text-primary"><i class="fa fa-certificate mr-2"></i>Certifications</h5>
                     <?php 

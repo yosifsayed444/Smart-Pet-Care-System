@@ -84,6 +84,18 @@
                 </div>
             </div>
 
+            <div class="dash-card">
+                <div class="dash-card-top">
+                    <div class="card-icon i-green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#22543D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9.5h20"/></svg>
+                    </div>
+                    <span class="dash-card-title">Payouts management</span>
+                </div>
+                <div class="dash-card-actions">
+                    <a href="<?php echo ROOT ?>/admin/payouts" class="btn-pill btn-green">View payouts</a>
+                </div>
+            </div>
+
             
             <div class="dash-card">
                 <div class="dash-card-top">

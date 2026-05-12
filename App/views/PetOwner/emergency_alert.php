@@ -10,7 +10,7 @@
                     <h1 class="font-weight-800 text-white" style="font-size: 3rem;">CRITICAL ALERT!</h1>
                     <p class="lead font-weight-bold">We detected potential life-threatening symptoms in your pet's log.</p>
                 </div>
-                
+
                 <div class="card-body p-5 bg-white">
                     <div class="mb-5">
                         <h4 class="text-uppercase tracking-widest text-danger font-weight-bold mb-3">Symptoms Identified:</h4>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="text-center mt-4">
                 <p class="text-muted small"><i class="fa fa-shield mr-2"></i>Smart Pet Care System Emergency Protocol v2.1</p>
             </div>

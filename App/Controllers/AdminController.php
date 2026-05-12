@@ -79,16 +79,13 @@ class AdminController extends Controller
             }
 
             $insertData = [
-
-                'username' => trim($_POST['username']),
-                'email'    => trim($_POST['email']),
-                'phone'    => trim($_POST['phone']),
-                'role'     => $_POST['role'],
-                'password' => password_hash(
-                    $_POST['password'],
-                    PASSWORD_DEFAULT
-                ),
-
+                'username'    => trim($_POST['username']),
+                'email'       => trim($_POST['email']),
+                'phone'       => trim($_POST['phone']),
+                'role'        => $_POST['role'],
+                'status'      => 'Active',
+                'is_verified' => 1,
+                'password'    => password_hash($_POST['password'], PASSWORD_DEFAULT),
             ];
 
             $user->insert($insertData);
@@ -626,17 +623,6 @@ class AdminController extends Controller
         $this->view('admin/reports/appointments', $data);
     }
 
-    public function messages()
-    {
-        Middleware::requireRole('Admin');
-
-        $message = new Message();
-
-        $data['messages'] = $message->fetchAll();
-
-        $this->view('admin/messages', $data);
-    }
-
     public function generateReportPDF($type)
     {
         Middleware::requireRole('Admin');
@@ -705,5 +691,26 @@ class AdminController extends Controller
             }
         }
         redirect('admin/escrowManagement');
+    }
+    public function payouts()
+    {
+        Middleware::requireRole('Admin');
+        $query = "SELECT p.*, u.username as ProviderName, o.OrderDate 
+                  FROM payouts p 
+                  JOIN users u ON p.ProviderID = u.id 
+                  JOIN `order` o ON p.OrderID = o.OrderID 
+                  ORDER BY p.CreatedAt DESC";
+        $data['payouts'] = (new Booking())->query($query); 
+        $data['username'] = $_SESSION['username'] ?? 'Admin';
+        $this->view('admin/payouts', $data);
+    }
+
+    public function releasePayout($id)
+    {
+        Middleware::requireRole('Admin');
+        $query = "UPDATE payouts SET Status = 'Paid' WHERE PayoutID = :id";
+        (new Booking())->query($query, ['id' => $id]);
+        $_SESSION['success'] = "Payout marked as Paid successfully.";
+        redirect('admin/payouts');
     }
 }

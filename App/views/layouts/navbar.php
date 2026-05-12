@@ -107,7 +107,6 @@
 
 <script>
 (function () {
-    // Active link highlight
     document.querySelectorAll('.pcnav-link').forEach(function (a) {
         if (window.location.pathname === new URL(a.href, location.origin).pathname) {
             a.classList.add('is-active');

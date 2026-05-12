@@ -20,7 +20,7 @@ class Incident
 
     public function getByOwner($ownerId)
     {
-        $query = "SELECT i.*, p.PetName, s.Name as SitterName 
+        $query = "SELECT i.*, p.PetName, s.Name as SitterName
                   FROM incidents i
                   LEFT JOIN pet p ON i.PetID = p.PetID
                   LEFT JOIN serviceprovider s ON i.SitterID = s.ProviderID
@@ -31,7 +31,7 @@ class Incident
 
     public function getBySitter($sitterId)
     {
-        $query = "SELECT i.*, p.PetName 
+        $query = "SELECT i.*, p.PetName
                   FROM incidents i
                   LEFT JOIN pet p ON i.PetID = p.PetID
                   WHERE i.SitterID = :SitterID

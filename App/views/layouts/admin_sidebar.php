@@ -71,6 +71,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             Escrow
         </a>
+        <a href="<?= ROOT ?>/admin/payouts" class="nav-item <?= is_active('payouts', $current_page) ?>">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9.5h20"/></svg>
+            Payouts
+        </a>
 
         <div class="nav-group-label">System</div>
         <a href="<?= ROOT ?>/admin/reports" class="nav-item <?= is_active('reports', $current_page) ?>">

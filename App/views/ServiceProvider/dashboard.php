@@ -33,7 +33,7 @@
         <?php endif; ?>
 
         <div class="row">
-            <!-- Sidebar Navigation -->
+            
             <div class="col-lg-3 mb-4">
                 <div class="premium-card">
                     <div class="section-header">
@@ -74,11 +74,11 @@
                 </div>
             </div>
 
-            <!-- Main Content Area -->
+            
             <div class="col-lg-9">
                 <div class="tab-content" id="sitterTabsContent">
                     
-                    <!-- Bookings Pane -->
+                    
                     <div class="tab-pane fade show active" id="bookings-pane">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h4 class="font-weight-bold mb-0">Recent Service Bookings</h4>
@@ -144,7 +144,7 @@
                         </div>
                     </div>
 
-                    <!-- Services Pane -->
+                    
                     <div class="tab-pane fade" id="services-pane">
                         <div class="row">
                             <div class="col-md-5">
@@ -207,7 +207,7 @@
                         </div>
                     </div>
 
-                    <!-- Schedule Pane -->
+                    
                     <div class="tab-pane fade" id="schedule-pane">
                         <div class="row">
                             <div class="col-md-5">
@@ -255,7 +255,7 @@
                         </div>
                     </div>
 
-                    <!-- Reviews Pane -->
+                    
                     <div class="tab-pane fade" id="reviews-pane">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h4 class="font-weight-bold mb-0">Community Feedback</h4>
@@ -293,7 +293,7 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- Certifications Pane -->
+                    
                     <div class="tab-pane fade" id="certs-pane">
                         <div class="text-center py-5">
                             <i class="fa fa-certificate fa-4x text-primary mb-4 opacity-25"></i>
@@ -303,7 +303,7 @@
                         </div>
                     </div>
 
-                    <!-- Emergency Pane -->
+                    
                     <div class="tab-pane fade" id="emergency-pane">
                         <div class="bg-danger-light p-4 rounded-xl border border-danger mb-4" style="background: rgba(231, 76, 60, 0.05);">
                             <h5 class="text-danger font-weight-bold mb-1"><i class="fa fa-bullhorn mr-2"></i>Lost Pet Community Network</h5>
@@ -344,7 +344,7 @@
     </div>
 </div>
 
-<!-- Modals for Sitter Hub -->
+
 <?php if(!empty($recentBookings)): ?>
     <?php foreach($recentBookings as $booking): ?>
         <div class="modal fade" id="petDetails<?= $booking['BookingID'] ?>" tabindex="-1" role="dialog" aria-hidden="true">

@@ -21,13 +21,6 @@
                 <div class="mt-3 small text-muted">After 10% platform fee</div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="stats-card text-center">
-                <div class="text-muted small text-uppercase font-weight-bold mb-2">In Transit</div>
-                <div class="display-4 font-weight-800 text-warning">$<?= number_format($data['stats']['pending_payouts'], 2) ?></div>
-                <div class="mt-3 small text-muted">Pending bank verification</div>
-            </div>
-        </div>
     </div>
 </div>
 

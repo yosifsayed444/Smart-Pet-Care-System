@@ -26,14 +26,12 @@ trait Database
                 if (is_array($result) && count($result) > 0) {
                     return $result;
                 } else {
-                    
                     return $stmt->rowCount() > 0 ? true : false;
                 }
             } else {
                 return false;
             }
         } catch (PDOException $e) {
-            
             error_log("DB Error: " . $e->getMessage());
             return false;
         }

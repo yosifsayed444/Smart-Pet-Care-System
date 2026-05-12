@@ -114,6 +114,7 @@ class PetOwnerController extends Controller
         
         $incidentModel = new Incident();
         $data['openIncidentsCount'] = $incidentModel->getOpenByOwner($ownerId);
+        $data['incidents'] = $incidentModel->getByOwner($ownerId);
         
         $this->view('PetOwner/dashboard', $data);
     }
@@ -441,7 +442,7 @@ public function triageResult()
     $symptoms = $_POST['symptoms'] ?? [];
     $petId = $_POST['petId'] ?? null;
 
-    // Emergency Red Flags (No DB needed, pure logic)
+    
     $emergencySymptoms = ['breathing', 'bleeding', 'unconscious', 'seizure'];
     $redFlags = array_intersect($emergencySymptoms, $symptoms);
 

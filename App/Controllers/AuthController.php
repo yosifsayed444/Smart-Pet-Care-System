@@ -104,30 +104,31 @@ class AuthController extends Controller
             if (empty($errors)) {
 
                 $data = [
-
-                    'username' => trim($_POST['username'] ?? ''),
-                    'email'    => trim($_POST['email'] ?? ''),
-                    'phone'    => trim($_POST['phone'] ?? ''),
-                    'role'     => 'Owner',
-
-                    'password' => password_hash(
-                        $_POST['password'],
-                        PASSWORD_DEFAULT
-                    ),
+                    'username'    => trim($_POST['username'] ?? ''),
+                    'email'       => trim($_POST['email'] ?? ''),
+                    'phone'       => trim($_POST['phone'] ?? ''),
+                    'role'        => 'Owner',
+                    'status'      => 'Active',
+                    'is_verified' => 0,
+                    'password'    => password_hash($_POST['password'], PASSWORD_DEFAULT),
                 ];
 
-                $user->insert($data);
+                if ($user->insert($data)) {
+                    $newUser = $user->first([
+                        'email' => $data['email'],
+                    ]);
 
-                $newUser = $user->first([
-                    'email' => trim($_POST['email'] ?? ''),
-                ]);
+                    if ($newUser) {
+                        $_SESSION['id']       = $newUser['id'];
+                        $_SESSION['role']     = $newUser['role'];
+                        $_SESSION['username'] = $newUser['username'];
 
-                $_SESSION['id']       = $newUser['id'];
-                $_SESSION['role']     = $newUser['role'];
-                $_SESSION['username'] = $newUser['username'];
-
-                header("Location: " . ROOT . "/home");
-                exit;
+                        header("Location: " . ROOT . "/home");
+                        exit;
+                    }
+                }
+                
+                $errors['email'] = "Registration failed. Please try again.";
             }
 
             $this->view('auth/register', [

@@ -10,7 +10,7 @@
                 <p class="text-muted small">Overview of business and user metrics</p>
             </div>
         </div>
-            
+
             <div class="row">
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm border-primary">

@@ -93,7 +93,7 @@ class ServiceProviderController extends Controller
                     SUM(NetAmount) as net_market,
                     COUNT(*) as total_payouts
                   FROM payouts 
-                  WHERE VendorID = :id";
+                  WHERE ProviderID = :id";
         $marketStats = (new Booking())->query($query, ['id' => $provider_id]);
         $marketStats = !empty($marketStats) ? $marketStats[0] : [
             'gross_market' => 0,
@@ -139,9 +139,9 @@ class ServiceProviderController extends Controller
         $data['availability'] = $providerModel->getAvailability($provider_id);
         $data['conflictBooking'] = $providerModel->findFirstConflict($provider_id);
         $data['reviews'] = $reviewModel->getReviewsForUser($provider_id);
-        // Debug: echo "Found " . count($data['reviews']) . " reviews for provider $provider_id"; 
+        
         $data['recentBookings'] = $bookingModel->getByProvider($provider_id);
-        // Fetch Analytics Stats
+        
         $query = "SELECT 
                     COUNT(*) as total_bookings,
                     SUM(EscrowAmount) as gross_bookings,
@@ -156,7 +156,7 @@ class ServiceProviderController extends Controller
                     SUM(PlatformFee) as total_fees,
                     SUM(NetAmount) as net_market
                   FROM payouts 
-                  WHERE VendorID = :id";
+                  WHERE ProviderID = :id";
         $marketStats = $bookingModel->query($query, ['id' => $provider_id]);
         $marketStats = !empty($marketStats) ? $marketStats[0] : ['gross_market' => 0, 'total_fees' => 0, 'net_market' => 0];
 
@@ -514,7 +514,7 @@ class ServiceProviderController extends Controller
                 ]);
                 $_SESSION['success'] = "Certification uploaded and is pending verification.";
             } else {
-                // error set by uploadFile
+                
             }
         }
         redirect('ServiceProvider/certifications');
@@ -553,7 +553,7 @@ class ServiceProviderController extends Controller
                     'Status' => 'Open'
                 ]);
 
-                // Force terminate the booking regardless of severity (ignore QR flow)
+                
                 $bookingModel->updateByBookingId($bookingId, [
                     'status' => 'Completed',
                     'CheckOutTime' => date('Y-m-d H:i:s')
@@ -565,7 +565,7 @@ class ServiceProviderController extends Controller
                     $notifMsg = "URGENT: An incident has been reported for your pet during booking #$bookingId. The service has been terminated as a precaution.";
                 }
 
-                // Send notification
+                
                 $notifModel = new Notification();
                 $notifModel->sendNotification($booking['OwnerID'], $notifMsg, "System");
 

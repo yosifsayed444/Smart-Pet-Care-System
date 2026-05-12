@@ -40,7 +40,7 @@
 
                         <div class="form-group-premium">
                             <label>Phone Number</label>
-                            <input type="text" name="phone" class="form-control-premium" placeholder="+00 123 456" value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '' ?>" required>
+                            <input type="tel" name="phone" class="form-control-premium" placeholder="01234567890" value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '' ?>" required>
                             <?php if (! empty($errors['phone'])): ?>
                                 <span class="error-hint"><?php echo $errors['phone'] ?></span>
                             <?php endif; ?>

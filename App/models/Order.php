@@ -19,7 +19,7 @@ class Order
         return $this->insert($data);
     }
 
-    public function addDetails($orderId, $cart)
+    public function payouts($orderId, $cart)
     {
         $con = $this->connect();
         $commissionRate = 0.15; 
@@ -34,7 +34,7 @@ class Order
             ]);
 
             
-            $pQuery = "SELECT Price, VendorID FROM product WHERE ProductID = :id";
+            $pQuery = "SELECT Price, ProviderID FROM product WHERE ProductID = :id";
             $stmt = $con->prepare($pQuery);
             $stmt->execute(['id' => $id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -44,11 +44,11 @@ class Order
                 $fee = $gross * $commissionRate;
                 $net = $gross - $fee;
 
-                $payQuery = "INSERT INTO payouts (OrderID, VendorID, GrossAmount, PlatformFee, NetAmount, Status) 
-                             VALUES (:order_id, :vendor_id, :gross, :fee, :net, 'Pending')";
+                $payQuery = "INSERT INTO payouts (OrderID, ProviderID, GrossAmount, PlatformFee, NetAmount, Status) 
+                             VALUES (:order_id, :provider_id, :gross, :fee, :net, 'Pending')";
                 $con->prepare($payQuery)->execute([
                     'order_id' => $orderId,
-                    'vendor_id' => $product['VendorID'],
+                    'provider_id' => $product['ProviderID'],
                     'gross' => $gross,
                     'fee' => $fee,
                     'net' => $net

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
 
-            <!-- Brand & Social -->
+            
             <div class="col-md-6 col-lg-4 mb-5">
                 <a href="<?= ROOT ?>/" class="pf-brand-logo">
                     <img src="<?= ROOT ?>/assets/images/logo.png" alt="PetCare Logo">
@@ -23,7 +23,7 @@
                 </ul>
             </div>
 
-            <!-- Quick Links -->
+            
             <div class="col-md-6 col-lg-2 mb-5">
                 <h6 class="pf-heading">Quick Links</h6>
                 <ul class="pf-links">
@@ -35,7 +35,7 @@
                 </ul>
             </div>
 
-            <!-- Account Links -->
+            
             <div class="col-md-6 col-lg-2 mb-5">
                 <h6 class="pf-heading">Account</h6>
                 <ul class="pf-links">
@@ -47,7 +47,7 @@
                 </ul>
             </div>
 
-            <!-- Contact Info -->
+            
             <div class="col-md-6 col-lg-4 mb-5">
                 <h6 class="pf-heading">Get In Touch</h6>
                 <ul class="pf-contact-list">
@@ -79,7 +79,7 @@
 
     <hr class="pf-divider">
 
-    <!-- Bottom Bar -->
+    
     <div class="pf-bottom">
         <div class="container">
             <div class="row align-items-center">

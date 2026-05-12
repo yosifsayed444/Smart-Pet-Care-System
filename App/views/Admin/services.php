@@ -31,7 +31,7 @@
                                 <td><?= htmlspecialchars($booking['ProviderName'] ?? 'Hassan') ?></td>
                                 <td><?= $booking['StartTime'] ?> - <?= $booking['EndTime'] ?></td>
                                 <td>
-                                    <?php 
+                                    <?php
                                         $st = $booking['status'] ?? 'Pending';
                                         $cls = strtolower($st);
                                         if($cls == 'under review') $cls = 'pending';

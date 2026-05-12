@@ -30,8 +30,13 @@ class Validator
 
         if (empty($phone)) {
             $errors['phone'] = "Phone is required";
-        } elseif (! preg_match("/^[0-9]{10,15}$/", $phone)) {
-            $errors['phone'] = "Invalid phone number format (use 10-15 digits)";
+        } elseif (!preg_match("/^[0-9]{11,15}$/", $phone)) {
+            $errors['phone'] = "Phone must be between 11 and 15 digits";
+        } else {
+            $phoneExists = $userModel->first(['phone' => $phone]);
+            if ($phoneExists && $phoneExists['id'] != $ignoreId) {
+                $errors['phone'] = "Phone number already exists";
+            }
         }
         if ($ignoreId === null) {
             if (empty($password)) {
@@ -105,8 +110,8 @@ class Validator
 
         if (empty(trim($data['phone'] ?? ''))) {
             $errors['phone'] = "Phone number is required";
-        } elseif (! preg_match("/^[0-9]{10,15}$/", trim($data['phone']))) {
-            $errors['phone'] = "Invalid phone number format (use 10-15 digits)";
+        } elseif (! preg_match("/^[0-9]{11,15}$/", trim($data['phone']))) {
+            $errors['phone'] = "Invalid phone number format (use 11-15 digits)";
         }
 
         if (($data['payment'] ?? '') === 'card') {

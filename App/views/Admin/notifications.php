@@ -5,7 +5,7 @@
 
     <main class="main-content">
             <h2 class="mb-4">System Notifications</h2>
-            
+
             <?php if (isset($_SESSION['success'])): ?>
                 <div class="alert alert-success"><?= $_SESSION['success']; unset($_SESSION['success']); ?></div>
             <?php endif; ?>

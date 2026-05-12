@@ -13,7 +13,7 @@
                 </div>
                 <?php unset($_SESSION['success']); ?>
             <?php endif; ?>
-            
+
             <?php if(isset($_SESSION['error'])): ?>
                 <div class="alert alert-danger alert-dismissible fade show">
                     <?php echo $_SESSION['error']; ?>
